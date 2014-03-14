@@ -19,8 +19,8 @@ SET time_zone = "+00:00";
 --
 -- 数据库: `wshow`
 --
-CREATE DATABASE IF NOT EXISTS `wshow` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
-USE `wshow`;
+CREATE DATABASE IF NOT EXISTS `ccms` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `ccms`;
 
 -- --------------------------------------------------------
 

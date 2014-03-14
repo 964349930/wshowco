@@ -14,13 +14,17 @@ class UserModel extends CommonModel{
 			$info['group_name'] = ($info['group_id'] == 1) ? '管理员' : '普通会员';
 		}
 		//时间
-		if(in_array('last_time_text', $arrFormatField)){
-			$info['last_time_text'] = date('Y-m-d H:i', $info['last_time']);
+		if(in_array('data_log_text', $arrFormatField)){
+			$info['data_log_text'] = date('Y-m-d H:i', $info['data_log']);
 		}
 		//头像
 		if(in_array('avatar_name', $arrFormatField)){
 			$info['avatar_name'] = getPicPath($info['avatar']);
 		}
+        //url
+        if(in_array('url', $arrFormatField)){
+            $info['url'] = 'http://'.$_SERVER['HTTP_HOST'].U('Home/Wx/api', array('user'=>$info['token']));
+        }
 		return $info;
 	}
 }

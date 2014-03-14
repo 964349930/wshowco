@@ -5,7 +5,7 @@
  * @version 2013-10-06
  */
 
-class CmsSettingModel extends CommonModel {
+class SettingModel extends CommonModel {
     /**
      * 获取主题文件名
      * @return string $theme_spell 主题名称
@@ -35,18 +35,27 @@ class CmsSettingModel extends CommonModel {
      * @param  string $arrFormatField 需要格式化的数据
      */
     public function format($info, $arrFormatField){
+        //url
+        if(in_array('url', $arrFormatField)){
+            $user_name = D('User')->where('id='.$info['user_id'])->getField('name');
+            $info['url'] = 'http://'.$_SERVER['HTTP_HOST'].U('Mobile/Index/index', array('user'=>$user_name));
+        }
+
         //logo
         if(in_array('logo_name', $arrFormatField)){
             $info['logo_name'] = getPicPath($info['logo']);
         }
+
         //主题名称
         if(in_array('theme_name', $arrFormatField)){
-            $info['theme_name'] = D('CmsTheme')->where('id='.$info['theme_id'])->getField('theme_name');
+            $info['theme_name'] = D('Theme')->where('id='.$info['theme_id'])->getField('name');
         }
+
         //主题目录
         if(in_array('theme_spell', $arrFormatField)){
             $info['theme_spell'] = D('CmsTheme')->where('id='.$info['theme_id'])->getField('spell');
         }
+
         //配色方案
         if(in_array('color_name', $arrFormatField)){
             $info['color_name'] = D('CmsThemeColor')->where('id='.$info['color_id'])->getField('color_name');

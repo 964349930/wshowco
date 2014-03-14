@@ -11,7 +11,13 @@ class ThemeAction extends HomeAction{
 	public function themeList(){
 		$themeObj = D('Theme');
 		$arrField = array('*');
-		$arrMap = array();
+
+        //search
+        $search = $this->_post('search');
+        if(!empty($search)){
+            $arrMap['name'] = array('like', '%'.$search.'%');
+        }
+        $arrMap['status'] = array('eq', 1);
 		$arrOrder = array('date_modify desc');
 		$count = $themeObj->getCount($arrMap);
 		$page = page($count);
@@ -23,7 +29,7 @@ class ThemeAction extends HomeAction{
 		}
 		$tplData = array(
 			'addUrl' => U('Home/Theme/add'),
-			'useUrl' => U('Home/Theme/use'),
+			'useUrl' => U('Home/Theme/toUse'),
 			'editUrl' => U('Home/Theme/edit'),
 			'delUrl' => U('Home/Theme/del'),
 			'pageHtml' => $pageHtml,
@@ -36,12 +42,12 @@ class ThemeAction extends HomeAction{
 	/**
 	 * 使用主题
 	 */
-	public function doUse(){
-		$siteObj = D('CmsSetting');
+	public function toUse(){
+		$siteObj = D('Setting');
 		$id = intval($this->_get('id'));
-        $arrMap['wechat_id'] = array('eq', $_SESSION['wechat_id']);
+        $arrMap['user_id'] = array('eq', $_SESSION['user_id']);
 		if($siteObj->where($arrMap)->setField('theme_id', $id)){
-			$url = U('Admin/Theme/themeList');
+			$url = U('Home/Item/setting');
 			$this->success('使用主题成功', $url);
 		}else{
 			$this->error('使用主题失败');

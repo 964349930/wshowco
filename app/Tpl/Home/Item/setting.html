@@ -8,19 +8,38 @@
     <form method="post" action="{$editUrl}" enctype="multipart/form-data">
         <dl>
             <dt>微网名称：</dt>
-            <dd><input type="text" name="site_name" value="" /></dd>
+            <dd><input type="text" name="site_name" value="{$siteInfo.site_name}" /></dd>
+        </dl>
+        <dl>
+            <dt>LOGO</dt>
+            <notempty name="siteInfo[logo_name]">
+            <dd><img src="{$siteInfo.logo_name}" height="50px" /></dd>
+            </notempty>
+            <dd><input type="file" name="pic" /></dd>
+        </dl>
+        <dl>
+            <dt>微网链接：</dt>
+            <dd><p>{$siteInfo.url}</p></dd>
         </dl>
         <dl>
             <dt>客服号码：</dt>
-            <dd><input type="tel" name="site_tel" value="" /></dd>
+            <dd><input type="tel" name="tel" value="{$siteInfo.tel}" /></dd>
+        </dl>
+        <dl>
+            <dt>地址：</dt>
+            <dd><input type="text" name="address" value="{$siteInfo.address}" /></dd>
+        </dl>
+        <dl>
+            <dt>邮箱：</dt>
+            <dd><input type="email" name="email" value="{$siteInfo.email}" /></dd>
         </dl>
         <dl>
             <dt>主题：</dt>
-            <dd><input type="text" name="site_theme" value="" /></dd>
+            <dd><p>{$siteInfo.theme_name}</p><a href="{:U('Home/Theme/themeList')}" /><span>->查看更多主题</span></a></dd>
         </dl>
         <dl>
             <dt></dt>
-            <dd><input type="submit" value="更新" /></dd>
+            <dd><input type="submit" value="更 新" /></dd>
         </dl>
     </form>
 </div>

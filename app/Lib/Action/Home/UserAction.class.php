@@ -64,7 +64,7 @@ class UserAction extends HomeAction{
         if(empty($data)){
 		    $id = $_SESSION['uid'];
 		    $userInfo = $userObj->getInfoById($id);
-		    $userInfo = $userObj->format($userInfo, array('avatar_name'));
+		    $userInfo = $userObj->format($userInfo, array('url', 'avatar_name'));
 		    $this->assign('editUrl', U('Home/User/basic'));
             $this->assign('userInfo', $userInfo);
 		    $this->display();
@@ -73,7 +73,7 @@ class UserAction extends HomeAction{
 		if(!empty($_FILES['pic']['name'])){
 			$picList = uploadPic();
 			if($picList['code'] != 'error'){
-				$update['avatar'] = $picList['pic']['savename'];
+				$data['avatar'] = $picList['pic']['savename'];
 			}
 		}
         $userObj->save($data);

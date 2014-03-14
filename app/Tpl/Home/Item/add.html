@@ -25,7 +25,12 @@
         </dl>
         <dl>
             <dt>模版：</dt>
-            <dd><input type="text" name="item[template]" /></dd>
+            <dd><select name="item[template_id]">
+                <volist name="templateList" id="vo">
+                <option value="{$vo.spell}">{$vo.name}</option>
+                </volist>
+            </select>
+            </dd>
         </dl>
         <dl>
             <dt>排序：</dt>

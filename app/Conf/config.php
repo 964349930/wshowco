@@ -10,17 +10,17 @@ return array(
 
     'DB_TYPE' => 'mysql',
     'DB_HOST' => 'localhost',
-    'DB_NAME' => 'wshow',
+    'DB_NAME' => 'ccms',
     'DB_USER' => 'root',
-    'DB_PWD' => '',
+    'DB_PWD' => '250764',
     'DB_PORT' => '3306',
     'DB_PREFIX' => 'ws_',
 
     'TMPL_L_DELIM' => '{',
     'TMPL_R_DELIM' => '}',
 
-    'APP_GROUP_LIST' => 'home, mobile',
-    'DEFAULT_GROUP' => 'home',
+    'APP_GROUP_LIST' => 'Home, Mobile',
+    'DEFAULT_GROUP' => 'Home',
 
     'APP_AUTOLOAD_PATH' => '@.TagLib',
 );

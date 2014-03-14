@@ -26,7 +26,11 @@
         </dl>
         <dl>
             <dt>模版：</dt>
-            <dd><input type="text" name="item[template]" value="{$itemInfo.template}" /></dd>
+            <dd><select name="item[template_id]">
+                <volist name="templateList" id="vo">
+                <option <eq name="itemInfo[template_id]" value="$vo.id">selected="selected"</eq> value="{$vo.id}">{$vo.name}</option>
+                </volist>
+            </select></dd>
         </dl>
         <dl>
             <dt>排序：</dt>
