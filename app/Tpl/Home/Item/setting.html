@@ -1,0 +1,27 @@
+<include file="Public:header" />
+<div class="tabs">
+    <ul>
+        <li class="current"><a href="javascript:void(0)" class="current">微网设置</a></li>
+    </ul>
+</div>
+<div class="edit">
+    <form method="post" action="{$editUrl}" enctype="multipart/form-data">
+        <dl>
+            <dt>微网名称：</dt>
+            <dd><input type="text" name="site_name" value="" /></dd>
+        </dl>
+        <dl>
+            <dt>客服号码：</dt>
+            <dd><input type="tel" name="site_tel" value="" /></dd>
+        </dl>
+        <dl>
+            <dt>主题：</dt>
+            <dd><input type="text" name="site_theme" value="" /></dd>
+        </dl>
+        <dl>
+            <dt></dt>
+            <dd><input type="submit" value="更新" /></dd>
+        </dl>
+    </form>
+</div>
+<include file="Public:footer" />

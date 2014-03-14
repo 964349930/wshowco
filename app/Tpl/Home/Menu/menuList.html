@@ -1,0 +1,144 @@
+<include file="Public:header" />
+<div class="tabs">
+    <ul>
+        <li class="current"><a href="javascript:void(0)" class="current">菜单列表</a></li>
+    </ul>
+</div>
+<div class="toolbar">
+    <a href="javascript:void(0)" class="btn" id="addMenu"><span>添加菜单</span></a>
+    <a href="javascript:void(0)" class="btn"><span>更新菜单</span></a>
+</div>
+<div class="list">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <thead>
+            <tr>
+                <th width="20%">菜单名称</th>
+                <th width="20%">类型</th>
+                <th width="20%">菜单值</th>
+                <th width="20%">排序</th>
+                <th width="20%">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        <empty name="menuList">
+            <tr>
+                <td colspan="11" class="empty">暂无相关信息</td>
+            </tr>
+        <else />
+            <volist name="menuList" id="vo">
+                <tr>
+                    <td><input type="text" name="name" value="{$vo.name}" /></td>
+                    <td></td>
+                    <td><input type="text" name="value" value="{$vo.value}" /></td>
+                    <td><input type="number" name="sort_order" value="{$vo.sort_order}" /></td>
+                    <td>
+                        <a href="{$editUrl}&id={$vo.id}" class="mr10">编辑</a>
+                        <a href="javascript:void(0)" onClick="del({$vo.id})" class="delete_btn">删除</a>
+                    </td>
+                </tr>
+            </volist>
+        </empty>
+        </tbody>
+    </table>
+</div>
+<div class="toolbar">
+</div>
+<div id="menuForm" class="none">
+    <ul>  
+		<form id="myForm" method="post">
+        <li>
+			<div class="fid-q">上级菜单：</div>
+			<select class="fid-input" name="fid">
+				<option value="0">--</option>
+				<volist name="itemList" id="vo">
+				<option value="{$vo.id}">{$vo.name}</option>
+				</volist>
+			</select>
+        </li>					
+        <li> 
+			<div class="fid-q">菜单名称：</div>
+			<input class="fid-input" type="text" name="name"> 
+        </li>
+		<li>
+			<div class="fid-q">类型：</div>
+			<select class="fid-input" name="type">
+                <option value="0">--</option>
+                <option value="view">链接</option>
+                <option value="click">关键字</option>
+            </select>
+		</li>
+		<li>
+            <div class="fid-q">菜单值：</div>
+            <input class="fid-input" type="text" name="value">
+        </li>
+        <li>
+            <div class="fid-q">排序：</div>
+            <input class="fid-input" type="text" name="sort_order">
+        </li>
+        </form>
+    </ul>
+</div>
+<link href="./public/css/jquery-ui.css"  rel="stylesheet" type="text/css">
+<script type="text/javascript" src="./public/js/jquery-ui.js"></script>
+<script>
+//删除
+function del(id){
+	$url = '{$delMenu}';
+	$.get($url, {"id":id});
+}
+
+$(function(){
+    //添加主菜单
+    $("#addMenu").click(function(){
+		$("#menuForm").dialog("open");
+    });
+
+   //删除效果
+	$('.delete-btn').click(function(){
+	    $(this).parents('tr').remove();
+	});
+
+    //编辑菜单
+    $(".editMenu").click(function(){
+        var id=$(this).parents('tr').attr('trid');
+        var fid=$(this).parents('tr').attr('trfid');
+        var name=$(this).parents('tr').find('.tdname').val();
+		var type=$(this).parents('tr').find('.tdtype').val();
+        var value=$(this).parents('tr').find('.tdvalue').val();
+        var display_order=$(this).parents('tr').find('.tdorder').val();
+        var data={'id':id, 'fid':fid, 'name':name, 'type':type, 'value':value, 'display_order':display_order};
+        var url="{:U('Home/Menu/editMenu')}";
+        $.post(url, data, function(data){
+            alert('更新成功');
+            });
+    });
+
+    //对话框
+    $("#menuForm").dialog({
+		autoOpen: false,
+		height: 300,
+		width: 350,
+		modal: true,
+		title: '添加菜单',
+		buttons: {
+			"确认添加": function(){
+				$.post("{$addMenu}", $("#myForm").serialize(), function(data){
+                    window.location.reload();
+				});
+				$(this).dialog("close");
+			},
+			"取消": function(){
+				$(this).dialog("close");
+			}
+		}
+	});
+});
+</script>
+<style>
+#menuForm li{ height:26px; width:100%; float:left; padding:2px 0;}
+#menuForm li .fid-q{ width:100px; float:left;}
+#menuForm li .fid-input{ width:200px; height:24px; line-height:24px; border:1px solid #999;}
+
+</style>
+<include file="Public:footer"/>
+

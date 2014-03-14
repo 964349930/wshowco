@@ -14,12 +14,12 @@ return array(
     'DB_USER' => 'root',
     'DB_PWD' => '',
     'DB_PORT' => '3306',
-    'DB_PREFIX' => 'ws',
+    'DB_PREFIX' => 'ws_',
 
     'TMPL_L_DELIM' => '{',
     'TMPL_R_DELIM' => '}',
 
-    'APP_GROUP_LIST' => 'home, admin',
+    'APP_GROUP_LIST' => 'home, mobile',
     'DEFAULT_GROUP' => 'home',
 
     'APP_AUTOLOAD_PATH' => '@.TagLib',

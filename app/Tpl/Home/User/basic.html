@@ -1,0 +1,41 @@
+<include file="Public:header" />
+<div class="tabs">
+    <ul>
+        <li class="current"><a href="javascript:void(0)" class="current">基本信息</a></li>
+    </ul>
+</div>
+<div class="edit">
+    <form method="post" action="{$editUrl}" enctype="multipart/form-data" role="form">
+    <input type="hidden" name="id" value="{$userInfo.id}" />
+    <dl>
+        <dt>头像</dt>
+        <notempty name="userInfo[avatar]"><dd><img src="{$userInfo[avatar_name]}" height="80" /></p></notempty>
+        <dd><input type="file" name="pic" value="{$userInfo.avatar}" />
+    </dl>
+    <dl>
+        <dt>用户名：</dt>
+        <dd><input type="text" name="name" value="{$userInfo.name}" placeholder="请输入用户名"/></dd>
+    </dl>
+    <dl>
+        <dt>手机号码：</dt>
+        <dd><input type="tel" name="mobile" value="{$userInfo.mobile}" placeholder="请输入您的手机号码"/></dd>
+    </dl>
+    <dl>
+        <dt>QQ：</dt>
+        <dd><input type="number" name="qq" value="{$userInfo.qq}" placeholder="请输入您的QQ号码"/>
+    </dl>
+    <dl>
+        <dt>邮箱：</dt>
+        <dd><input type="email" name="email" value="{$userInfo.email}" placeholder="请输入您的邮箱地址" />
+    </dl>
+    <dl>
+        <dt>本次登录IP：</dt>
+        <dd><p>{$_SESSION[current_ip]}</p>
+    </dl>
+    <dl>
+        <dt></dt>
+        <dd><input type="submit" value="更新" /></dd>
+    </dl>
+    </form>
+</div>
+<include file="Public:footer" />
