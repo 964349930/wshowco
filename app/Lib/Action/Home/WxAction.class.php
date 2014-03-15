@@ -1,12 +1,10 @@
 <?php
 /**
  * 微信接口处理类
- * @author: blue
+ * @author: chen
  * @version: 2013-12-20
  */
-
-
-class WxAction extends CommonAction
+class WxAction extends BaseAction
 {
     //类属性
     private $wechat_id;
@@ -16,10 +14,8 @@ class WxAction extends CommonAction
      * api接口处理函数
      */
 	public function wxapi(){
-        $_SESSION['blue_key'] = $_GET['blue_key'];
-        $wechatInfo = D('UserWechat')->where("blue_key='".$_SESSION['blue_key']."'")->find();
-        $this->wechat_id = $wechatInfo['id'];
-        $this->token = $wechatInfo['token'];
+        $user = $this->_get('user');
+        $userInfo = D('User')->where("name='".$user."'")->find();
 		$this->valid();
 		$this->responseMsg();
 	}
@@ -74,7 +70,7 @@ class WxAction extends CommonAction
         //将访问信息存入数据库
         //如果用户发送的是关注或取消关注事件
         //或者直接存入用户发送的text信息
-        D('Log')->setApiLog($arrPost, $this->wechat_id);
+        D('Message')->addMessage($arrPost, $this->wechat_id);
         //将发送者ID存入SESSION
         //如何用户是要访问微网站，session还有用，否则无用
         $_SESSION['guest_open_id'] = $arrPost['FromUserName'];

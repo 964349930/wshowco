@@ -4,18 +4,17 @@
  * @author chen
  * version 2014-03-04
  */
-class MessageAction extends MobileCommonAction
+class MessageAction extends MobileAction
 {
     /**
      * 添加评论操作
      */
-    public function addMessage()
+    public function message()
     {
         $data = $_POST;
-        $data['ctime'] = time();
-        $data['wechat_id'] = $this->wechat_id;
-        $data['open_id'] = $this->guest_open_id;
-        D('CmsLeave')->add($data);
+        $data['date_add'] = time();
+        $data['user_id'] = $this->user_id;
+        D('Message')->add($data);
         echo '操作成功';
     }
 }

@@ -18,10 +18,14 @@ class IndexAction extends HomeAction {
      * 头部菜单
      */
     protected function _getChannel() {
-        return array(
-            'index' => '内容',
-            'setting' => '设置',
-        );
+        if($_SESSION['uid'] == 1){
+            return array(
+                'index' => '内容',
+                'setting' => '设置',
+            );
+        }else{
+            return array('index'=>'内容');
+        }
         /*
 		$arrList = array();
 		$tabList = $this->getMenuList();
@@ -68,6 +72,7 @@ class IndexAction extends HomeAction {
             ),
             '主题管理' => array(
                 '主题列表' => U('Home/Theme/themeList'),
+                '模版列表' => U('Home/Template/templateList'),
             ),
             '工具管理' => array(
                 '工具列表' => U('Home/Tool/toolList'),

@@ -23,7 +23,7 @@ class UserModel extends CommonModel{
 		}
         //url
         if(in_array('url', $arrFormatField)){
-            $info['url'] = 'http://'.$_SERVER['HTTP_HOST'].U('Home/Wx/api', array('user'=>$info['token']));
+            $info['url'] = 'http://'.$_SERVER['HTTP_HOST'].U('Home/Wx/api', array('user'=>$info['name']));
         }
 		return $info;
 	}

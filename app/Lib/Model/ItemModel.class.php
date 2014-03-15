@@ -16,6 +16,9 @@ class ItemModel extends CommonModel
         if(in_array('cover_name', $arrFormatField)){
             $arrInfo['cover_name'] = getPicPath($arrInfo['cover']);
         }
+        if(in_array('template_name', $arrFormatField)){
+            $arrInfo['template_name'] = D('Template')->where('id='.$arrInfo['template_id'])->getField('spell');
+        }
         return $arrInfo;
     }
 }

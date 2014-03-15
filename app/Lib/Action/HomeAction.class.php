@@ -8,7 +8,7 @@ class HomeAction extends BaseAction
 {
     public function _initialize()
     {
-        if(empty($_SESSION['uid'])){
+        if(!isset($_SESSION['uid'])){
             $this->redirect('Public/login');
         }
     }

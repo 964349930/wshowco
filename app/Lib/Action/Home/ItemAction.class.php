@@ -14,8 +14,8 @@ class ItemAction extends HomeAction
         $siteObj = D('Setting');
         $data = $this->_post();
         $siteInfo = $siteObj->where('user_id='.$_SESSION['uid'])->find();
-        $siteInfo = $siteObj->format($siteInfo, array('logo_name', 'url', 'theme_name'));
         if(empty($data)){
+            $siteInfo = $siteObj->format($siteInfo, array('logo_name', 'url', 'theme_name'));
             $this->assign('siteInfo', $siteInfo);
             $this->assign('editUrl', U('Home/Item/setting'));
             $this->display();
@@ -23,11 +23,18 @@ class ItemAction extends HomeAction
         }
         if(empty($siteInfo)){
             $data['user_id'] = $_SESSION['uid'];
-            $siteObj->add($data);
+            if($siteObj->add($data)){
+                $this->success('添加成功');
+            }else{
+                $this->error('添加失败');
+            }
         }else{
-            $siteObj->save($data);
+            if($siteObj->save($data)){
+                $this->success('更新成功');
+            }else{
+                $this->error('更新失败');
+            }
         }
-        $this->success('更新成功');
     }
 
     /**

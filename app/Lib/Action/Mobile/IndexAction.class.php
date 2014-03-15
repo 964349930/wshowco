@@ -4,15 +4,14 @@
  * @author chen
  * @version 2014-03-03
  */
-class IndexAction extends MobileCommonAction
+class IndexAction extends MobileAction
 {
     /**
      * 首页控制函数
      */
     public function index()
     {
-        $theme_name = $this->getThemeName();
-        $this->display(ucfirst($theme_name).':index');
+        $this->display(ucfirst($this->theme_name).':index');
     }
 
     /**
@@ -27,10 +26,9 @@ class IndexAction extends MobileCommonAction
             'info' => $info,
             'list' => $this->getItemList($id),
         );
-        //浏览记录
-        $this->setViews($id);
+        D('Item')->where('id='.$id)->setInc('views');
         $this->assign($data);
-        $this->display($info['template_self']);
+        $this->display(ucfirst($this->theme_name).':'.$info['template_name']);
     }
 }
 
