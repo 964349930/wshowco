@@ -142,91 +142,78 @@ class NewsAction extends HomeAction{
 	}
 
     /**
-     * 关注时回复
+     * special push action
      */
     public function special(){
-        /*
-        //获取特殊回复类型名称
-        $keyword = $this->_get('keyword');
-        //实例化模型
-        $newsObj = D('News');
-        $arrMap = array(
-            'user_id' => $_SESSION['user_id'],
-            'keyword'   => $keyword,
-        );
-        //获取图文ID
-        $id = D('Route')->where($arrMap)->getField('obj_id');
-        //获取图文信息
-        $newsInfo = $newsObj->getInfoById($id);
-        $newsInfo = $newsObj->format($newsInfo, array('cover_name'));
-
-        //模板赋值
-        $tplData = array(
-            'editUrl'  => U('Admin/News/doEditSub', array('keyword'=>$keyword)),
-            'itemInfo' => $newsInfo,
-            'left_current' => ($keyword == '关注') ? 'sub' : 'none',
-            'title' => ($keyword == '关注') ? '关注时回复' : '无匹配回复',
-        );
-         */
-        $this->assign($tplData);
-        $this->display();
+        $meta = $this->_post();
+        if(empty($meta)){
+            $keyword = $this->_get('keyword', 'trim');
+            $routeInfo = D('Route')->where("user_id=".$_SESSION['uid']." AND keyword='".$keyword."'")->find();
+            if(!empty($routeInfo)){
+                $metaInfo = D('NewsMeta')->where('id='.$routeInfo['obj_id'])->find();
+                $this->assign('route_id', $routeInfo['id']);
+                $this->assign('news_id', $routeInfo['news_id']);
+                $this->assign('metaInfo', $metaInfo);
+            }
+            $this->assign('keyword', $keyword);
+            $this->assign('editUrl', U('Home/News/special'));
+            $this->display();
+            exit;
+        }
+        $news_id = $this->updateNews();
+        $this->updateRoute($route, $news_id);
+        $this->updateMeta($meta, $news_id);
+    }
+    /**
+     * update the news action
+     */
+    private function updateNews()
+    {
+        $news['user_id'] = $_SESSION['uid'];
+        $news['date_modify'] = time();
+        if(empty($data['id'])){
+            $news['date_add'] = time();
+            $news_id = D('News')->add($data);
+        }else{
+            $news_id = D('News')->save($data);
+        }
+        return $news_id;
     }
 
     /**
-     * 特殊回复更新
+     * update the route action
      */
-    public function doEditSub(){
-        //获取关键字
-        $keyword = $this->_get('keyword');
-        //实例化模型
-        $newsObj = D('PushNews');
-        //获取post数据
-        $update = $this->_post();
-		if(!empty($_FILES['pic']['name'])){
-			$picList = uploadPic();
-			$update['cover'] = $picList['pic']['savename'];
-		}
-        $update['wechat_id'] = $_SESSION['wechat_id'];
-        $update['mtime'] = time();
-        //如果是更新数据，则执行下列操作
-        if(!empty($update['id'])){
-            if(empty($update['url'])){
-                //设置关注图文链接
-                $blue_key = D('UserWechat')->where('id='.$_SESSION['wechat_id'])->getField('blue_key');
-                $url = 'http://';
-                $url .= $_SERVER['HTTP_HOST'];
-                $url .= U('Shenlan/Cat/index', array('blue_key'=>$blue_key));
-                $update['url'] = $url;
-            }
-            if($newsObj->save($update)){
-                $this->success('更新成功');
-                exit;
-            }else{
-                $this->error('更新失败');
-                exit;
-            }
+    private function updateRoute()
+    {
+        $route['obj_type'] = 'news';
+        $route['obj_id'] = $news_id;
+        $route['user_id'] = $_SESSION['user_id'];
+        $route['keyword'] = $keyword;
+        $route['date_modify'] = time();
+        if(empty($route)){
+            $route['date_add'] = time();
+            $result = D('Route')->add($route);
         }else{
-            //如果是首次创建，则执行以下操作
-
-            if(empty($update['url'])){
-                //设置关注图文链接
-                $blue_key = D('UserWechat')->where('id='.$_SESSION['wechat_id'])->getField('blue_key');
-                $url = 'http://';
-                $url .= $_SERVER['HTTP_HOST'];
-                $url .= U('Shenlan/Cat/index', array('blue_key'=>$blue_key));
-                $update['url'] = $url;
-            }
-            $update['ctime'] = time();
-            $obj_id = $newsObj->add($update);
-            if($obj_id){
-                D('PushRoute')->addRoute('pushNews', $obj_id, $keyword);
-                $this->success('更新成功');
-            }else{
-                $this->error('更新失败');
-            }
+            $result = D('Route')->save($route);
         }
+        return $result;
     }
 
+    /**
+     * update the meta action
+     */
+    private function updateMeta($data, $news_id)
+    {
+        $meta['news_id'] = $news_id;
+        $meta['date_modify'] = time();
+        if(empty($meta['id'])){
+            $meta['date_add'] = time();
+            $result = D('NewsMeta')->add($meta);
+        }else{
+            $result = D('NewsMeta')->save($meta);
+        }
+        return $result;
+    }
 	/**
 	 * 图文删除
 	 */
@@ -260,28 +247,21 @@ class NewsAction extends HomeAction{
 	 * 文字素材列表
 	 */
 	public function textList(){
-        /*
 		$textObj = D('Text');
 		$arrField = array('*');
-		$arrMap['wechat_id'] = array('eq', $_SESSION['wechat_id']);
-        $arrOrder = array('mtime desc');
+		$arrMap['user_id'] = array('eq', $_SESSION['user_id']);
+        $arrOrder = array('date_modify desc');
 		$count = $textObj->getCount($arrMap);
 		$page = page($count);
 		$pageHtml = $page->show();
 		$textList = $textObj->getList($arrField, $arrMap, $arrOrder, $page->firstRow, $page->listRows);
-		$arrFormatField = array('mtime_text');
-		foreach($textList as $k=>$v){
-			$textList[$k] = $textObj->format($v, $arrFormatField);
-		}
 		$textTpl = array(
-			'addUrl' => U('Admin/Text/addText'),
-			'editUrl' => U('Admin/Text/editText'),
-			'delUrl' => U('Admin/Text/doDelText'),
+			'addUrl' => U('Home/Text/add'),
+			'editUrl' => U('Home/Text/edit'),
+			'delUrl' => U('Home/Text/del'),
 			'pageHtml' => $pageHtml,
-			'itemList' => $textList,
-            'left_current' => 'text',
+			'textList' => $textList,
 		);
-         */
 		$this->assign($textTpl);
 		$this->display();
 	}
@@ -289,77 +269,40 @@ class NewsAction extends HomeAction{
 	/**
 	 * 文字素材添加页面
 	 */
-	public function addText(){
-		$tplData = array(
-			'addUrl' => U('Admin/Text/doAddText'),
-            'left_current' => 'text',
-		);
-		$this->assign($tplData);
-		$this->display();
-	}
-
-	/**
-	 * 文字素材的添加操作
-	 */
-	public function doAddText(){
-		$textObj = D('PushText');
-		$insert = $this->_post();
-        $insert['wechat_id'] = $_SESSION['wechat_id'];
-
-        //判断关键字是否可用
-        if(!D('PushRoute')->checkKeyword($insert['keyword'])){
-            $this->error('关键字不可用');
+	public function add(){
+        $data = $this->_post();
+        if(empty($data)){
+            $this->assign('addUrl', U('Home/News/add'));
+            $this->display();
+            exit;
         }
-
-		$insert['ctime'] = time();
-        $id = $textObj->add($insert);
-		if($id){
-            D('PushRoute')->addRoute('pushText', $id, $insert['keyword']); 
-			$url = U('Admin/Text/textList');
-			$this->success('添加成功', $url);
-		}else{
-			$this->error('添加失败');
-		}
+        $data['date_add'] = $data['date_modify'] = time();
+        if(D('Text')->add($data)){
+            $this->success('success');
+        }else{
+            $this->error('error');
+        }
 	}
 
 	/**
 	 * 文字素材的编辑页面
 	 */
-	public function editText(){
-		$textObj = D('PushText');
-		$id = $this->_get('id');
-		$textInfo = $textObj->getInfoById($id);
-        $routeInfo = D('PushRoute')->getRoute('pushText', $id);
-		$tplData = array(
-			'editUrl' => U('Admin/Text/doEditText'),
-			'itemInfo' => $textInfo,
-            'routeInfo' => $routeInfo,
-            'left_current' => 'text',
-		);
-		$this->assign($tplData);
-		$this->display();
-	}
-
-	/**
-	 * 文字素材的编辑操作
-	 */
-	public function doEditText(){
-		$textObj = D('PushText');
-		$update = $this->_post();
-        $routeInfo = $this->_post('route');
-
-        //判断关键字是否可用
-        if(!D('PushRoute')->checkKeyword($routeInfo['keyword'], $routeInfo['id'])){
-            $this->error('关键字不可用');
+	public function edit(){
+        $data = $this->_post();
+   		$textObj = D('Text');
+        if(empty($data)){
+            $id = $this->_get('id', 'intval');
+            $textInfo = $textObj->where('id='.$id)->find();
+            $this->assign('textInfo', $textInfo);
+            $this->display();
+            exit;
         }
-
-		$update['mtime'] = time();
-		if($textObj->save($update)){
-            D('PushRoute')->editRoute($routeInfo);
-			$this->success('更新成功');
-		}else{
-			$this->error('更新失败');
-		}
+        $data['date_modify'] = time();
+        if(D('Text')->save($data)){
+            $this->success('success');
+        }else{
+            $this->error('error');
+        }
 	}
 
 	/**

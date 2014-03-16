@@ -5,14 +5,6 @@
  * @version 2013-12-21
  */
 class PushToolModel extends CommonModel {
-    /**
-     * 接口统一函数：获取工具信息
-     */
-    public function getPush($id, $keyword){
-        $toolObj = D('PushTool');
-        $toolInfo = $toolObj->getInfoById($id);
-        return $this->$toolInfo['function'](substr($keyword, 6, strlen($keyword)-6));
-    }
 
     /**
      * 格式化
