@@ -4,7 +4,7 @@
  * @author blue
  * @version 2013-12-24
  */
-class PushRouteModel extends CommonModel{
+class RouteModel extends CommonModel{
     /**
      * 判断关键字是否被占用
      * @return boolen 如何关键字已经被占用，则返回false，否则返回true
@@ -20,9 +20,8 @@ class PushRouteModel extends CommonModel{
             return false;
             exit;
         }
-        $arrMap['wechat_id'] = array('eq', $_SESSION['wechat_id']);
         $arrMap['keyword'] = array('eq', $keyword);
-        $resultId = D('PushRoute')->where($arrMap)->getField('id');
+        $resultId = D('Route')->where($arrMap)->getField('obj_id');
         if(empty($resultId)){
             return true;
         }elseif($resultId == $id){
@@ -40,14 +39,13 @@ class PushRouteModel extends CommonModel{
      * @param string $keyword 关键字
      */
     public function addRoute($obj_type, $obj_id, $keyword){
-        $routeObj = D('PushRoute');
+        $routeObj = D('Route');
         $insert = array(
             'obj_type'  => $obj_type,
             'obj_id'    => $obj_id,
             'keyword'   => $keyword,
-            'wechat_id' => $_SESSION['wechat_id'],
-            'ctime'     => time(),
-            'mtime'     => time(),
+            'date_add' => time(),
+            'date_modify' => time(),
         );
         $result = $routeObj->add($insert);
         return $result;
@@ -60,7 +58,7 @@ class PushRouteModel extends CommonModel{
      * @param int $obj_id 资源ID
      */
     public function getRoute($obj_type, $obj_id){
-        $routeObj = D('PushRoute');
+        $routeObj = D('Route');
         $arrMap = array(
             'obj_type' => $obj_type,
             'obj_id'   => $obj_id,
@@ -70,6 +68,25 @@ class PushRouteModel extends CommonModel{
     }
 
     /**
+     * update the route info
+     * add and edit action
+     */
+    public function updateRoute($obj_type, $obj_id, $route)
+    {
+        $routeObj = D('Route');
+        $route['obj_type'] = $obj_type;
+        $route['obj_id'] = $obj_id;
+        $route['date_modify'] = time();
+        if(empty($route['id'])){
+            $route['date_add'] = time();
+            $routeObj->add($route);
+        }else{
+            $routeObj->save($route);
+        }
+    }
+
+
+    /**
      * 路由表更新
      * @return boolen
      * @param string $obj_type 资源类型
@@ -77,12 +94,11 @@ class PushRouteModel extends CommonModel{
      * @param string $keyword 关键字
      */
     public function editRoute($update){
-        $routeObj = D('PushRoute');
+        $routeObj = D('Route');
         $update = array(
-            'wechat_id' => $_SESSION['wechat_id'],
             'id'        => $update['id'],
             'keyword'   => $update['keyword'],
-            'mtime'     => time(),
+            'date_modify'     => time(),
         );
         $routeObj->save($update);
     }
@@ -94,7 +110,8 @@ class PushRouteModel extends CommonModel{
      * @param array $map 资源ID数组
      */
     public function delRoute($obj_type, $map){
-        $routeObj = D('PushRoute');
+        $routeObj = D('Route');
+        $map['obj_type'] = $obj_type;
         $routeObj->where($map)->delete();
     }
 }

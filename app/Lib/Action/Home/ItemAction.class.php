@@ -63,12 +63,11 @@ class ItemAction extends HomeAction
             $itemList[$k] = $itemObj->format($v, $arrFormatField);
         }
         $data = array(
-            'addUrl'   => U('Home/Item/add'),
+            'addUrl'   => U('Home/Item/add', array('id'=>$id)),
             'editUrl'  => U('Home/Item/edit'),
             'delUrl'   => U('Home/Item/del'),
             'subUrl'   => U('Home/Item/itemList'),
             'itemList' => $itemList,
-            'id'       => $id,
         );
         $this->assign($data);
         $this->display();
@@ -82,7 +81,7 @@ class ItemAction extends HomeAction
         $itemData = $this->_post('item');
         if(empty($itemData)){
             $id = $this->_get('id', 'intval');
-            $this->assign('templateList', D('Template')->getTemplateList());
+            $this->assign('tplList', D('ThemeTpl')->getTplList());
             $this->assign('parent_id', $id);
             $this->assign('addUrl', U('Home/Item/add'));
             $this->display();
@@ -112,7 +111,7 @@ class ItemAction extends HomeAction
             $id = $this->_get('id', 'intval');
             $itemInfo = $itemObj->getInfoById($id);
             $itemInfo = $itemObj->format($itemInfo, array('cover_name'));
-            $this->assign('templateList', D('Template')->getTemplateList());
+            $this->assign('tplList', D('ThemeTpl')->getTplList());
             $this->assign('editUrl', U('Home/Item/edit'));
             $this->assign('itemInfo', $itemInfo);
             $this->display();

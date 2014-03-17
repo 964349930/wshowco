@@ -9,33 +9,26 @@ class NewsAction extends HomeAction{
 	 * 回复图文消息素材列表
 	 */
 	public function newsList(){
-        /*
-        //实例化模型
 		$newsObj = D('News');
-        //设置选项
 		$arrField = array('*');
 		$arrMap['user_id'] = array('eq', $_SESSION['uid']);
-		$arrOrder = array();
-        //分页
+		$arrOrder = array('date_modify desc');
 		$count = $newsObj->getCount($arrMap);
 		$page = page($count, 10);
 		$pageHtml = $page->show();
-        //获取图文列表
 		$newsList = $newsObj->getList($arrField, $arrMap, $arrOrder, $page->firstRow, $page->listRows);
-        //对列表数据进行格式化
-		$arrFormatField = array('cover_name', 'keyword', 'mtime_text');
+		$arrFormatField = array('keyword');
 		foreach ($newsList as $k=>$v){
 			$newsList[$k] = $newsObj->format($v, $arrFormatField);
 		}
-        //模板赋值
 		$tplData = array( 
-			'addUrl'   => U('Admin/News/addNews'),
-			'editUrl'  => U('Admin/News/editNews'),
-			'delUrl'   => U('Admin/News/doDelNews'),
+			'addUrl'   => U('Home/News/newsInfo'),
+            'subUrl'   => U('Home/News/metaList'),
+			'editUrl'  => U('Home/News/newsInfo'),
+			'delUrl'   => U('Home/News/delNews'),
             'newsList' => $newsList,
 			'pageHtml' => $pageHtml,
 		);
-         */
 		$this->assign($tplData);
 		$this->display();
 	}
@@ -43,116 +36,40 @@ class NewsAction extends HomeAction{
 	/**
 	 * 页面：添加图文素材
 	 */
-	public function addNews(){
-		$tplData = array(
-			'addUrl' => U('Admin/News/doAddNews'),
-            'left_current' => 'news',
-		);
-		$this->assign($tplData);
-		$this->display();
-	}
-
-	/**
-	 * 操作：添加图文素材
-	 */
-	public function doAddNews(){
-        //实例化模型
-		$newsObj = D('PushNews');
-        //获取post数据
-		$insert = $this->_post();
-
-        //判断关键字是否可用
-        if(!D('PushRoute')->checkKeyword($insert['keyword'])){
-            $this->error('关键字不可用');
-        }
-
-        //处理图片数据
-		if(!empty($_FILES['cover']['name'])){
-			$picList = uploadPic();
-			$insert['cover'] = $picList['cover']['savename'];
-		}
-        $insert['wechat_id'] = $_SESSION['wechat_id'];
-		$insert['content'] = htmlspecialchars_decode(stripslashes($insert['content']));
-		$insert['ctime'] = $insert['mtime'] = time();
-        //获取图文ID
-		$id = $newsObj->add($insert);
-		if($id){
-            if(empty($insert['url'])){
-                //添加route数据
-                D('PushRoute')->addRoute('pushNews', $id, $insert['keyword']);
-                $url = U('Admin/News/newsList');
-                $this->success('添加成功', $url);
-            }else{
-		        $this->error('添加失败');
+	public function newsInfo(){
+        if(empty($_POST)){
+            $id = $this->_get('id', 'intval');
+            if(!empty($id)){
+                $routeInfo = D('Route')->where("obj_type='news' AND obj_id=".$id)->find();
+                $this->assign('newsInfo', D('News')->getInfoById($id));
+                $this->assign('routeInfo', $routeInfo);
             }
+            $this->assign('editUrl', U('Home/News/newsInfo'));
+            $this->display();
+            exit;
         }
-    }
-
-    /**
-	 * 页面：编辑图文
-	 */
-	public function editNews(){
-        //实例化模型
-		$newsObj = D('PushNews');
-        //获取图文ID
-		$id = intval($this->_get('id'));
-        //获取图文信息
-		$newsInfo = $newsObj->getInfoById($id);
-        //获取格式化后的图文信息
-		$newsInfo = $newsObj->format($newsInfo, array('cover_name'));
-        //模板赋值
-		$tplData = array(
-			'editUrl'   => U('Admin/News/doEditNews'),
-			'itemInfo'  => $newsInfo,
-            'routeInfo' => D('PushRoute')->getRoute('pushNews', $id),
-            'left_current' => 'news',
-		);
-		$this->assign($tplData);
-		$this->display();
-	}
-
-	/**
-	 * 操作：编辑图文素材
-	 */
-	public function doEditNews(){
-        //实例化模型
-		$newsObj = D('PushNews');
-        //获取图文信息的post数据
-		$update = $this->_post();
-        //获取route信息的post数据
-        $routeInfo = $this->_post('route');
-
-        //判断关键字是否可用
-        if(!D('PushRoute')->checkKeyword($routeInfo['keyword'], $routeInfo['id'])){
+        $news = $this->_post('news');
+        $route = $this->_post('route');
+        if(!D('Route')->checkKeyword($route['keyword'], $news['id'])){
             $this->error('关键字不可用');
         }
-
-        //处理图文信息的post数据
-		if(!empty($_FILES['pic']['name'])){
-			$picList = uploadPic();
-			$update['cover'] = $picList['pic']['savename'];
-		}
-		$update['content'] = htmlspecialchars_decode(stripslashes($update['content']));
-        $update['mtime'] = time();
-        //news表的更新操作
-        $newsObj->save($update);
-        //route表的更新操作
-        D('PushRoute')->editRoute($routeInfo);
-		$this->success('编辑成功');
+        $news_id = D('News')->updateNews($news);
+        D('Route')->updateRoute('news', $news_id, $route);
+	    $this->success('操作成功');	
 	}
 
     /**
      * special push action
      */
     public function special(){
-        $meta = $this->_post();
-        if(empty($meta)){
+        if(empty($_POST)){
             $keyword = $this->_get('keyword', 'trim');
-            $routeInfo = D('Route')->where("user_id=".$_SESSION['uid']." AND keyword='".$keyword."'")->find();
+            $routeInfo = D('Route')->where("obj_type='news' AND keyword='".$keyword."'")->find();
             if(!empty($routeInfo)){
                 $metaInfo = D('NewsMeta')->where('id='.$routeInfo['obj_id'])->find();
-                $this->assign('route_id', $routeInfo['id']);
-                $this->assign('news_id', $routeInfo['news_id']);
+                $metaInfo = D('NewsMeta')->format($metaInfo, array('cover_name'));
+                $this->assign('routeInfo', $routeInfo);
+                $this->assign('newsInfo', D('News')->getInfoById($routeInfo['obj_id']));
                 $this->assign('metaInfo', $metaInfo);
             }
             $this->assign('keyword', $keyword);
@@ -160,66 +77,26 @@ class NewsAction extends HomeAction{
             $this->display();
             exit;
         }
-        $news_id = $this->updateNews();
-        $this->updateRoute($route, $news_id);
-        $this->updateMeta($meta, $news_id);
-    }
-    /**
-     * update the news action
-     */
-    private function updateNews()
-    {
-        $news['user_id'] = $_SESSION['uid'];
-        $news['date_modify'] = time();
-        if(empty($data['id'])){
-            $news['date_add'] = time();
-            $news_id = D('News')->add($data);
-        }else{
-            $news_id = D('News')->save($data);
-        }
-        return $news_id;
+        $news = $this->_post('news');
+        $meta = $this->_post('meta');
+        $route = $this->_post('route');
+		if(!empty($_FILES['pic']['name'])){
+			$picList = uploadPic();
+			if($picList['code'] != 'error'){
+				$meta['cover'] = $picList['pic']['savename'];
+			}
+		}
+        $news_id = D('News')->updateNews($news);
+        D('Route')->updateRoute('news', $news_id, $route);
+        D('NewsMeta')->updateMeta($meta, $news_id);
+        $this->success('操作成功');
     }
 
-    /**
-     * update the route action
-     */
-    private function updateRoute()
-    {
-        $route['obj_type'] = 'news';
-        $route['obj_id'] = $news_id;
-        $route['user_id'] = $_SESSION['user_id'];
-        $route['keyword'] = $keyword;
-        $route['date_modify'] = time();
-        if(empty($route)){
-            $route['date_add'] = time();
-            $result = D('Route')->add($route);
-        }else{
-            $result = D('Route')->save($route);
-        }
-        return $result;
-    }
-
-    /**
-     * update the meta action
-     */
-    private function updateMeta($data, $news_id)
-    {
-        $meta['news_id'] = $news_id;
-        $meta['date_modify'] = time();
-        if(empty($meta['id'])){
-            $meta['date_add'] = time();
-            $result = D('NewsMeta')->add($meta);
-        }else{
-            $result = D('NewsMeta')->save($meta);
-        }
-        return $result;
-    }
 	/**
 	 * 图文删除
 	 */
-	public function doDelNews(){
-		$pushObj = D('PushNews');
-        //数据
+	public function delNews(){
+		$newsObj = D('News');
         $delIds = array();
         $postIds = $this->_post('id');
         if (!empty($postIds)) {
@@ -229,19 +106,100 @@ class NewsAction extends HomeAction{
         if (!empty($getId)) {
             $delIds[] = $getId;
         }
-        //删除数据
         if (empty($delIds)) {
             $this->error('请选择您要删除的数据');
         }
-		$arrMap['id'] = $arrRouteMap['obj_id'] = array('in', $delIds);
-		if($pushObj->where($arrMap)->delete()){
-            D('PushRoute')->delRoute('pushNews', $arrRouteMap);
+		$arrMap['id'] = $arrRouteMap['obj_id'] = $arrMetaMap['news_id'] = array('in', $delIds);
+		if($newsObj->where($arrMap)->delete()){
+            D('Route')->delRoute('news', $arrRouteMap);
+            D('NewsMeta')->where($arrMetaMap)->delete();
 			$this->success('删除成功');
 		}else{
 			$this->error('删除失败');
 		}
 	}
 
+    /*********************子图文内容管理*********************/
+    /**
+     * meta list
+     */
+    public function metaList()
+    {
+        $id = $this->_get('id', 'intval');
+        $metaObj = D('NewsMeta');
+        $arrField = array('*');
+        $arrMap['news_id'] = array('eq', $id);
+        $arrOrder = array('sort_order');
+        $metaList = $metaObj->getList($arrField, $arrMap, $arrOrder);
+        $arrFormatField = array('cover_name');
+        foreach($metaList as $k=>$v){
+            $metaList[$k] = $metaObj->format($v, $arrFormatField);
+        }
+        $data = array(
+            'addUrl' => U('Home/News/metaInfo', array('news_id'=>$id)),
+            'editUrl' => U('Home/News/metaInfo'),
+            'delUrl' => U('Home/News/delMeta'),
+            'metaList' => $metaList,
+        );
+        $this->assign($data);
+        $this->display();
+    }
+
+    /**
+     * meta update
+     */
+    public function metaInfo()
+    {
+        $metaObj = D('NewsMeta');
+        if(empty($_POST)){
+            $id = $this->_get('id', 'intval');
+            $news_id = $this->_get('news_id', 'intval');
+            if(!empty($id)){
+                $metaInfo = $metaObj->getInfoById($id);
+                $metaInfo = $metaObj->format($metaInfo, array('cover_name'));
+                $news_id = $metaInfo['news_id'];
+                $this->assign('metaInfo', $metaInfo);
+            }
+            $this->assign('news_id', $news_id);
+            $this->assign('editUrl', U('Home/News/metaInfo'));
+            $this->display();
+            exit;
+        }
+        $meta = $this->_post('meta');
+		if(!empty($_FILES['pic']['name'])){
+			$picList = uploadPic();
+			if($picList['code'] != 'error'){
+				$meta['cover'] = $picList['pic']['savename'];
+			}
+		}
+        D('NewsMeta')->updateMeta($meta, $meta['news_id']);
+        $this->success('操作成功');
+    }
+
+	/**
+	 * zi图文删除
+	 */
+	public function delMeta(){
+		$metaObj = D('NewsMeta');
+        $delIds = array();
+        $postIds = $this->_post('id');
+        if (!empty($postIds)) {
+            $delIds = $postIds;
+        }
+        $getId = intval($this->_get('id'));
+        if (!empty($getId)) {
+            $delIds[] = $getId;
+        }
+        if (empty($delIds)) {
+            $this->error('请选择您要删除的数据');
+        }
+		$arrMap['id'] = $arrRouteMap['obj_id'] = $arrMetaMap['news_id'] = array('in', $delIds);
+		if($metaObj->where($arrMap)->delete()){
+			$this->success('删除成功');
+		}else{
+			$this->error('删除失败');
+		}
+	}
     /*********************文字内容管理***********************/
 	/**
 	 * 文字素材列表
@@ -249,16 +207,20 @@ class NewsAction extends HomeAction{
 	public function textList(){
 		$textObj = D('Text');
 		$arrField = array('*');
-		$arrMap['user_id'] = array('eq', $_SESSION['user_id']);
+		$arrMap['user_id'] = array('eq', $_SESSION['uid']);
         $arrOrder = array('date_modify desc');
 		$count = $textObj->getCount($arrMap);
 		$page = page($count);
 		$pageHtml = $page->show();
 		$textList = $textObj->getList($arrField, $arrMap, $arrOrder, $page->firstRow, $page->listRows);
+        $arrFormatField = array('keyword');
+        foreach($textList as $k=>$v){
+            $textList[$k] = D('Text')->format($v, $arrFormatField);
+        }
 		$textTpl = array(
-			'addUrl' => U('Home/Text/add'),
-			'editUrl' => U('Home/Text/edit'),
-			'delUrl' => U('Home/Text/del'),
+			'addUrl' => U('Home/News/textInfo'),
+			'editUrl' => U('Home/News/textInfo'),
+			'delUrl' => U('Home/News/delText'),
 			'pageHtml' => $pageHtml,
 			'textList' => $textList,
 		);
@@ -269,47 +231,34 @@ class NewsAction extends HomeAction{
 	/**
 	 * 文字素材添加页面
 	 */
-	public function add(){
-        $data = $this->_post();
-        if(empty($data)){
-            $this->assign('addUrl', U('Home/News/add'));
-            $this->display();
-            exit;
-        }
-        $data['date_add'] = $data['date_modify'] = time();
-        if(D('Text')->add($data)){
-            $this->success('success');
-        }else{
-            $this->error('error');
-        }
-	}
-
-	/**
-	 * 文字素材的编辑页面
-	 */
-	public function edit(){
-        $data = $this->_post();
-   		$textObj = D('Text');
-        if(empty($data)){
+	public function textInfo(){
+        $textObj = D('Text');
+        if(empty($_POST)){
             $id = $this->_get('id', 'intval');
-            $textInfo = $textObj->where('id='.$id)->find();
-            $this->assign('textInfo', $textInfo);
+            if(!empty($id)){
+                $this->assign('textInfo', $textObj->getInfoById($id));
+                $this->assign('routeInfo', D('Route')->getRoute('text', $id));
+            }
+            $this->assign('addUrl', U('Home/News/textInfo'));
             $this->display();
             exit;
         }
-        $data['date_modify'] = time();
-        if(D('Text')->save($data)){
-            $this->success('success');
-        }else{
-            $this->error('error');
+        $text = $this->_post('text');
+        $route = $this->_post('route');
+        if(!D('Route')->checkKeyword($route['keyword'], $text['id'])){
+            $this->error('关键字不可用');
         }
+        $obj_id = D('Text')->updateText($text);
+        D('Route')->updateRoute('text', $obj_id, $route);
+        $this->success('提交成功');
+
 	}
 
 	/**
 	 * 文字素材的删除操作
 	 */
-	public function doDelText(){
-		$textObj = D('PushText');
+	public function delText(){
+		$textObj = D('Text');
         //数据
         $delIds = array();
         $postIds = $this->_post('id');
@@ -326,12 +275,10 @@ class NewsAction extends HomeAction{
         }
 		$arrMap['id'] = $arrRouteMap['obj_id'] = array('in', $delIds);
 		if($textObj->where($arrMap)->delete()){
-            D('PushRoute')->delRoute('pushText', $arrRouteMap);
+            D('Route')->delRoute('text', $arrRouteMap);
 			$this->success('删除成功');
 		}else{
 			$this->error('删除失败');
 		}
 	}
-
-
 }

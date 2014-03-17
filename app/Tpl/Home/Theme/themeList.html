@@ -49,6 +49,7 @@
                         <td>{$vo.date_mofidy|date="Y-m-d H:i", ###}</td>
                         <td>
                             <eq name="_SESSION['uid']" value="1">
+                            <a href="{$tplUrl}&id={$vo[id]}">管理模版</a>
                             <a href="{$editUrl}&id={$vo[id]}">编辑</a>
                             </eq>
 	                        <a href="{$useUrl}&id={$vo[id]}">使用此主题</a>

@@ -6,6 +6,7 @@
 </div>
 <div class="edit">
     <form action="{$addUrl}" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="theme_id" value="{$theme_id}" />
         <dl>
             <dt>模版名称：</dt>
             <dd><input type="text" name="name" /></dd>

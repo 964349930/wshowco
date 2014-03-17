@@ -26,8 +26,8 @@
         <dl>
             <dt>模版：</dt>
             <dd><select name="item[template_id]">
-                <volist name="templateList" id="vo">
-                <option value="{$vo.spell}">{$vo.name}</option>
+                <volist name="tplList" id="vo">
+                <option value="{$vo.id}">{$vo.name}</option>
                 </volist>
             </select>
             </dd>
