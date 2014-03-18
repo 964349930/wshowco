@@ -71,7 +71,7 @@ class WxAction extends BaseAction
         //将post数据解码为数组
         $arrPost = (array)simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
         //将访问信息存入数据库
-        //D('Message')->addMessage($arrPost, $this->user_id);
+        D('Message')->addWechatMessage($arrPost, $this->user_id);
         //将发送者ID存入SESSION
         $_SESSION['guest'] = $arrPost['FromUserName'];
         //将用户发送的信息转换为关键字形式

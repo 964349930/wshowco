@@ -27,15 +27,35 @@
         <else />
             <volist name="menuList" id="vo">
                 <tr>
-                    <td><input type="text" name="name" value="{$vo.name}" /></td>
-                    <td></td>
-                    <td><input type="text" name="value" value="{$vo.value}" /></td>
-                    <td><input type="number" name="sort_order" value="{$vo.sort_order}" /></td>
+                    <input class="tdid" type="hidden" name="id" value="{$vo.id}" />
+                    <td><input class="tdname" type="text" name="name" value="{$vo.name}" /></td>
+                    <td><input class="tdtype" type="radio" name="type" value="view" <eq name="vo[type]" value="view">checked="checked"</eq> >链接
+                        <input class="tdtype" type="radio" name="type" value="click" <eq name="vo[type]" value="click">checked="checked"</eq> >关键字
+                    </td>
+                    <td><input class="tdvalue" type="text" name="value" value="{$vo.value}" /></td>
+                    <td><input class="tdorder" type="number" name="sort_order" value="{$vo.sort_order}" /></td>
                     <td>
-                        <a href="{$editUrl}&id={$vo.id}" class="mr10">编辑</a>
+                        <a href="javascript:void(0)" class="editMenu mr10">编辑</a>
                         <a href="javascript:void(0)" onClick="del({$vo.id})" class="delete_btn">删除</a>
                     </td>
                 </tr>
+                <notempty name="vo[sub_button]">
+                <volist name="vo[sub_button]" id="voo">
+                 <tr>
+                    <input class="tdid" type="hidden" name="id" value="{$voo.id}" />
+                    <td>------<input class="tdname" type="text" name="name" value="{$voo.name}" /></td>
+                    <td><input class="tdtype" type="radio" name="type" value="view" <eq name="voo[type]" value="view">checked="checked"</eq> >链接
+                        <input class="tdtype" type="radio" name="type" value="click" <eq name="voo[type]" value="click">checked="checked"</eq> >关键字
+                    </td>
+                    <td><input class="tdvalue" type="text" name="value" value="{$voo.value}" /></td>
+                    <td><input class="tdorder" type="number" name="sort_order" value="{$voo.sort_order}" /></td>
+                    <td>
+                        <a href="javascript:void(0)" class="editMenu mr10">编辑</a>
+                        <a href="javascript:void(0)" onClick="del({$voo.id})" class="delete_btn">删除</a>
+                    </td>
+                </tr>
+                </volist>
+                </notempty>
             </volist>
         </empty>
         </tbody>
@@ -48,9 +68,9 @@
 		<form id="myForm" method="post">
         <li>
 			<div class="fid-q">上级菜单：</div>
-			<select class="fid-input" name="fid">
+			<select class="fid-input" name="parent_id">
 				<option value="0">--</option>
-				<volist name="itemList" id="vo">
+				<volist name="menuList" id="vo">
 				<option value="{$vo.id}">{$vo.name}</option>
 				</volist>
 			</select>
@@ -61,11 +81,8 @@
         </li>
 		<li>
 			<div class="fid-q">类型：</div>
-			<select class="fid-input" name="type">
-                <option value="0">--</option>
-                <option value="view">链接</option>
-                <option value="click">关键字</option>
-            </select>
+            <input type="radio" name="type" value="view" />链接
+            <input type="radio" name="type" value="click" />关键字
 		</li>
 		<li>
             <div class="fid-q">菜单值：</div>
@@ -81,10 +98,12 @@
 <link href="./public/css/jquery-ui.css"  rel="stylesheet" type="text/css">
 <script type="text/javascript" src="./public/js/jquery-ui.js"></script>
 <script>
-//删除
 function del(id){
 	$url = '{$delMenu}';
-	$.get($url, {"id":id});
+    $.get($url, {"id":id}, function(){
+            alert('删除成功');
+            window.location.reload();
+            });
 }
 
 $(function(){
@@ -93,21 +112,15 @@ $(function(){
 		$("#menuForm").dialog("open");
     });
 
-   //删除效果
-	$('.delete-btn').click(function(){
-	    $(this).parents('tr').remove();
-	});
-
     //编辑菜单
     $(".editMenu").click(function(){
-        var id=$(this).parents('tr').attr('trid');
-        var fid=$(this).parents('tr').attr('trfid');
+        var id=$(this).parents('tr').find('.tdid').val();
         var name=$(this).parents('tr').find('.tdname').val();
-		var type=$(this).parents('tr').find('.tdtype').val();
+		var type=$(this).parents('tr').find(':radio').val();
         var value=$(this).parents('tr').find('.tdvalue').val();
-        var display_order=$(this).parents('tr').find('.tdorder').val();
-        var data={'id':id, 'fid':fid, 'name':name, 'type':type, 'value':value, 'display_order':display_order};
-        var url="{:U('Home/Menu/editMenu')}";
+        var sort_order=$(this).parents('tr').find('.tdorder').val();
+        var data={'id':id, 'name':name, 'type':type, 'value':value, 'sort_order':sort_order};
+        var url="{:U('Home/Menu/edit')}";
         $.post(url, data, function(data){
             alert('更新成功');
             });
@@ -123,6 +136,7 @@ $(function(){
 		buttons: {
 			"确认添加": function(){
 				$.post("{$addMenu}", $("#myForm").serialize(), function(data){
+                    alert('添加成功');
                     window.location.reload();
 				});
 				$(this).dialog("close");

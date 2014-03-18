@@ -4,7 +4,7 @@
     <div class="leave  pl20 pr20 tc pb50 mt20">
         <ul><form id="message" rel="external" action="{:U('Message/message', array('user'=>$user))}" method="post">
             <li><input type="text" class="name" name="guest" autofocus="autofocus" placeholder="姓名"></li>
-            <li><input type="tel" class="number" pattern="[0-9]{11}" name="phone" placeholder="手机号"></li>
+            <li><input type="tel" class="number" pattern="[0-9]{11}" name="mobile" placeholder="手机号"></li>
             <li><textarea cols="40" rows="8" name="content" pattern="*" placeholder="请输入留言内容..."></textarea></li>
             <li><button class="ui-shadow ui-btn ui-corner-all" type="submit">提交</button></li>
         </ul>

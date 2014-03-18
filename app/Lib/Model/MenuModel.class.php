@@ -2,15 +2,30 @@
 /**
  * 菜单模型
  */
-class MenuModel extends CommonModel{
+class MenuModel extends CommonModel
+{
     /**
-     * 格式化
+     * 获取token
      */
-    public function format($info, $arrFormatField){
-        //类型
-        if(in_array('type_name', $arrFormatField)){
-            $info['type_name'] = ($info['type'] == 'view') ? '链接' : '关键字';
+    public function getToken(){
+        $userInfo = D('User')->where('id='.$_SESSION['uid'])->find();
+        $grant_type = 'client_credential';
+        $appid = $userInfo['appid'];
+        $appsecret = $userInfo['appsecrect'];
+        $url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type='.$grant_type.'&appid='.$appid.'&secret='.$appsecret;
+
+        $ch = curl_init();//初始化curl
+        curl_setopt($ch, CURLOPT_URL, $url);//抓取指定网页
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        //将获取到的内容json解码为类
+        $result = json_decode($result);
+        if($result->expires_in !== 7200){
         }
-        return $info;
+        return $result->access_token;
     }
+
 }

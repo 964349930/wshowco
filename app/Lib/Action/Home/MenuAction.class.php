@@ -12,7 +12,7 @@ class MenuAction extends HomeAction{
         $menuObj = D('Menu');
         $arrField = array('*');
         $arrMap['user_id'] = array('eq', $_SESSION['uid']);
-        $arrMap['fid'] = array('eq', 0);
+        $arrMap['parent_id'] = array('eq', 0);
         $arrOrder = array('sort_order');
         $menuList = $menuObj->getList($arrField, $arrMap, $arrOrder);
         foreach($menuList as $k=>$v){
@@ -21,6 +21,7 @@ class MenuAction extends HomeAction{
         }
         $tplData = array(
             'addMenu' => U('Home/Menu/add'),
+            'editMenu' => U('Home/Menu/edit'),
             'delMenu' => U('Home/Menu/del'),
             'updateMenu' => U('Home/Menu/update'),
             'menuList' => $menuList,
@@ -51,6 +52,29 @@ class MenuAction extends HomeAction{
 	}
 
     /**
+     * 编辑菜单
+     */
+    public function edit(){
+        $id = intval($this->_post('id'));
+        $update = $this->_post();
+        D('Menu')->where('id='.$id)->save($update);
+    }
+
+	/**
+	 * 操作：删除菜单
+	 */
+	public function del(){
+        $id = intval($this->_get('id'));
+        $menuList = D('Menu')->where('parent_id='.$id)->select();
+        if(!empty($menuList)){
+        foreach($menuList as $k=>$v){
+            D('Menu')->where('id='.$v['id'])->delete();
+        }
+        }
+        D('Menu')->where('id='.$id)->delete();
+	}
+
+    /**
      * 下载菜单
      */
     public function downMenu(){
@@ -67,26 +91,26 @@ class MenuAction extends HomeAction{
 		$menuList = json_decode($data, true);
         foreach($menuList['menu']['button'] as $k=>$v){
             $insert = array();
-            $insert['fid'] = '0';
-            $insert['wechat_id'] = $_SESSION['wechat_id'];
+            $insert['parent_id'] = '0';
+            $insert['user_id'] = $_SESSION['uid'];
             $insert['name'] = $v['name'];
             $insert['type'] = ($v['type']) ? $v['type'] : '0';
             $insert['value'] = ($v['url'].$v['key']) ? ($v['url'].$v['key']) : '0';
-            $insert['mtime'] = time();
+            $insert['data_modify'] = time();
             $id = D('Menu')->add($insert);
             if(isset($v['sub_button'])){
                 foreach($v['sub_button'] as $k2=>$v2){
                     $insert = array();
-                    $insert['fid'] = $id;
-                    $insert['wechat_id'] = $_SESSION['wechat_id'];
+                    $insert['parent_id'] = $id;
+                    $insert['user_id'] = $_SESSION['uid'];
                     $insert['name'] = $v2['name'];
                     $insert['type'] = $v2['type'];
                     $insert['value'] = ($v2['url']) ? $v2['url'] : $v2['key'];
-                    $insert['mtime'] = time();
+                    $insert['date_modify'] = time();
                     D('Menu')->add($insert);
                 }
             }
-            $url = U('Admin/Menu/menuList');
+            $url = U('Home/Menu/menuList');
             $this->success('更新菜单成功', $url);
         }
     }
@@ -110,6 +134,7 @@ class MenuAction extends HomeAction{
         $count = $menuObj->getCount($arrMap);
         if(empty($count)){
             $this->redirect('Menu/downMenu');
+            exit;
         }
         $arrOrder = array('sort_order');
         $menuList = $menuObj->getList($arrField, $arrMap, $arrOrder);
@@ -121,7 +146,7 @@ class MenuAction extends HomeAction{
                 $menuList[$k]['key'] = urlencode($v['value']);
             }
             //获取子菜单
-            $map['fid'] = array('eq', $v['id']);
+            $map['parent_id'] = array('eq', $v['id']);
             $subMenuList = $menuObj->where($map)->select();
             $menuList[$k]['sub_button'] = ($subMenuList) ? $subMenuList : array();
             foreach($menuList[$k]['sub_button'] as $k2=>$v2){
@@ -156,31 +181,4 @@ class MenuAction extends HomeAction{
             $this->error('菜单更新失败');
         }
  	}
-
-    /**
-     * 编辑菜单
-     */
-    public function edit(){
-        $id = intval($this->_post('id'));
-        $update = $this->_post();
-        D('Menu')->where('id='.$id)->save($update);
-    }
-
-	/**
-	 * 操作：删除菜单
-	 */
-	public function del(){
-        $id = intval($this->_get('id'));
-        $menuList = D('Menu')->where('parent_id='.$id)->select();
-        if(!empty($menuList)){
-        foreach($menuList as $k=>$v){
-            D('Menu')->where('id='.$v['id'])->delete();
-        }
-        }
-        D('Menu')->where('id='.$id)->delete();
-	}
-
 }
-
-
-
