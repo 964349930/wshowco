@@ -4,7 +4,7 @@
  * @author blue
  * @version 2013-12-21
  */
-class PushToolModel extends CommonModel {
+class WechatToolModel extends CommonModel {
 
     /**
      * 格式化
@@ -13,13 +13,8 @@ class PushToolModel extends CommonModel {
      * @param array $arrFormatField 需要格式化的数组
      */
     public function format($info, $arrFormatField){
-        //时间
-        if(in_array('mtime_text', $arrFormatField)){
-            $info['mtime_text'] = date('Y-m-d H:i', $info['mtime']);
-        }
-        //使用状态
         if(in_array('status', $arrFormatField)){
-            $info['status'] = D('PushRoute')->checkKeyword($info['tool_name']);
+            $info['status'] = D('WechatRoute')->checkKeyword($info['tool_name']);
             $info['status_name'] = ($info['status']) ? '未使用'
                 : '已使用';
         }

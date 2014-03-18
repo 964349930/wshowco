@@ -4,7 +4,7 @@
  * @author blue
  * @version 2013-12-24
  */
-class RouteModel extends CommonModel{
+class WechatRouteModel extends CommonModel{
     /**
      * 判断关键字是否被占用
      * @return boolen 如何关键字已经被占用，则返回false，否则返回true
@@ -21,7 +21,7 @@ class RouteModel extends CommonModel{
             exit;
         }
         $arrMap['keyword'] = array('eq', $keyword);
-        $resultId = D('Route')->where($arrMap)->getField('obj_id');
+        $resultId = D('WechatRoute')->where($arrMap)->getField('obj_id');
         if(empty($resultId)){
             return true;
         }elseif($resultId == $id){
@@ -39,7 +39,7 @@ class RouteModel extends CommonModel{
      * @param string $keyword 关键字
      */
     public function addRoute($obj_type, $obj_id, $keyword){
-        $routeObj = D('Route');
+        $routeObj = D('WechatRoute');
         $insert = array(
             'obj_type'  => $obj_type,
             'obj_id'    => $obj_id,
@@ -58,7 +58,7 @@ class RouteModel extends CommonModel{
      * @param int $obj_id 资源ID
      */
     public function getRoute($obj_type, $obj_id){
-        $routeObj = D('Route');
+        $routeObj = D('WechatRoute');
         $arrMap = array(
             'obj_type' => $obj_type,
             'obj_id'   => $obj_id,
@@ -73,7 +73,7 @@ class RouteModel extends CommonModel{
      */
     public function updateRoute($obj_type, $obj_id, $route)
     {
-        $routeObj = D('Route');
+        $routeObj = D('WechatRoute');
         $route['obj_type'] = $obj_type;
         $route['obj_id'] = $obj_id;
         $route['date_modify'] = time();
@@ -94,7 +94,7 @@ class RouteModel extends CommonModel{
      * @param string $keyword 关键字
      */
     public function editRoute($update){
-        $routeObj = D('Route');
+        $routeObj = D('WechatRoute');
         $update = array(
             'id'        => $update['id'],
             'keyword'   => $update['keyword'],
@@ -110,7 +110,7 @@ class RouteModel extends CommonModel{
      * @param array $map 资源ID数组
      */
     public function delRoute($obj_type, $map){
-        $routeObj = D('Route');
+        $routeObj = D('WechatRoute');
         $map['obj_type'] = $obj_type;
         $routeObj->where($map)->delete();
     }

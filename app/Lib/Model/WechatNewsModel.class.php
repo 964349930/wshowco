@@ -4,7 +4,7 @@
  * Author: Blue
  * Created Time: 2013-10-12 9:40:04
 */
-class NewsModel extends CommonModel{
+class WechatNewsModel extends CommonModel{
 
     /**
      * 格式化
@@ -19,7 +19,7 @@ class NewsModel extends CommonModel{
         }
         //关键字
         if(in_array('keyword', $arrFormatField)){
-            $routeInfo = D('Route')->getRoute('news', $info['id']);
+            $routeInfo = D('WechatRoute')->getRoute('news', $info['id']);
             $info['keyword'] = $routeInfo['keyword'];
         }
         return $info;
@@ -30,7 +30,7 @@ class NewsModel extends CommonModel{
      */
     public function updateNews($news)
     {
-        $newsObj = D('News');
+        $newsObj = D('WechatNews');
         $news['date_modify'] = time();
         $id = $news['id'];
         if(empty($id)){

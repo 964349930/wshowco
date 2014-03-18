@@ -9,7 +9,7 @@ class NewsAction extends HomeAction{
 	 * 回复图文消息素材列表
 	 */
 	public function newsList(){
-		$newsObj = D('News');
+		$newsObj = D('WechatNews');
 		$arrField = array('*');
 		$arrMap['user_id'] = array('eq', $_SESSION['uid']);
 		$arrOrder = array('date_modify desc');
@@ -40,8 +40,8 @@ class NewsAction extends HomeAction{
         if(empty($_POST)){
             $id = $this->_get('id', 'intval');
             if(!empty($id)){
-                $routeInfo = D('Route')->where("obj_type='news' AND obj_id=".$id)->find();
-                $this->assign('newsInfo', D('News')->getInfoById($id));
+                $routeInfo = D('WechatRoute')->where("obj_type='news' AND obj_id=".$id)->find();
+                $this->assign('newsInfo', D('WechatNews')->getInfoById($id));
                 $this->assign('routeInfo', $routeInfo);
             }
             $this->assign('editUrl', U('Home/News/newsInfo'));
@@ -50,11 +50,11 @@ class NewsAction extends HomeAction{
         }
         $news = $this->_post('news');
         $route = $this->_post('route');
-        if(!D('Route')->checkKeyword($route['keyword'], $news['id'])){
+        if(!D('WechatRoute')->checkKeyword($route['keyword'], $news['id'])){
             $this->error('关键字不可用');
         }
-        $news_id = D('News')->updateNews($news);
-        D('Route')->updateRoute('news', $news_id, $route);
+        $news_id = D('WechatNews')->updateNews($news);
+        D('WechatRoute')->updateRoute('news', $news_id, $route);
 	    $this->success('操作成功');	
 	}
 
@@ -64,12 +64,12 @@ class NewsAction extends HomeAction{
     public function special(){
         if(empty($_POST)){
             $keyword = $this->_get('keyword', 'trim');
-            $routeInfo = D('Route')->where("obj_type='news' AND keyword='".$keyword."'")->find();
+            $routeInfo = D('WechatRoute')->where("obj_type='news' AND keyword='".$keyword."'")->find();
             if(!empty($routeInfo)){
-                $metaInfo = D('NewsMeta')->where('id='.$routeInfo['obj_id'])->find();
-                $metaInfo = D('NewsMeta')->format($metaInfo, array('cover_name'));
+                $metaInfo = D('WechatNewsMeta')->where('id='.$routeInfo['obj_id'])->find();
+                $metaInfo = D('WechatNewsMeta')->format($metaInfo, array('cover_name'));
                 $this->assign('routeInfo', $routeInfo);
-                $this->assign('newsInfo', D('News')->getInfoById($routeInfo['obj_id']));
+                $this->assign('newsInfo', D('WechatNews')->getInfoById($routeInfo['obj_id']));
                 $this->assign('metaInfo', $metaInfo);
             }
             $this->assign('keyword', $keyword);
@@ -86,9 +86,9 @@ class NewsAction extends HomeAction{
 				$meta['cover'] = $picList['pic']['savename'];
 			}
 		}
-        $news_id = D('News')->updateNews($news);
-        D('Route')->updateRoute('news', $news_id, $route);
-        D('NewsMeta')->updateMeta($meta, $news_id);
+        $news_id = D('WechatNews')->updateNews($news);
+        D('WechatRoute')->updateRoute('news', $news_id, $route);
+        D('WechatNewsMeta')->updateMeta($meta, $news_id);
         $this->success('操作成功');
     }
 
@@ -96,7 +96,7 @@ class NewsAction extends HomeAction{
 	 * 图文删除
 	 */
 	public function delNews(){
-		$newsObj = D('News');
+		$newsObj = D('WechatNews');
         $delIds = array();
         $postIds = $this->_post('id');
         if (!empty($postIds)) {
@@ -111,8 +111,8 @@ class NewsAction extends HomeAction{
         }
 		$arrMap['id'] = $arrRouteMap['obj_id'] = $arrMetaMap['news_id'] = array('in', $delIds);
 		if($newsObj->where($arrMap)->delete()){
-            D('Route')->delRoute('news', $arrRouteMap);
-            D('NewsMeta')->where($arrMetaMap)->delete();
+            D('WechatRoute')->delRoute('news', $arrRouteMap);
+            D('WechatNewsMeta')->where($arrMetaMap)->delete();
 			$this->success('删除成功');
 		}else{
 			$this->error('删除失败');
@@ -126,7 +126,7 @@ class NewsAction extends HomeAction{
     public function metaList()
     {
         $id = $this->_get('id', 'intval');
-        $metaObj = D('NewsMeta');
+        $metaObj = D('WechatNewsMeta');
         $arrField = array('*');
         $arrMap['news_id'] = array('eq', $id);
         $arrOrder = array('sort_order');
@@ -150,7 +150,7 @@ class NewsAction extends HomeAction{
      */
     public function metaInfo()
     {
-        $metaObj = D('NewsMeta');
+        $metaObj = D('WechatNewsMeta');
         if(empty($_POST)){
             $id = $this->_get('id', 'intval');
             $news_id = $this->_get('news_id', 'intval');
@@ -172,7 +172,7 @@ class NewsAction extends HomeAction{
 				$meta['cover'] = $picList['pic']['savename'];
 			}
 		}
-        D('NewsMeta')->updateMeta($meta, $meta['news_id']);
+        D('WechatNewsMeta')->updateMeta($meta, $meta['news_id']);
         $this->success('操作成功');
     }
 
@@ -180,7 +180,7 @@ class NewsAction extends HomeAction{
 	 * zi图文删除
 	 */
 	public function delMeta(){
-		$metaObj = D('NewsMeta');
+		$metaObj = D('WechatNewsMeta');
         $delIds = array();
         $postIds = $this->_post('id');
         if (!empty($postIds)) {
@@ -205,7 +205,7 @@ class NewsAction extends HomeAction{
 	 * 文字素材列表
 	 */
 	public function textList(){
-		$textObj = D('Text');
+		$textObj = D('WechatText');
 		$arrField = array('*');
 		$arrMap['user_id'] = array('eq', $_SESSION['uid']);
         $arrOrder = array('date_modify desc');
@@ -215,7 +215,7 @@ class NewsAction extends HomeAction{
 		$textList = $textObj->getList($arrField, $arrMap, $arrOrder, $page->firstRow, $page->listRows);
         $arrFormatField = array('keyword');
         foreach($textList as $k=>$v){
-            $textList[$k] = D('Text')->format($v, $arrFormatField);
+            $textList[$k] = D('WechatText')->format($v, $arrFormatField);
         }
 		$textTpl = array(
 			'addUrl' => U('Home/News/textInfo'),
@@ -232,12 +232,12 @@ class NewsAction extends HomeAction{
 	 * 文字素材添加页面
 	 */
 	public function textInfo(){
-        $textObj = D('Text');
+        $textObj = D('WechatText');
         if(empty($_POST)){
             $id = $this->_get('id', 'intval');
             if(!empty($id)){
                 $this->assign('textInfo', $textObj->getInfoById($id));
-                $this->assign('routeInfo', D('Route')->getRoute('text', $id));
+                $this->assign('routeInfo', D('WechatRoute')->getRoute('text', $id));
             }
             $this->assign('addUrl', U('Home/News/textInfo'));
             $this->display();
@@ -245,11 +245,11 @@ class NewsAction extends HomeAction{
         }
         $text = $this->_post('text');
         $route = $this->_post('route');
-        if(!D('Route')->checkKeyword($route['keyword'], $text['id'])){
+        if(!D('WechatRoute')->checkKeyword($route['keyword'], $text['id'])){
             $this->error('关键字不可用');
         }
-        $obj_id = D('Text')->updateText($text);
-        D('Route')->updateRoute('text', $obj_id, $route);
+        $obj_id = D('WechatText')->updateText($text);
+        D('WechatRoute')->updateRoute('text', $obj_id, $route);
         $this->success('提交成功');
 
 	}
@@ -258,7 +258,7 @@ class NewsAction extends HomeAction{
 	 * 文字素材的删除操作
 	 */
 	public function delText(){
-		$textObj = D('Text');
+		$textObj = D('WechatText');
         //数据
         $delIds = array();
         $postIds = $this->_post('id');
@@ -275,7 +275,7 @@ class NewsAction extends HomeAction{
         }
 		$arrMap['id'] = $arrRouteMap['obj_id'] = array('in', $delIds);
 		if($textObj->where($arrMap)->delete()){
-            D('Route')->delRoute('text', $arrRouteMap);
+            D('WechatRoute')->delRoute('text', $arrRouteMap);
 			$this->success('删除成功');
 		}else{
 			$this->error('删除失败');

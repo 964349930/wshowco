@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2014 年 03 月 17 日 10:01
+-- 生成日期: 2014 年 03 月 18 日 09:34
 -- 服务器版本: 5.6.12-log
 -- PHP 版本: 5.4.16
 
@@ -112,151 +112,66 @@ CREATE TABLE IF NOT EXISTS `ws_item_img` (
 -- --------------------------------------------------------
 
 --
--- 表的结构 `ws_log`
+-- 表的结构 `ws_member`
 --
 
-CREATE TABLE IF NOT EXISTS `ws_log` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '唯一ID',
-  `user_id` mediumint(8) unsigned NOT NULL COMMENT 'userID',
-  `guest` varchar(50) NOT NULL DEFAULT '0' COMMENT '关注者唯一ID',
-  `ip` varchar(16) NOT NULL DEFAULT '0' COMMENT 'IP地址',
-  `longitude` double(12,8) NOT NULL DEFAULT '0.00000000' COMMENT '经度',
-  `lagitude` double(12,8) NOT NULL DEFAULT '0.00000000' COMMENT '纬度',
-  `device` varchar(255) NOT NULL COMMENT '设备信息',
-  `date_view` int(10) NOT NULL DEFAULT '0' COMMENT '访问时间',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='接口访问记录' AUTO_INCREMENT=1 ;
-
--- --------------------------------------------------------
-
---
--- 表的结构 `ws_menu`
---
-
-CREATE TABLE IF NOT EXISTS `ws_menu` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '唯一ID',
-  `parent_id` mediumint(8) unsigned NOT NULL COMMENT '父级ID',
+CREATE TABLE IF NOT EXISTS `ws_member` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '会员ID',
   `user_id` mediumint(8) unsigned NOT NULL COMMENT '用户ID',
-  `name` varchar(20) NOT NULL COMMENT '菜单名称',
-  `type` enum('view','click') NOT NULL DEFAULT 'view' COMMENT '菜单类型',
-  `value` varchar(100) NOT NULL COMMENT '菜单值：若type为url，则为链接类型；若type为click，则为eventkey',
-  `sort_order` mediumint(8) unsigned NOT NULL DEFAULT '5' COMMENT '排序',
-  `date_modify` int(10) NOT NULL DEFAULT '0' COMMENT '更新时间',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='菜单管理' AUTO_INCREMENT=108 ;
+  `wechat_id` varchar(100) NOT NULL COMMENT '会员微信号',
+  `name` varchar(50) NOT NULL COMMENT '会员名称',
+  `avatar` varchar(100) NOT NULL COMMENT '头像',
+  `password` varchar(255) NOT NULL COMMENT '登录密码',
+  `mobile` varchar(11) NOT NULL COMMENT '手机号码',
+  `email` varchar(50) NOT NULL COMMENT '邮箱地址',
+  `date_reg` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '注册时间',
+  `date_login` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '登录时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `name` (`name`,`mobile`,`email`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='会员信息表' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
 --
--- 表的结构 `ws_message`
+-- 表的结构 `ws_member_log`
 --
 
-CREATE TABLE IF NOT EXISTS `ws_message` (
+CREATE TABLE IF NOT EXISTS `ws_member_log` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '会员浏览记录ID',
+  `member_id` int(10) unsigned NOT NULL COMMENT '会员ID ',
+  `event` tinyint(2) unsigned NOT NULL DEFAULT '1' COMMENT '记录事件',
+  `item_id` int(10) unsigned NOT NULL COMMENT '栏目ID',
+  `item_name` varchar(100) NOT NULL COMMENT '栏目名称',
+  `date_event` int(10) NOT NULL COMMENT '访问时间',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='会员操作记录' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `ws_member_msg`
+--
+
+CREATE TABLE IF NOT EXISTS `ws_member_msg` (
   `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT,
   `type` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '信息类型，默认1为微信留言，2为网站留言',
-  `user_id` mediumint(8) unsigned NOT NULL COMMENT '用户ID',
-  `guest` varchar(100) NOT NULL COMMENT '标题',
+  `member_id` mediumint(8) unsigned NOT NULL COMMENT '会员ID',
   `mobile` varchar(11) NOT NULL DEFAULT '0' COMMENT '手机号码',
   `qq` varchar(11) NOT NULL DEFAULT '0' COMMENT 'QQ号码',
   `wechat` varchar(20) NOT NULL DEFAULT '0' COMMENT '微信号码',
   `email` varchar(50) NOT NULL COMMENT '邮箱',
   `info` varchar(255) NOT NULL COMMENT '内容',
-  `date_add` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `date_msg` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='会员留言信息表' AUTO_INCREMENT=5 ;
 
 --
--- 转存表中的数据 `ws_message`
+-- 转存表中的数据 `ws_member_msg`
 --
 
-INSERT INTO `ws_message` (`id`, `type`, `user_id`, `guest`, `mobile`, `qq`, `wechat`, `email`, `info`, `date_add`) VALUES
-(1, 1, 1, '', '0', '0', '0', '', '', 1394862536),
-(2, 1, 1, 'orange', '0', '0', '0', '', '', 1394862976),
-(3, 1, 1, 'orange', '0', '0', '0', '', '', 1394863007),
-(4, 1, 1, '', '0', '0', '0', '', '', 1394863014);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `ws_news`
---
-
-CREATE TABLE IF NOT EXISTS `ws_news` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '唯一ID',
-  `user_id` mediumint(8) unsigned NOT NULL COMMENT '用户ID',
-  `date_add` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
-  `date_modify` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=8 ;
-
---
--- 转存表中的数据 `ws_news`
---
-
-INSERT INTO `ws_news` (`id`, `user_id`, `date_add`, `date_modify`) VALUES
-(1, 1, 0, 0),
-(2, 1, 0, 1395035603),
-(7, 5, 1395049721, 1395049844),
-(6, 5, 1395048849, 1395048849);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `ws_news_meta`
---
-
-CREATE TABLE IF NOT EXISTS `ws_news_meta` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '唯一ID',
-  `news_id` mediumint(8) unsigned NOT NULL COMMENT '图文ID',
-  `title` varchar(50) NOT NULL COMMENT '标题',
-  `cover` varchar(100) NOT NULL COMMENT '封面',
-  `description` varchar(255) NOT NULL COMMENT '描述',
-  `content` text NOT NULL COMMENT '详细内容',
-  `url` varchar(100) NOT NULL COMMENT '链接地址',
-  `sort_order` mediumint(8) unsigned NOT NULL DEFAULT '255' COMMENT '排序',
-  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '启用状态：默认1为启用',
-  `date_add` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间',
-  `date_modify` int(10) NOT NULL DEFAULT '0' COMMENT '修改时间',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='图文素材表' AUTO_INCREMENT=8 ;
-
---
--- 转存表中的数据 `ws_news_meta`
---
-
-INSERT INTO `ws_news_meta` (`id`, `news_id`, `title`, `cover`, `description`, `content`, `url`, `sort_order`, `status`, `date_add`, `date_modify`) VALUES
-(1, 1, '图文测试', '', '图文描述', '', 'http://www.baidu.com', 255, 1, 1395034976, 1395034976),
-(2, 2, '欢迎欢迎', '201403/17/53268d2374660.jpg', '欢迎描书0', '', 'http://localhost/ccms/index.php?g=Mobile&amp;m=Index&amp;a=index&amp;user=haisen', 255, 1, 1395035427, 1395035603),
-(6, 6, '1212', '', '1313', '1313', '', 1, 1, 1395049864, 1395049864);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `ws_route`
---
-
-CREATE TABLE IF NOT EXISTS `ws_route` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '唯一ID',
-  `obj_type` varchar(20) NOT NULL DEFAULT 'news' COMMENT '资源类型',
-  `obj_id` varchar(10) NOT NULL COMMENT '资源ID',
-  `keyword` varchar(20) NOT NULL COMMENT '唯一标识',
-  `date_add` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间',
-  `date_modify` int(10) NOT NULL DEFAULT '0' COMMENT '修改时间',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='响应路由表' AUTO_INCREMENT=11 ;
-
---
--- 转存表中的数据 `ws_route`
---
-
-INSERT INTO `ws_route` (`id`, `obj_type`, `obj_id`, `keyword`, `date_add`, `date_modify`) VALUES
-(2, 'text', '8', '帮助1', 1395026605, 1395032563),
-(3, 'text', '10', '帮助2', 1395026788, 1395026941),
-(5, 'text', '11', '帮助3', 1395032588, 1395032588),
-(6, 'news', '1', '关注', 1395034976, 1395034976),
-(7, 'news', '2', '无匹配', 1395035427, 1395035603),
-(8, 'news', '7', '图文121', 1395045829, 1395049844),
-(10, 'news', '6', '图文3', 1395048849, 1395048849);
+INSERT INTO `ws_member_msg` (`id`, `type`, `member_id`, `mobile`, `qq`, `wechat`, `email`, `info`, `date_msg`) VALUES
+(2, 1, 1, '0', '0', '0', '', '', 1394862976),
+(3, 1, 1, '0', '0', '0', '', '', 1394863007);
 
 -- --------------------------------------------------------
 
@@ -291,6 +206,40 @@ INSERT INTO `ws_setting` (`id`, `user_id`, `site_name`, `logo`, `url`, `backgrou
 (9, 4, 'Allison奢华名品汇', '', '0', '', 1, 1, '河南省郑州市', '0371-88888888', '', '', 'orangechen.1991@gmail.com', '0.00000000', '0.00000000'),
 (10, 1, '半氪心', '', '0', '', 1, 1, '', '0379-88888888', '', '', '', '0.00000000', '0.00000000'),
 (11, 5, '海森国际', '', '0', '', 2, 1, '', '', '', '', '', '0.00000000', '0.00000000');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `ws_shop_order`
+--
+
+CREATE TABLE IF NOT EXISTS `ws_shop_order` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '订单ID',
+  `member_id` mediumint(8) unsigned NOT NULL COMMENT '会员ID',
+  `item_id` mediumint(8) unsigned NOT NULL COMMENT '商品ID',
+  `number` smallint(4) unsigned NOT NULL DEFAULT '1' COMMENT '数量',
+  `price` double(6,4) unsigned NOT NULL DEFAULT '0.0000' COMMENT '单价',
+  `discount` smallint(4) unsigned NOT NULL DEFAULT '100' COMMENT '折扣',
+  `price_count` double(6,4) unsigned NOT NULL DEFAULT '0.0000' COMMENT '总价',
+  `date_add` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `date_modify` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='订单' AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `ws_shop_trolley`
+--
+
+CREATE TABLE IF NOT EXISTS `ws_shop_trolley` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '购物车ID',
+  `member_id` mediumint(8) unsigned NOT NULL COMMENT '会员ID',
+  `order_id` mediumint(8) unsigned NOT NULL COMMENT '订单DI',
+  `date_add` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `date_modify` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='购物车' AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 
@@ -341,30 +290,6 @@ INSERT INTO `ws_tab` (`id`, `fid`, `name`, `spell`, `description`, `content`, `u
 (23, 7, '预约管理', 'reserve', '', '', 'index.php?g=Admin&m=Reserve&a=reserveList', 1, 1, 0),
 (24, 8, '应用列表', 'toolList', '', '', 'index.php?g=Admin&m=Tool&a=toolList', 1, 1, 0),
 (25, 2, '无匹配回复', 'none', '', '', 'index.php?g=Admin&m=News&a=subscribe&keyword=默认', 2, 1, 0);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `ws_text`
---
-
-CREATE TABLE IF NOT EXISTS `ws_text` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '唯一ID',
-  `user_id` mediumint(8) unsigned NOT NULL COMMENT '用户ID',
-  `content` varchar(255) NOT NULL COMMENT '内容',
-  `date_add` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间',
-  `date_modify` int(10) NOT NULL DEFAULT '0' COMMENT '修改时间',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='文本回复' AUTO_INCREMENT=12 ;
-
---
--- 转存表中的数据 `ws_text`
---
-
-INSERT INTO `ws_text` (`id`, `user_id`, `content`, `date_add`, `date_modify`) VALUES
-(8, 5, '帮助测试文本1', 1395024768, 1395032563),
-(11, 5, '半天祝啊啊', 1395032588, 1395032588),
-(10, 5, '哈哈哈', 1395026788, 1395026941);
 
 -- --------------------------------------------------------
 
@@ -432,61 +357,6 @@ INSERT INTO `ws_theme_tpl` (`id`, `theme_id`, `name`, `spell`, `version`, `statu
 -- --------------------------------------------------------
 
 --
--- 表的结构 `ws_tool`
---
-
-CREATE TABLE IF NOT EXISTS `ws_tool` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '唯一ID',
-  `name` varchar(20) NOT NULL COMMENT '插件名称',
-  `intro` varchar(255) NOT NULL COMMENT '插件描述',
-  `function` varchar(20) NOT NULL COMMENT '处理函数名称',
-  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '插件启用状态：默认1为可用',
-  `sort_order` mediumint(8) unsigned NOT NULL COMMENT '显示顺序，1为最前',
-  `date_add` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间',
-  `date_modify` int(10) NOT NULL DEFAULT '0' COMMENT '修改时间',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='插件详情表' AUTO_INCREMENT=6 ;
-
---
--- 转存表中的数据 `ws_tool`
---
-
-INSERT INTO `ws_tool` (`id`, `name`, `intro`, `function`, `status`, `sort_order`, `date_add`, `date_modify`) VALUES
-(1, '天气查询', '输入“天气”后跟任意城市名称，查询城市天气', 'weather', 0, 1, 0, 0),
-(2, '新闻', '输入“新闻”，回复当前新浪头条新闻', 'sinaNews', 1, 0, 0, 0),
-(3, '翻译', '输入“翻译”加任意内容，回复翻译后的内容', 'trans', 0, 2, 0, 0),
-(4, '英语', '输入“英语”，回复一句随机英语', 'english', 1, 1, 0, 0),
-(5, '笑话', '回复“笑话”，回复一则随机笑话', 'joke', 1, 3, 0, 0);
-
--- --------------------------------------------------------
-
---
--- 表的结构 `ws_tpl`
---
-
-CREATE TABLE IF NOT EXISTS `ws_tpl` (
-  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '唯一ID',
-  `type` varchar(20) NOT NULL COMMENT '模板类型',
-  `texttpl` text NOT NULL COMMENT '模板数据',
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='xml模板信息表' AUTO_INCREMENT=8 ;
-
---
--- 转存表中的数据 `ws_tpl`
---
-
-INSERT INTO `ws_tpl` (`id`, `type`, `texttpl`) VALUES
-(1, 'news', '<item>\r\n<Title><![CDATA[%s]]></Title>\r\n<Description><![CDATA[%s]]></Description>\r\n<PicUrl><![CDATA[%s]]></PicUrl>\r\n<Url><![CDATA[%s]]></Url>\r\n</item>'),
-(2, 'text', ' <MsgType><![CDATA[text]]></MsgType>\r\n <Content><![CDATA[%s]]></Content>'),
-(3, 'image', '<MsgType><![CDATA[image]]></MsgType>\r\n<Image>\r\n<MediaId><![CDATA[media_id]]></MediaId>\r\n</Image>'),
-(4, 'voice', '<MsgType><![CDATA[voice]]></MsgType>\r\n<Voice>\r\n<MediaId><![CDATA[media_id]]></MediaId>\r\n</Voice>'),
-(5, 'video', '<MsgType><![CDATA[video]]></MsgType>\r\n<Video>\r\n<MediaId><![CDATA[media_id]]></MediaId>\r\n<ThumbMediaId><![CDATA[thumb_media_id]]></ThumbMediaId>\r\n</Video> '),
-(6, 'music', '<MsgType><![CDATA[music]]></MsgType>\r\n<Music>\r\n<Title><![CDATA[TITLE]]></Title>\r\n<Description><![CDATA[DESCRIPTION]]></Description>\r\n<MusicUrl><![CDATA[MUSIC_Url]]></MusicUrl>\r\n<HQMusicUrl><![CDATA[HQ_MUSIC_Url]]></HQMusicUrl>\r\n<ThumbMediaId><![CDATA[media_id]]></ThumbMediaId>'),
-(7, 'header', ' <xml>\r\n <ToUserName><![CDATA[%s]]></ToUserName>\r\n <FromUserName><![CDATA[%s]]></FromUserName>\r\n <CreateTime>%s</CreateTime>\r\n %s\r\n </xml>\r\n');
-
--- --------------------------------------------------------
-
---
 -- 表的结构 `ws_user`
 --
 
@@ -516,6 +386,201 @@ INSERT INTO `ws_user` (`id`, `group_id`, `name`, `password`, `mobile`, `avatar`,
 (1, 1, 'chen', 'fe01d67a002dfa0f3ac084298142eccd', '15550005746', '201403/14/5322898c44ae2.jpg', 'chen', '', 'chenmo', '', '', 0, 0, '0'),
 (4, 2, 'allison', '4651d80cfa79f4933bc5408665394e9c', '15550005746', '201403/14/532305635ec48.jpg', '', '', 'allison', '', '', 1394803627, 1394803627, '0'),
 (5, 2, 'haisen', 'ff9327827f8e171914f34e428d6eafba', '', '', '', '', '', '', '', 1395022299, 1395022299, '0');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `ws_wechat_menu`
+--
+
+CREATE TABLE IF NOT EXISTS `ws_wechat_menu` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '唯一ID',
+  `parent_id` mediumint(8) unsigned NOT NULL COMMENT '父级ID',
+  `user_id` mediumint(8) unsigned NOT NULL COMMENT '用户ID',
+  `name` varchar(20) NOT NULL COMMENT '菜单名称',
+  `type` enum('view','click') NOT NULL DEFAULT 'view' COMMENT '菜单类型',
+  `value` varchar(100) NOT NULL COMMENT '菜单值：若type为url，则为链接类型；若type为click，则为eventkey',
+  `sort_order` mediumint(8) unsigned NOT NULL DEFAULT '5' COMMENT '排序',
+  `date_modify` int(10) NOT NULL DEFAULT '0' COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='菜单管理' AUTO_INCREMENT=113 ;
+
+--
+-- 转存表中的数据 `ws_wechat_menu`
+--
+
+INSERT INTO `ws_wechat_menu` (`id`, `parent_id`, `user_id`, `name`, `type`, `value`, `sort_order`, `date_modify`) VALUES
+(111, 0, 1, 'sfaf', 'click', 'dfadf', 2, 1395109221),
+(110, 0, 1, '半颗心', 'view', '001', 1, 1395107153),
+(112, 110, 1, 'afdaf ', 'click', 'ad', 3, 1395109305);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `ws_wechat_news`
+--
+
+CREATE TABLE IF NOT EXISTS `ws_wechat_news` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '唯一ID',
+  `user_id` mediumint(8) unsigned NOT NULL COMMENT '用户ID',
+  `date_add` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `date_modify` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
+
+--
+-- 转存表中的数据 `ws_wechat_news`
+--
+
+INSERT INTO `ws_wechat_news` (`id`, `user_id`, `date_add`, `date_modify`) VALUES
+(1, 1, 0, 0),
+(2, 1, 0, 1395035603),
+(7, 5, 1395049721, 1395049844),
+(6, 5, 1395048849, 1395048849),
+(8, 1, 1395122783, 1395122783);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `ws_wechat_news_meta`
+--
+
+CREATE TABLE IF NOT EXISTS `ws_wechat_news_meta` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '唯一ID',
+  `news_id` mediumint(8) unsigned NOT NULL COMMENT '图文ID',
+  `title` varchar(50) NOT NULL COMMENT '标题',
+  `cover` varchar(100) NOT NULL COMMENT '封面',
+  `description` varchar(255) NOT NULL COMMENT '描述',
+  `content` text NOT NULL COMMENT '详细内容',
+  `url` varchar(100) NOT NULL COMMENT '链接地址',
+  `sort_order` mediumint(8) unsigned NOT NULL DEFAULT '255' COMMENT '排序',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '启用状态：默认1为启用',
+  `date_add` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `date_modify` int(10) NOT NULL DEFAULT '0' COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='图文素材表' AUTO_INCREMENT=10 ;
+
+--
+-- 转存表中的数据 `ws_wechat_news_meta`
+--
+
+INSERT INTO `ws_wechat_news_meta` (`id`, `news_id`, `title`, `cover`, `description`, `content`, `url`, `sort_order`, `status`, `date_add`, `date_modify`) VALUES
+(1, 1, '图文测试', '', '图文描述', '', 'http://www.baidu.com', 255, 1, 1395034976, 1395034976),
+(2, 2, '欢迎欢迎', '201403/17/53268d2374660.jpg', '欢迎描书0', '', 'http://localhost/ccms/index.php?g=Mobile&amp;m=Index&amp;a=index&amp;user=haisen', 255, 1, 1395035427, 1395035603),
+(6, 6, '1212', '', '1313', '1313', '', 1, 1, 1395049864, 1395049864),
+(8, 8, '000', '', '0.', '0.0', '', 1, 1, 1395122798, 1395122798),
+(9, 8, '.2', '', '2.1', '\r\n1313', '', 2, 1, 1395122807, 1395122807);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `ws_wechat_route`
+--
+
+CREATE TABLE IF NOT EXISTS `ws_wechat_route` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '唯一ID',
+  `obj_type` varchar(20) NOT NULL DEFAULT 'news' COMMENT '资源类型',
+  `obj_id` varchar(10) NOT NULL COMMENT '资源ID',
+  `keyword` varchar(20) NOT NULL COMMENT '唯一标识',
+  `date_add` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `date_modify` int(10) NOT NULL DEFAULT '0' COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='响应路由表' AUTO_INCREMENT=13 ;
+
+--
+-- 转存表中的数据 `ws_wechat_route`
+--
+
+INSERT INTO `ws_wechat_route` (`id`, `obj_type`, `obj_id`, `keyword`, `date_add`, `date_modify`) VALUES
+(2, 'text', '8', '帮助1', 1395026605, 1395032563),
+(3, 'text', '10', '帮助2', 1395026788, 1395026941),
+(5, 'text', '11', '帮助3', 1395032588, 1395032588),
+(6, 'news', '1', '关注', 1395034976, 1395034976),
+(7, 'news', '2', '无匹配', 1395035427, 1395035603),
+(8, 'news', '7', '图文121', 1395045829, 1395049844),
+(11, 'text', '12', '测试', 1395104857, 1395104857),
+(10, 'news', '6', '图文3', 1395048849, 1395048849),
+(12, 'news', '8', '000', 1395122783, 1395122783);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `ws_wechat_text`
+--
+
+CREATE TABLE IF NOT EXISTS `ws_wechat_text` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '唯一ID',
+  `user_id` mediumint(8) unsigned NOT NULL COMMENT '用户ID',
+  `content` varchar(255) NOT NULL COMMENT '内容',
+  `date_add` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `date_modify` int(10) NOT NULL DEFAULT '0' COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='文本回复' AUTO_INCREMENT=13 ;
+
+--
+-- 转存表中的数据 `ws_wechat_text`
+--
+
+INSERT INTO `ws_wechat_text` (`id`, `user_id`, `content`, `date_add`, `date_modify`) VALUES
+(8, 5, '帮助测试文本1', 1395024768, 1395032563),
+(11, 5, '半天祝啊啊', 1395032588, 1395032588),
+(10, 5, '哈哈哈', 1395026788, 1395026941),
+(12, 1, '测试本文', 1395104857, 1395104857);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `ws_wechat_tool`
+--
+
+CREATE TABLE IF NOT EXISTS `ws_wechat_tool` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '唯一ID',
+  `name` varchar(20) NOT NULL COMMENT '插件名称',
+  `intro` varchar(255) NOT NULL COMMENT '插件描述',
+  `function` varchar(20) NOT NULL COMMENT '处理函数名称',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '插件启用状态：默认1为可用',
+  `sort_order` mediumint(8) unsigned NOT NULL COMMENT '显示顺序，1为最前',
+  `date_add` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间',
+  `date_modify` int(10) NOT NULL DEFAULT '0' COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='插件详情表' AUTO_INCREMENT=6 ;
+
+--
+-- 转存表中的数据 `ws_wechat_tool`
+--
+
+INSERT INTO `ws_wechat_tool` (`id`, `name`, `intro`, `function`, `status`, `sort_order`, `date_add`, `date_modify`) VALUES
+(1, '天气查询', '输入“天气”后跟任意城市名称，查询城市天气', 'weather', 0, 1, 0, 0),
+(2, '新闻', '输入“新闻”，回复当前新浪头条新闻', 'sinaNews', 1, 0, 0, 0),
+(3, '翻译', '输入“翻译”加任意内容，回复翻译后的内容', 'trans', 0, 2, 0, 0),
+(4, '英语', '输入“英语”，回复一句随机英语', 'english', 1, 1, 0, 0),
+(5, '笑话', '回复“笑话”，回复一则随机笑话', 'joke', 1, 3, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `ws_wechat_tpl`
+--
+
+CREATE TABLE IF NOT EXISTS `ws_wechat_tpl` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '唯一ID',
+  `type` varchar(20) NOT NULL COMMENT '模板类型',
+  `texttpl` text NOT NULL COMMENT '模板数据',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='xml模板信息表' AUTO_INCREMENT=8 ;
+
+--
+-- 转存表中的数据 `ws_wechat_tpl`
+--
+
+INSERT INTO `ws_wechat_tpl` (`id`, `type`, `texttpl`) VALUES
+(1, 'news', '<item>\r\n<Title><![CDATA[%s]]></Title>\r\n<Description><![CDATA[%s]]></Description>\r\n<PicUrl><![CDATA[%s]]></PicUrl>\r\n<Url><![CDATA[%s]]></Url>\r\n</item>'),
+(2, 'text', ' <MsgType><![CDATA[text]]></MsgType>\r\n <Content><![CDATA[%s]]></Content>'),
+(3, 'image', '<MsgType><![CDATA[image]]></MsgType>\r\n<Image>\r\n<MediaId><![CDATA[media_id]]></MediaId>\r\n</Image>'),
+(4, 'voice', '<MsgType><![CDATA[voice]]></MsgType>\r\n<Voice>\r\n<MediaId><![CDATA[media_id]]></MediaId>\r\n</Voice>'),
+(5, 'video', '<MsgType><![CDATA[video]]></MsgType>\r\n<Video>\r\n<MediaId><![CDATA[media_id]]></MediaId>\r\n<ThumbMediaId><![CDATA[thumb_media_id]]></ThumbMediaId>\r\n</Video> '),
+(6, 'music', '<MsgType><![CDATA[music]]></MsgType>\r\n<Music>\r\n<Title><![CDATA[TITLE]]></Title>\r\n<Description><![CDATA[DESCRIPTION]]></Description>\r\n<MusicUrl><![CDATA[MUSIC_Url]]></MusicUrl>\r\n<HQMusicUrl><![CDATA[HQ_MUSIC_Url]]></HQMusicUrl>\r\n<ThumbMediaId><![CDATA[media_id]]></ThumbMediaId>'),
+(7, 'header', ' <xml>\r\n <ToUserName><![CDATA[%s]]></ToUserName>\r\n <FromUserName><![CDATA[%s]]></FromUserName>\r\n <CreateTime>%s</CreateTime>\r\n %s\r\n </xml>\r\n');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

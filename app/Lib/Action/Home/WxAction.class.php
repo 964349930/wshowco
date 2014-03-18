@@ -113,7 +113,7 @@ class WxAction extends BaseAction
      * @param string $keyword 关键字
      */
     private function getContent($keyword){
-        $routeObj = D('Route');
+        $routeObj = D('WechatRoute');
         $arrMap = array(
             'user_id' => $this->user_id,
             'keyword' => $keyword,
@@ -153,17 +153,17 @@ class WxAction extends BaseAction
     {
         switch($obj_type){
         case 'text':
-            $textInfo = D('Text')->where('id='.$Obj_id)->find();
+            $textInfo = D('WechatText')->where('id='.$Obj_id)->find();
             $pushInfo = $this->setText($pushInfo);
             break;
         case 'tool':
-            $function = D('Tool')->where('id='.$obj_id)->getField('function');
-            $toolInfo = D('Tool')->$function($keyword);
+            $function = D('WechatTool')->where('id='.$obj_id)->getField('function');
+            $toolInfo = D('WechatTool')->$function($keyword);
             $pushInfo = $this->setText($pushInfo);
             break;
         case 'news':
-            $newsList = D('NewsMeta')->where('news_id='.$obj_id)->select();
-            $count = D('News')->where('id='.$obj_id)->getField('count');
+            $newsList = D('WechatNewsMeta')->where('news_id='.$obj_id)->select();
+            $count = D('WechatNews')->where('id='.$obj_id)->getField('count');
             $pushInfo = $this->setNews($newsList, $count);
             break;
         }
@@ -177,7 +177,7 @@ class WxAction extends BaseAction
      * @param int $count 数组的数量
      */
     private function setNews($newsList, $count){
-        $texttpl = D('Tpl')->where('type="news"')->getField('texttpl');
+        $texttpl = D('WechatTpl')->where('type="news"')->getField('texttpl');
         $content = "<MsgType><![CDATA[news]]></MsgType>";
         $content .= "<ArticleCount>".$count."</ArticleCount>";
         $content .= "<Articles>";
@@ -204,7 +204,7 @@ class WxAction extends BaseAction
 	 * 组装text
 	 */
 	private function setText($content){
-	  $texttpl = D('Tpl')->where('type="text"')->getField('texttpl');
+	  $texttpl = D('WechatTpl')->where('type="text"')->getField('texttpl');
 	  $content = sprintf($texttpl, $content);
 	  return ($content);
 	}

@@ -2,7 +2,7 @@
 /**
  * 菜单模型
  */
-class MenuModel extends CommonModel
+class WechatMenuModel extends CommonModel
 {
     /**
      * 获取token

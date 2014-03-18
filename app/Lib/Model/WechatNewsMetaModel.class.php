@@ -4,7 +4,7 @@
  * @author vhen
  * @version 2014-03-17
  */
-class NewsMetaModel extends CommonModel
+class WechatNewsMetaModel extends CommonModel
 {
     /**
      * format action
@@ -25,7 +25,7 @@ class NewsMetaModel extends CommonModel
      */
     public function updateMeta($meta, $news_id)
     {
-        $metaObj = D('NewsMeta');
+        $metaObj = D('WechatNewsMeta');
         $meta['date_modify'] = time();
         if(empty($meta['id'])){
             $meta['news_id'] = $news_id;

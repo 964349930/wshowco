@@ -9,7 +9,7 @@ class MenuAction extends HomeAction{
 	 * 菜单列表
 	 */
 	public function menuList(){
-        $menuObj = D('Menu');
+        $menuObj = D('WechatMenu');
         $arrField = array('*');
         $arrMap['user_id'] = array('eq', $_SESSION['uid']);
         $arrMap['parent_id'] = array('eq', 0);
@@ -34,7 +34,7 @@ class MenuAction extends HomeAction{
 	 * 页面：添加菜单
 	 */
 	public function add(){
-        $menuObj = D('Menu');
+        $menuObj = D('WechatMenu');
         $insert = $this->_post();
         $insert['user_id'] = $_SESSION['uid'];
         $insert['date_modify'] = time();
@@ -57,7 +57,7 @@ class MenuAction extends HomeAction{
     public function edit(){
         $id = intval($this->_post('id'));
         $update = $this->_post();
-        D('Menu')->where('id='.$id)->save($update);
+        D('WechatMenu')->where('id='.$id)->save($update);
     }
 
 	/**
@@ -65,13 +65,13 @@ class MenuAction extends HomeAction{
 	 */
 	public function del(){
         $id = intval($this->_get('id'));
-        $menuList = D('Menu')->where('parent_id='.$id)->select();
+        $menuList = D('WechatMenu')->where('parent_id='.$id)->select();
         if(!empty($menuList)){
         foreach($menuList as $k=>$v){
-            D('Menu')->where('id='.$v['id'])->delete();
+            D('WechatMenu')->where('id='.$v['id'])->delete();
         }
         }
-        D('Menu')->where('id='.$id)->delete();
+        D('WechatMenu')->where('id='.$id)->delete();
 	}
 
     /**
@@ -97,7 +97,7 @@ class MenuAction extends HomeAction{
             $insert['type'] = ($v['type']) ? $v['type'] : '0';
             $insert['value'] = ($v['url'].$v['key']) ? ($v['url'].$v['key']) : '0';
             $insert['data_modify'] = time();
-            $id = D('Menu')->add($insert);
+            $id = D('WechatMenu')->add($insert);
             if(isset($v['sub_button'])){
                 foreach($v['sub_button'] as $k2=>$v2){
                     $insert = array();
@@ -107,7 +107,7 @@ class MenuAction extends HomeAction{
                     $insert['type'] = $v2['type'];
                     $insert['value'] = ($v2['url']) ? $v2['url'] : $v2['key'];
                     $insert['date_modify'] = time();
-                    D('Menu')->add($insert);
+                    D('WechatMenu')->add($insert);
                 }
             }
             $url = U('Home/Menu/menuList');
@@ -126,7 +126,7 @@ class MenuAction extends HomeAction{
         }
 		//以post方式发送菜单内容给微信服务器
 		//$json = $this->array_utf8_encode_recursive($_SESSION['menuInfo']);
-        $menuObj = D('Menu');
+        $menuObj = D('WechatMenu');
         $arrField = array('id, parent_id, name, type, value');
         $arrMap['user_id'] = array('eq', $_SESSION['uid']);
         $arrMap['parent_id'] = array('eq', 0);
