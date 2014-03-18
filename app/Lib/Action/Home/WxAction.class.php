@@ -9,6 +9,7 @@ class WxAction extends BaseAction
     //类属性
     private $user_id;
     private $token;
+    private $member_id;
 
     /**
      * api接口处理函数
@@ -70,10 +71,10 @@ class WxAction extends BaseAction
         }
         //将post数据解码为数组
         $arrPost = (array)simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
+        //get the member id
+        $this->member_id = D('Member')->getMemberIdByWechatId($arrPost['FromUserName']);
         //将访问信息存入数据库
-        D('Message')->addWechatMessage($arrPost, $this->user_id);
-        //将发送者ID存入SESSION
-        $_SESSION['guest'] = $arrPost['FromUserName'];
+        D('MemberMsg')->addWechatMessage($arrPost, $this->member_id);
         //将用户发送的信息转换为关键字形式
         $keyword = $this->getKeyword($arrPost);
         //根据post数组获取返回数据内容
@@ -190,8 +191,8 @@ class WxAction extends BaseAction
             if(empty($v['url'])){
                 $v['url'] = 'http://'.$_SERVER['HTTP_HOST'].U('Index/item', array(
                     'user'  => $this->user,
+                    'member_id' => $this->member_id,
                     'id'    => $id,
-                    'guest' => $_SESSION['guest'],
                 ));
             }
             $content .= sprintf($texttpl, $v['title'], $v['description'], $v['cover'], $v['url']);

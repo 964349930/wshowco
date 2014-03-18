@@ -19,16 +19,7 @@ class IndexAction extends MobileAction
      */
     public function item()
     {
-        //获取栏目信息
-        $id = intval($this->_get('id'));
-        $info = $this->getItemInfo($id);
-        $data = array(
-            'info' => $info,
-            'list' => $this->getItemList($id),
-        );
-        D('Item')->where('id='.$id)->setInc('views');
-        $this->assign($data);
-        $this->display(ucfirst($this->theme_name).':'.$info['template_name']);
+        $this->display(ucfirst($this->theme_name).':'.$this->template_name);
     }
 }
 

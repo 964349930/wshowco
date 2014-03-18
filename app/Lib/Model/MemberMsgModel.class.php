@@ -1,15 +1,15 @@
 <?php
 /**
- * Message model
+ * member msg model
  * @author chen
  * @version 2014-03-18
  */
-class MessageModel extends CommonModel
+class MemberMsgModel extends CommonModel
 {
     /**
      * add the wechat message
      */
-    public function addWechatMessage($arrPost, $user_id)
+    public function addWechatMessage($arrPost, $member_id)
     {
         switch ($arrPost['MsgType']){
         case 'event':
@@ -23,13 +23,12 @@ class MessageModel extends CommonModel
             break;
         }
         $insert = array(
-            'user_id'  => $user_id,
+            'member_id' => $member_id,
             'type'     => '1',
-            'guest'    => $arrPost['FromUserName'],
             'info'     => $content,
-            'date_add' => time(),
+            'date_msg' => time(),
         );
-        $id = D('Message')->add($insert);
+        $id = D('MemberMsg')->add($insert);
         return $id;
     }
 

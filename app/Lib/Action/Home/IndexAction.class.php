@@ -1,11 +1,11 @@
 <?php
 /**
  * 平台首页
- * @author chen 
+ * @author chen
  * @version 2014-03-14
  */
 class IndexAction extends HomeAction {
-    
+
     //框架页
     public function index() {
         C('SHOW_PAGE_TRACE', false);
@@ -50,6 +50,9 @@ class IndexAction extends HomeAction {
                 '网站设置' => U('Home/Item/setting'),
                 '栏目列表' => U('Home/Item/itemList'),
             ),
+            'Member' => array(
+                'memberList' => U('Home/Member/MemberList'),
+            ),
             '主题管理' => array(
                 '主题列表' => U('Home/Theme/themeList'),
             ),
@@ -72,7 +75,6 @@ class IndexAction extends HomeAction {
             ),
             '主题管理' => array(
                 '主题列表' => U('Home/Theme/themeList'),
-                '模版列表' => U('Home/Template/templateList'),
             ),
             '工具管理' => array(
                 '工具列表' => U('Home/Tool/toolList'),

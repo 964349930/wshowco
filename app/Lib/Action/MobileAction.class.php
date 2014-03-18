@@ -10,6 +10,9 @@ class MobileAction extends BaseAction
     protected $user;
     protected $user_id;
     protected $theme_name;
+    protected $member_id;
+    protected $item_id;
+    protected $template_name;
 
 	/**
 	 * 判断用户
@@ -17,14 +20,20 @@ class MobileAction extends BaseAction
     public function _initialize()
     {
 		$this->user = trim($_GET['user']);
-		if(empty($this->user)){
-			echo '对不起，您所访问的站点不存在';
-			exit;
-		}
+        $this->member_id = intval($_GET['member_id']);
         $this->user_id = D('User')->where("name='".$this->user."'")->getField('id');
-        $this->setTheme();
+        $this->theme_name = $this->getThemeName();
+        $this->item_id = trim($_GET['id']);
+        if(!empty($this->item_id)){
+            $itemInfo = $this->getItemInfo($this->item_id);
+            $itemList = $this->getItemList($this->item_id);
+            $this->template_name = $itemInfo['template_name'];
+            D('MemberEvent')->addEvent($this->member_id, 'view', $this->item_id, $itemInfo['item_name']);
+            $data = array('info'=>$itemInfo, 'list'=>$itemList);
+        }
         $data = array(
             'user'          => $this->user,
+            'member_id'     => $this->member_id,
             'site'          => $this->getSiteInfo(),
             'menuList'      => $this->getItemList(),
             'home'          => U('Index/index', array('user'=>$this->user)),
@@ -34,14 +43,20 @@ class MobileAction extends BaseAction
 	}
 
     /**
-     * Set the guest info
-     * add the ip, longitude, lagitude, and device info
+     * check link
      */
-    private function setGuestInfo()
+    private function checkLink()
     {
-        $this->guest = trim($_GET['guest']);
-        if(empty($this->guest)){
-            $this->guest = time().substr(mt_rand(), 5);
+		if(empty($this->user)){
+			echo '对不起，您所访问的站点不存在';
+			exit;
+		}elseif(empty($this->member_id)){
+            echo 'sorry, system is not get your infomation, it may be you are not in wechat, please make sure you are using wechat , to make your the better traval';
+            exit;
+        }elseif(($this->member_id !== $_SESSION['member_id'])
+        OR($this->user !== $_SESSION['user'])){
+            $_SESSION['member_id'] = $this->member_id;
+            $_SESSION['user'] = $this->user;
         }
     }
 
@@ -58,7 +73,7 @@ class MobileAction extends BaseAction
 
     /**
      * 获取栏目信息
-     * @param int $id 
+     * @param int $id
      * @return array $itemInfo
      */
     protected function getItemInfo($id)
@@ -79,7 +94,7 @@ class MobileAction extends BaseAction
         $arrFormatField = array('cover_name');
         foreach($itemList as $k=>$v){
             $itemList[$k] = D('Item')->format($v, $arrFormatField);
-            $itemList[$k]['url'] = U('Index/item', array('user'=>$this->user, 'id'=>$v['id']));
+            $itemList[$k]['url'] = U('Index/item', array('user'=>$this->user, 'member_id'=>$this->member_id, 'id'=>$v['id']));
         }
         return $itemList;
     }
@@ -88,15 +103,11 @@ class MobileAction extends BaseAction
      * Get the Thene name
      * return string $themeName 主题名称
      */
-    protected function setTheme()
+    protected function getThemeName()
     {
         $theme_id = D('Setting')->where('user_id='.$this->user_id)->getField('theme_id');
         $theme_name = D('Theme')->where('id='.$theme_id)->getField('spell');
-        if(!empty($theme_name)){
-            $this->theme_name = $theme_name;
-        }else{
-            $this->theme_name = 'default';
-        }
+        return ($theme_name) ? $theme_name : 'default';
     }
 
-} 
+}
