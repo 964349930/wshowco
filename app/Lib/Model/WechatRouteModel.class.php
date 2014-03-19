@@ -16,7 +16,8 @@ class WechatRouteModel extends CommonModel{
             return true;
             exit;
         }
-        if(($keyword == '关注') OR ($keyword == '默认')){
+        $keywordList = D('WechatRoute')->where("obj_type='common'")->getField('keyword' ,true);
+        if(in_array($keyword, $keywordList)){
             return false;
             exit;
         }

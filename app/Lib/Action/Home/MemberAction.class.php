@@ -21,6 +21,10 @@ class MemberAction extends HomeAction
             $memberList[$k] = $memberObj->format($v, array('avatar_name'));
         }
         $data = array(
+            'infoUrl' => U('Home/Member/memberInfo'),
+            'msgUrl' => U('Home/Member/msgList'),
+            'viewUrl' => U('Home/Member/viewList'),
+            'likeUrl' => U('Home/Member/likeList'),
             'memberList' => $memberList,
             'pageHtml' => $page->show(),
         );
@@ -31,14 +35,14 @@ class MemberAction extends HomeAction
     /**
      * view the member info
      */
-    public function viewInfo()
+    public function memberInfo()
     {
         $memberObj = D('Member');
-        $id = $this->_get('id', 'intval');
-        $memberInfo = $memberObj->getInfoById($id);
+        $member_id = $this->_get('member_id', 'intval');
+        $memberInfo = $memberObj->getInfoById($member_id);
         $memberInfo = $memberObj->format($memberInfo, array('avatar_name'));
         $data = array(
-            'memeberInfo' => $memberInfo,
+            'memberInfo' => $memberInfo,
         );
         $this->assign($data);
         $this->display();
@@ -47,16 +51,36 @@ class MemberAction extends HomeAction
     /**
      * view the member visit log
      */
-    public function eventList()
+    public function viewList()
     {
         $member_id = $this->_get('member_id', 'intval');
-        $event = $this->_get('event');
         $eventObj = D('MemberEvent');
         $arrField = array();
         $arrMap['member_id'] = array('eq', $member_id);
-        $arrMap['event'] = array('eq', $event);
+        $arrMap['event'] = array('eq', 'view');
         $arrOrder = array('date_event');
-        $page = page($logObj->getCount($arrMap));
+        $page = page($eventObj->getCount($arrMap));
+        $eventList = $eventObj->getList($arrField, $arrMap, $arrOrder, $page->firstRow, $page->listRows);
+        $data = array(
+            'eventList' => $eventList,
+            'pageHtml' => $page->show(),
+        );
+        $this->assign($data);
+        $this->display();
+    }
+
+    /**
+     * view the member visit log
+     */
+    public function likeList()
+    {
+        $member_id = $this->_get('member_id', 'intval');
+        $eventObj = D('MemberEvent');
+        $arrField = array();
+        $arrMap['member_id'] = array('eq', $member_id);
+        $arrMap['event'] = array('eq', 'like');
+        $arrOrder = array('date_event');
+        $page = page($eventObj->getCount($arrMap));
         $eventList = $eventObj->getList($arrField, $arrMap, $arrOrder, $page->firstRow, $page->listRows);
         $data = array(
             'eventList' => $eventList,
@@ -71,7 +95,7 @@ class MemberAction extends HomeAction
      */
     public function msgList()
     {
-        $member_id = $this->_get('id', 'intval');
+        $member_id = $this->_get('member_id', 'intval');
         $msgObj = D('MemberMsg');
         $arrField = array();
         $arrMap['member_id'] = array('eq', $member_id);

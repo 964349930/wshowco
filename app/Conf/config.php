@@ -12,7 +12,7 @@ return array(
     'DB_HOST' => 'localhost',
     'DB_NAME' => 'ccms',
     'DB_USER' => 'root',
-    'DB_PWD' => '250764',
+    'DB_PWD' => '',
     'DB_PORT' => '3306',
     'DB_PREFIX' => 'ws_',
 

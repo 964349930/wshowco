@@ -18,10 +18,12 @@ class MemberEventModel extends CommonModel
             'item_name' => $item_name,
             'date_event' => time(),
         );
-        $event_id = $this->add($data);
-        if(!empty($event_id)){
-            D('Item')->where('id='.$item_id)->setInc($event);
+        if(!empty($member_id)){
+            $event_id = $this->add($data);
+                if(!empty($event_id)){
+                    D('Item')->where('id='.$item_id)->setInc($event);
+            }
+            return $event_id;
         }
-        return $event_id;
     }
 }

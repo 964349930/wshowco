@@ -6,15 +6,4 @@
  */
 class MessageAction extends MobileAction
 {
-    /**
-     * 添加评论操作
-     */
-    public function message()
-    {
-        $data = $_POST;
-        $data['date_add'] = time();
-        $data['user_id'] = $this->user_id;
-        D('Message')->add($data);
-        echo '操作成功';
-    }
 }

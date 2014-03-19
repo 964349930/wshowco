@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.6deb1
+-- version 4.0.4
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Mar 18, 2014 at 03:36 PM
--- Server version: 5.5.35-0ubuntu0.13.10.2
--- PHP Version: 5.5.3-1ubuntu2.2
+-- 主机: localhost
+-- 生成日期: 2014 年 03 月 19 日 09:54
+-- 服务器版本: 5.6.12-log
+-- PHP 版本: 5.4.16
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,13 +17,36 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `ccms`
+-- 数据库: `ccms`
 --
+CREATE DATABASE IF NOT EXISTS `ccms` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `ccms`;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ws_ext`
+-- 表的结构 `ws_debug_log`
+--
+
+CREATE TABLE IF NOT EXISTS `ws_debug_log` (
+  `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '纠错ID',
+  `user_id` mediumint(8) unsigned NOT NULL DEFAULT '1' COMMENT '用户ID',
+  `info` varchar(255) NOT NULL COMMENT '内容',
+  `date_add` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '时间',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='纠错记录表' AUTO_INCREMENT=2 ;
+
+--
+-- 转存表中的数据 `ws_debug_log`
+--
+
+INSERT INTO `ws_debug_log` (`id`, `user_id`, `info`, `date_add`) VALUES
+(1, 1, '2', 1395208511);
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `ws_ext`
 --
 
 CREATE TABLE IF NOT EXISTS `ws_ext` (
@@ -40,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `ws_ext` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ws_ext_val`
+-- 表的结构 `ws_ext_val`
 --
 
 CREATE TABLE IF NOT EXISTS `ws_ext_val` (
@@ -54,7 +77,7 @@ CREATE TABLE IF NOT EXISTS `ws_ext_val` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ws_item`
+-- 表的结构 `ws_item`
 --
 
 CREATE TABLE IF NOT EXISTS `ws_item` (
@@ -76,7 +99,7 @@ CREATE TABLE IF NOT EXISTS `ws_item` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
 
 --
--- Dumping data for table `ws_item`
+-- 转存表中的数据 `ws_item`
 --
 
 INSERT INTO `ws_item` (`id`, `parent_id`, `user_id`, `title`, `cover`, `intro`, `info`, `status`, `template_id`, `views`, `likes`, `sort_order`, `date_add`, `date_modify`) VALUES
@@ -95,7 +118,7 @@ INSERT INTO `ws_item` (`id`, `parent_id`, `user_id`, `title`, `cover`, `intro`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ws_item_img`
+-- 表的结构 `ws_item_img`
 --
 
 CREATE TABLE IF NOT EXISTS `ws_item_img` (
@@ -111,7 +134,7 @@ CREATE TABLE IF NOT EXISTS `ws_item_img` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ws_member`
+-- 表的结构 `ws_member`
 --
 
 CREATE TABLE IF NOT EXISTS `ws_member` (
@@ -127,12 +150,19 @@ CREATE TABLE IF NOT EXISTS `ws_member` (
   `date_login` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '登录时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`,`mobile`,`email`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='会员信息表' AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='会员信息表' AUTO_INCREMENT=2 ;
+
+--
+-- 转存表中的数据 `ws_member`
+--
+
+INSERT INTO `ws_member` (`id`, `user_id`, `wechat_id`, `name`, `avatar`, `password`, `mobile`, `email`, `date_reg`, `date_login`) VALUES
+(1, 1, 'FromUser', '', '', '', '', '', 1395209295, 1395209295);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ws_member_event`
+-- 表的结构 `ws_member_event`
 --
 
 CREATE TABLE IF NOT EXISTS `ws_member_event` (
@@ -143,12 +173,12 @@ CREATE TABLE IF NOT EXISTS `ws_member_event` (
   `item_name` varchar(100) NOT NULL COMMENT '栏目名称',
   `date_event` int(10) NOT NULL COMMENT '访问时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='会员action记录' AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='会员action记录' AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ws_member_msg`
+-- 表的结构 `ws_member_msg`
 --
 
 CREATE TABLE IF NOT EXISTS `ws_member_msg` (
@@ -162,20 +192,19 @@ CREATE TABLE IF NOT EXISTS `ws_member_msg` (
   `info` varchar(255) NOT NULL COMMENT '内容',
   `date_msg` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='会员留言信息表' AUTO_INCREMENT=5 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='会员留言信息表' AUTO_INCREMENT=58 ;
 
 --
--- Dumping data for table `ws_member_msg`
+-- 转存表中的数据 `ws_member_msg`
 --
 
 INSERT INTO `ws_member_msg` (`id`, `type`, `member_id`, `mobile`, `qq`, `wechat`, `email`, `info`, `date_msg`) VALUES
-(2, 1, 1, '0', '0', '0', '', '', 1394862976),
-(3, 1, 1, '0', '0', '0', '', '', 1394863007);
+(55, 1, 1, '0', '0', '0', '', 'subscribe', 1395208727);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ws_setting`
+-- 表的结构 `ws_setting`
 --
 
 CREATE TABLE IF NOT EXISTS `ws_setting` (
@@ -198,18 +227,18 @@ CREATE TABLE IF NOT EXISTS `ws_setting` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='网站全局参数表' AUTO_INCREMENT=12 ;
 
 --
--- Dumping data for table `ws_setting`
+-- 转存表中的数据 `ws_setting`
 --
 
 INSERT INTO `ws_setting` (`id`, `user_id`, `site_name`, `logo`, `url`, `background`, `theme_id`, `color_id`, `address`, `tel`, `mobile`, `qq`, `email`, `longitude`, `latitude`) VALUES
-(9, 4, 'Allison奢华名品汇', '', '0', '', 1, 1, '河南省郑州市', '0371-88888888', '', '', 'orangechen.1991@gmail.com', 0.00000000, 0.00000000),
-(10, 1, '半氪心', '', '0', '', 1, 1, '', '0379-88888888', '', '', '', 0.00000000, 0.00000000),
-(11, 5, '海森国际', '', '0', '', 2, 1, '', '', '', '', '', 0.00000000, 0.00000000);
+(9, 4, 'Allison奢华名品汇', '', '0', '', 1, 1, '河南省郑州市', '0371-88888888', '', '', 'orangechen.1991@gmail.com', '0.00000000', '0.00000000'),
+(10, 1, '半氪心', '', '0', '', 1, 1, '', '0379-88888888', '', '', '', '0.00000000', '0.00000000'),
+(11, 5, '海森国际', '', '0', '', 2, 1, '', '', '', '', '', '0.00000000', '0.00000000');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ws_shop_order`
+-- 表的结构 `ws_shop_order`
 --
 
 CREATE TABLE IF NOT EXISTS `ws_shop_order` (
@@ -228,7 +257,7 @@ CREATE TABLE IF NOT EXISTS `ws_shop_order` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ws_shop_trolley`
+-- 表的结构 `ws_shop_trolley`
 --
 
 CREATE TABLE IF NOT EXISTS `ws_shop_trolley` (
@@ -243,7 +272,7 @@ CREATE TABLE IF NOT EXISTS `ws_shop_trolley` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ws_tab`
+-- 表的结构 `ws_tab`
 --
 
 CREATE TABLE IF NOT EXISTS `ws_tab` (
@@ -261,7 +290,7 @@ CREATE TABLE IF NOT EXISTS `ws_tab` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='平台界面选项卡信息表' AUTO_INCREMENT=26 ;
 
 --
--- Dumping data for table `ws_tab`
+-- 转存表中的数据 `ws_tab`
 --
 
 INSERT INTO `ws_tab` (`id`, `fid`, `name`, `spell`, `description`, `content`, `url`, `display_order`, `status`, `ctime`) VALUES
@@ -293,7 +322,7 @@ INSERT INTO `ws_tab` (`id`, `fid`, `name`, `spell`, `description`, `content`, `u
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ws_theme`
+-- 表的结构 `ws_theme`
 --
 
 CREATE TABLE IF NOT EXISTS `ws_theme` (
@@ -312,7 +341,7 @@ CREATE TABLE IF NOT EXISTS `ws_theme` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
 
 --
--- Dumping data for table `ws_theme`
+-- 转存表中的数据 `ws_theme`
 --
 
 INSERT INTO `ws_theme` (`id`, `name`, `spell`, `cover`, `intro`, `author`, `version`, `status`, `date_add`, `date_modify`) VALUES
@@ -322,7 +351,7 @@ INSERT INTO `ws_theme` (`id`, `name`, `spell`, `cover`, `intro`, `author`, `vers
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ws_theme_tpl`
+-- 表的结构 `ws_theme_tpl`
 --
 
 CREATE TABLE IF NOT EXISTS `ws_theme_tpl` (
@@ -339,7 +368,7 @@ CREATE TABLE IF NOT EXISTS `ws_theme_tpl` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=14 ;
 
 --
--- Dumping data for table `ws_theme_tpl`
+-- 转存表中的数据 `ws_theme_tpl`
 --
 
 INSERT INTO `ws_theme_tpl` (`id`, `theme_id`, `name`, `spell`, `version`, `status`, `sort_order`, `date_add`, `date_modify`) VALUES
@@ -356,7 +385,7 @@ INSERT INTO `ws_theme_tpl` (`id`, `theme_id`, `name`, `spell`, `version`, `statu
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ws_user`
+-- 表的结构 `ws_user`
 --
 
 CREATE TABLE IF NOT EXISTS `ws_user` (
@@ -378,7 +407,7 @@ CREATE TABLE IF NOT EXISTS `ws_user` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=6 ;
 
 --
--- Dumping data for table `ws_user`
+-- 转存表中的数据 `ws_user`
 --
 
 INSERT INTO `ws_user` (`id`, `group_id`, `name`, `password`, `mobile`, `avatar`, `key`, `url`, `token`, `appid`, `appsecrect`, `date_reg`, `date_log`, `ip_log`) VALUES
@@ -389,7 +418,7 @@ INSERT INTO `ws_user` (`id`, `group_id`, `name`, `password`, `mobile`, `avatar`,
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ws_wechat_menu`
+-- 表的结构 `ws_wechat_menu`
 --
 
 CREATE TABLE IF NOT EXISTS `ws_wechat_menu` (
@@ -405,7 +434,7 @@ CREATE TABLE IF NOT EXISTS `ws_wechat_menu` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='菜单管理' AUTO_INCREMENT=113 ;
 
 --
--- Dumping data for table `ws_wechat_menu`
+-- 转存表中的数据 `ws_wechat_menu`
 --
 
 INSERT INTO `ws_wechat_menu` (`id`, `parent_id`, `user_id`, `name`, `type`, `value`, `sort_order`, `date_modify`) VALUES
@@ -416,7 +445,7 @@ INSERT INTO `ws_wechat_menu` (`id`, `parent_id`, `user_id`, `name`, `type`, `val
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ws_wechat_news`
+-- 表的结构 `ws_wechat_news`
 --
 
 CREATE TABLE IF NOT EXISTS `ws_wechat_news` (
@@ -428,7 +457,7 @@ CREATE TABLE IF NOT EXISTS `ws_wechat_news` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
 
 --
--- Dumping data for table `ws_wechat_news`
+-- 转存表中的数据 `ws_wechat_news`
 --
 
 INSERT INTO `ws_wechat_news` (`id`, `user_id`, `date_add`, `date_modify`) VALUES
@@ -441,7 +470,7 @@ INSERT INTO `ws_wechat_news` (`id`, `user_id`, `date_add`, `date_modify`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ws_wechat_news_meta`
+-- 表的结构 `ws_wechat_news_meta`
 --
 
 CREATE TABLE IF NOT EXISTS `ws_wechat_news_meta` (
@@ -460,7 +489,7 @@ CREATE TABLE IF NOT EXISTS `ws_wechat_news_meta` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='图文素材表' AUTO_INCREMENT=10 ;
 
 --
--- Dumping data for table `ws_wechat_news_meta`
+-- 转存表中的数据 `ws_wechat_news_meta`
 --
 
 INSERT INTO `ws_wechat_news_meta` (`id`, `news_id`, `title`, `cover`, `description`, `content`, `url`, `sort_order`, `status`, `date_add`, `date_modify`) VALUES
@@ -473,7 +502,7 @@ INSERT INTO `ws_wechat_news_meta` (`id`, `news_id`, `title`, `cover`, `descripti
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ws_wechat_route`
+-- 表的结构 `ws_wechat_route`
 --
 
 CREATE TABLE IF NOT EXISTS `ws_wechat_route` (
@@ -484,10 +513,10 @@ CREATE TABLE IF NOT EXISTS `ws_wechat_route` (
   `date_add` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `date_modify` int(10) NOT NULL DEFAULT '0' COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='响应路由表' AUTO_INCREMENT=13 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='响应路由表' AUTO_INCREMENT=21 ;
 
 --
--- Dumping data for table `ws_wechat_route`
+-- 转存表中的数据 `ws_wechat_route`
 --
 
 INSERT INTO `ws_wechat_route` (`id`, `obj_type`, `obj_id`, `keyword`, `date_add`, `date_modify`) VALUES
@@ -499,12 +528,19 @@ INSERT INTO `ws_wechat_route` (`id`, `obj_type`, `obj_id`, `keyword`, `date_add`
 (8, 'news', '7', '图文121', 1395045829, 1395049844),
 (11, 'text', '12', '测试', 1395104857, 1395104857),
 (10, 'news', '6', '图文3', 1395048849, 1395048849),
-(12, 'news', '8', '000', 1395122783, 1395122783);
+(12, 'news', '8', '000', 1395122783, 1395122783),
+(18, 'common', '0', '取消关注', 1395222382, 1395222382),
+(14, 'common', '0', '关注', 1395222343, 1395222343),
+(15, 'common', '0', '天气', 1395222352, 1395222352),
+(16, 'common', '0', '新闻', 1395222360, 1395222360),
+(17, 'common', '0', '笑话', 1395222366, 1395222366),
+(19, 'common', '0', '默认', 1395222683, 1395222683),
+(20, 'text', '13', '哈哈哈哈', 1395222731, 1395222731);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ws_wechat_text`
+-- 表的结构 `ws_wechat_text`
 --
 
 CREATE TABLE IF NOT EXISTS `ws_wechat_text` (
@@ -514,22 +550,23 @@ CREATE TABLE IF NOT EXISTS `ws_wechat_text` (
   `date_add` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `date_modify` int(10) NOT NULL DEFAULT '0' COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='文本回复' AUTO_INCREMENT=13 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='文本回复' AUTO_INCREMENT=14 ;
 
 --
--- Dumping data for table `ws_wechat_text`
+-- 转存表中的数据 `ws_wechat_text`
 --
 
 INSERT INTO `ws_wechat_text` (`id`, `user_id`, `content`, `date_add`, `date_modify`) VALUES
 (8, 5, '帮助测试文本1', 1395024768, 1395032563),
 (11, 5, '半天祝啊啊', 1395032588, 1395032588),
 (10, 5, '哈哈哈', 1395026788, 1395026941),
-(12, 1, '测试本文', 1395104857, 1395104857);
+(12, 1, '测试本文', 1395104857, 1395104857),
+(13, 1, '哈哈哈哈', 1395222731, 1395222731);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ws_wechat_tool`
+-- 表的结构 `ws_wechat_tool`
 --
 
 CREATE TABLE IF NOT EXISTS `ws_wechat_tool` (
@@ -545,7 +582,7 @@ CREATE TABLE IF NOT EXISTS `ws_wechat_tool` (
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='插件详情表' AUTO_INCREMENT=6 ;
 
 --
--- Dumping data for table `ws_wechat_tool`
+-- 转存表中的数据 `ws_wechat_tool`
 --
 
 INSERT INTO `ws_wechat_tool` (`id`, `name`, `intro`, `function`, `status`, `sort_order`, `date_add`, `date_modify`) VALUES
@@ -558,18 +595,20 @@ INSERT INTO `ws_wechat_tool` (`id`, `name`, `intro`, `function`, `status`, `sort
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ws_wechat_tpl`
+-- 表的结构 `ws_wechat_tpl`
 --
 
 CREATE TABLE IF NOT EXISTS `ws_wechat_tpl` (
   `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '唯一ID',
   `type` varchar(20) NOT NULL COMMENT '模板类型',
   `texttpl` text NOT NULL COMMENT '模板数据',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id` (`id`),
+  UNIQUE KEY `type` (`type`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='xml模板信息表' AUTO_INCREMENT=8 ;
 
 --
--- Dumping data for table `ws_wechat_tpl`
+-- 转存表中的数据 `ws_wechat_tpl`
 --
 
 INSERT INTO `ws_wechat_tpl` (`id`, `type`, `texttpl`) VALUES

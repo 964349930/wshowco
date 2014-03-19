@@ -11,6 +11,7 @@ class MemberMsgModel extends CommonModel
      */
     public function addWechatMessage($arrPost, $member_id)
     {
+        if(!empty($member_id)){
         switch ($arrPost['MsgType']){
         case 'event':
             $content = $arrPost['Event'];
@@ -30,6 +31,7 @@ class MemberMsgModel extends CommonModel
         );
         $id = D('MemberMsg')->add($insert);
         return $id;
+        }
     }
 
     /**

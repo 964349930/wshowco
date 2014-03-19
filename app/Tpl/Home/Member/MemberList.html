@@ -1,7 +1,7 @@
 <include file="Public:header" />
 <div class="tabs">
   <ul>
-    <li class="current"><a href="javascript:void(0)">MemberList</a></li>
+    <li class="current"><a href="javascript:void(0)">会员列表</a></li>
   </ul>
 </div>
 <div class="toolbar">
@@ -10,18 +10,18 @@
   <table width="100%" border="0" cellspacing="0" cellpadding="0">
     <thead>
       <tr>
-        <th width="">avatar</th>
-        <th width="">name</th>
-        <th width="">wechat_id</th>
-        <th width="">mobile</th>
-        <th width="">address</th>
-        <th width="">date_login</th>
-        <th width="">action</th>
+        <th width="20%">头像</th>
+        <th width="10%">昵称</th>
+        <th width="10%">唯一微信号</th>
+        <th width="10%">手机号码</th>
+        <th width="20%">地址</th>
+        <th width="10%">上次登录时间</th>
+        <th width="20%">操作</th>
       </tr>
     </thead>
     <tbody>
       <empty name="memberList">
-        <tr><td colspan="11" class="empty">none</td></tr>
+        <tr><td colspan="11" class="empty">暂无相关数据</td></tr>
       <else />
       <volist name="memberList" id="vo">
         <tr>
@@ -32,10 +32,10 @@
           <td>{$vo.address}</td>
           <td>{$vo.date_login|date="Y-m-d H:i", ###}</td>
           <td>
-            <a href="{$infoUrl}&member_id={$vo.id}" class="mr10">memberInfo</a>
-            <a href="{$msgUrl}&member_id={$vo.id}" class="mr10">msgList</a>
-            <a href="{$viewUrl}&member_id={$vo.id}" class="mr10">viewlist</a>
-            <a href="{$likeUrl}&member_id={$vo.id}">likelist</a>
+            <a href="{$infoUrl}&member_id={$vo.id}" class="mr10">会员信息</a>
+            <a href="{$msgUrl}&member_id={$vo.id}" class="mr10">消息记录</a>
+            <a href="{$viewUrl}&member_id={$vo.id}" class="mr10">浏览记录</a>
+            <a href="{$likeUrl}&member_id={$vo.id}">喜欢列表</a>
           </td>
         </tr>
       </volist>

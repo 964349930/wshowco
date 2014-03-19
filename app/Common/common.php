@@ -511,4 +511,18 @@ function getOrderId(){
 	}
 	return array($date.$exp,$current);
 }
+    /**
+     * 输出用于测试的数据
+     */
+    function cbug($content)
+    {
+	    if(is_array($content)){
+		    $content = serialize($content);
+	    }
+        $data['user_id'] = $_SESSION['uid'];
+	    $data['info'] = $content;
+	    $data['date_add'] = time();
+	    D('DebugLog')->add($data);
+    }
+
 ?>

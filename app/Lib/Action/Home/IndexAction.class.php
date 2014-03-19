@@ -50,14 +50,11 @@ class IndexAction extends HomeAction {
                 '网站设置' => U('Home/Item/setting'),
                 '栏目列表' => U('Home/Item/itemList'),
             ),
-            'Member' => array(
-                'memberList' => U('Home/Member/MemberList'),
+            '会员管理' => array(
+                '会员列表' => U('Home/Member/MemberList'),
             ),
             '主题管理' => array(
                 '主题列表' => U('Home/Theme/themeList'),
-            ),
-            '信息管理' => array(
-                '信息列表' => U('Home/Message/messageList'),
             ),
             '菜单管理' => array(
                 '菜单列表' => U('Home/Menu/menuList'),
@@ -70,11 +67,15 @@ class IndexAction extends HomeAction {
             ),
         );
         $menu['setting'] = array(
-            '会员管理' => array(
-                '会员列表' => U('Home/User/userList'),
+            '用户管理' => array(
+                '用户列表' => U('Home/User/userList'),
             ),
             '主题管理' => array(
                 '主题列表' => U('Home/Theme/themeList'),
+            ),
+            '微信功能' => array(
+                '接口模拟' => U('Home/Wechat/sim'),
+                '通用关键字' => U('Home/Wechat/keywordList'),
             ),
             '工具管理' => array(
                 '工具列表' => U('Home/Tool/toolList'),

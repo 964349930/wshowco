@@ -13,22 +13,31 @@ class MemberModel extends CommonModel
      * @param int $wechat_id
      * @return int member_id
      */
-    public function getMemberIdByWechatId($wechat_id)
+    public function getMemberIdByWechatId($user_id, $wechat_id)
     {
-        $map['user_id'] = array($_SESSION['uid']);
+        $map['user_id'] = array('eq', $user_id);
         $map['wechat_id'] = array('eq', $wechat_id);
-        $result = $this->where($map)->find();
-        $member_id = $result['id'];
-        if(empty($member_id)){
+        $result = D('Member')->where($map)->find();
+        if(empty($result)){
             $data = array(
-                'user_id' => $_SESSION['uid'],
+                'user_id' => $user_id,
                 'wechat_id' => $wechat_id,
                 'date_reg' => time(),
                 'date_login' => time(),
             );
-            $member_id = $this->add($data);
+            $member_id = D('Member')->add($data);
+        }else{
+            $member_id = $result['id'];
         }
         return $member_id;
+    }
+
+    /**
+     * format action
+     */
+    public function format($arrInfo, $arrFormat)
+    {
+        return $arrInfo;
     }
 
 }

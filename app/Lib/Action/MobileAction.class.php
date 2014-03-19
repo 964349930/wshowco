@@ -9,10 +9,9 @@ class MobileAction extends BaseAction
     //类属性
     protected $user;
     protected $user_id;
-    protected $theme_name;
     protected $member_id;
     protected $item_id;
-    protected $template_name;
+    protected $theme_name;
 
 	/**
 	 * 判断用户
@@ -23,23 +22,15 @@ class MobileAction extends BaseAction
         $this->member_id = intval($_GET['member_id']);
         $this->user_id = D('User')->where("name='".$this->user."'")->getField('id');
         $this->theme_name = $this->getThemeName();
-        $this->item_id = trim($_GET['id']);
-        if(!empty($this->item_id)){
-            $itemInfo = $this->getItemInfo($this->item_id);
-            $itemList = $this->getItemList($this->item_id);
-            $this->template_name = $itemInfo['template_name'];
-            D('MemberEvent')->addEvent($this->member_id, 'view', $this->item_id, $itemInfo['item_name']);
-            $data = array('info'=>$itemInfo, 'list'=>$itemList);
-        }
+        $this->item_id = intval($_GET['id']);
         $data = array(
             'user'          => $this->user,
             'member_id'     => $this->member_id,
             'site'          => $this->getSiteInfo(),
             'menuList'      => $this->getItemList(),
-            'home'          => U('Index/index', array('user'=>$this->user)),
+            'home'          => U('Index/index', array('user'=>$this->user, 'member_id'=>$this->member_id)),
         );
         $this->assign($data);
-
 	}
 
     /**
@@ -51,7 +42,7 @@ class MobileAction extends BaseAction
 			echo '对不起，您所访问的站点不存在';
 			exit;
 		}elseif(empty($this->member_id)){
-            echo 'sorry, system is not get your infomation, it may be you are not in wechat, please make sure you are using wechat , to make your the better traval';
+            echo '对不起，系统无法获取的您的身份信息，请使用微信重新访问';
             exit;
         }elseif(($this->member_id !== $_SESSION['member_id'])
         OR($this->user !== $_SESSION['user'])){

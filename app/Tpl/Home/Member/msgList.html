@@ -1,0 +1,43 @@
+<include file="Public:header" />
+<div class="tabs">
+  <ul>
+    <li class="current"><a href="javascript:void(0)">会员信息列表</a></li>
+  </ul>
+</div>
+<div class="toolbar">
+</div>
+<div class="list">
+    <form method="post" action="{$delUrl}" class="del-form">
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <thead>
+      <tr>
+          <th width="5%"><input type="checkbox" class="check-all" /></th>
+        <th width="20%">信息类型</th>
+        <th width="45%">信息内容</th>
+        <th width="10%">信息发送时间</th>
+        <th width="20%">操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <empty name="msgList">
+        <tr><td colspan="11" class="empty">暂无相关数据</td></tr>
+      <else />
+      <volist name="msgList" id="vo">
+        <tr>
+            <td><input type="checkbox" name="id[]" value="{$vo.id}"></td>
+          <td>{$vo.type_name}</td>
+          <td>{$vo.info}</td>
+          <td>{$vo.date_msg|date="Y-m-d H:i", ###}</td>
+          <td>
+            <a href="{$delUrl}&msg_id={$vo.id}">删除</a>
+          </td>
+        </tr>
+      </volist>
+      </empty>
+    </tbody>
+  </table>
+</div>
+<div class="toolbar">
+  <div class="page right">{$pageHtml}</div>
+</div>
+<include file="Public:footer" />
