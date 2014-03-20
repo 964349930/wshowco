@@ -5,25 +5,35 @@
  * Created Time: 2013-11-9 16:43:33
 */
 class MenuAction extends HomeAction{
+    /**
+     * get menu list 
+     */
+    private function getMenuList($parent_id=0)
+    {
+        $arrField = array('*');
+        $arrMap['user_id'] = array('eq', $_SESSION['uid']);
+        $arrMap['parent_id'] = array('eq', $parent_id);
+        $arrOrder = array('sort_order');
+        $menuList = D('WechatMenu')->getList($arrField, $arrMap, $arrOrder);
+        foreach($menuList as $k=>$v){
+            $menuList[$k] = D('WechatMenu')->format($v, array('type_name'));
+        }
+        return $menuList;
+    }
+
 	/**
 	 * 菜单列表
 	 */
 	public function menuList(){
         $menuObj = D('WechatMenu');
-        $arrField = array('*');
-        $arrMap['user_id'] = array('eq', $_SESSION['uid']);
-        $arrMap['parent_id'] = array('eq', 0);
-        $arrOrder = array('sort_order');
-        $menuList = $menuObj->getList($arrField, $arrMap, $arrOrder);
+        $menuList = $this->getMenuList();
         foreach($menuList as $k=>$v){
-            $map['parent_id'] = array('eq', $v['id']);
-            $menuList[$k]['sub_button'] = $menuObj->where($map)->select();
+            $menuList[$k]['sub_button'] = $this->getMenuList($v['id']);
         }
         $tplData = array(
-            'addMenu' => U('Home/Menu/add'),
-            'editMenu' => U('Home/Menu/edit'),
-            'delMenu' => U('Home/Menu/del'),
-            'updateMenu' => U('Home/Menu/update'),
+            'infoUrl' => U('Home/Menu/info'),
+            'updateUrl' => U('Home/Menu/update'),
+            'delUrl' => U('Home/Menu/del'),
             'menuList' => $menuList,
         );
 		$this->assign($tplData);
@@ -33,32 +43,31 @@ class MenuAction extends HomeAction{
 	/**
 	 * 页面：添加菜单
 	 */
-	public function add(){
+	public function info(){
         $menuObj = D('WechatMenu');
-        $insert = $this->_post();
-        $insert['user_id'] = $_SESSION['uid'];
-        $insert['date_modify'] = time();
-        $id = $menuObj->add($insert);
-        if(!empty($id)){
-            $data = array(
-                'id' => $id,
-                'name' => $insert['name'],
-                'type' => $insert['type'],
-                'value' => $insert['value'],
-            );
-            $data = json_encode($data);
-            echo $data;
+        if(empty($_POST)){
+            $id = $this->_get('id', 'intval');
+            $menuList = $this->getMenuList();
+            if(!empty($id)){
+                $info = $menuObj->getInfoById($id);
+                $this->assign('info', $info);
+            }
+            $this->assign('menuList', $menuList);
+            $this->assign('infoUrl', U('Home/Menu/info'));
+            $this->display();
+            exit;
         }
+        $data = $this->_post();
+        $data['date_modify'] = time();
+        if(empty($data['id'])){
+            $data['user_id'] = $_SESSION['uid'];
+            $data['date_add'] = time();
+            $menuObj->add($data);
+        }else{
+            $menuObj->save($data);
+        }
+        $this->success('操作成功');
 	}
-
-    /**
-     * 编辑菜单
-     */
-    public function edit(){
-        $id = intval($this->_post('id'));
-        $update = $this->_post();
-        D('WechatMenu')->where('id='.$id)->save($update);
-    }
 
 	/**
 	 * 操作：删除菜单
@@ -67,11 +76,12 @@ class MenuAction extends HomeAction{
         $id = intval($this->_get('id'));
         $menuList = D('WechatMenu')->where('parent_id='.$id)->select();
         if(!empty($menuList)){
-        foreach($menuList as $k=>$v){
-            D('WechatMenu')->where('id='.$v['id'])->delete();
-        }
+            foreach($menuList as $k=>$v){
+                D('WechatMenu')->where('id='.$v['id'])->delete();
+            }
         }
         D('WechatMenu')->where('id='.$id)->delete();
+        $this->success('操作成功');
 	}
 
     /**

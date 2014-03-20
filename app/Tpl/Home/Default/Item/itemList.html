@@ -54,7 +54,7 @@
                 <td>{$vo[sort_order]}</td>
                 <td>{$vo[date_modify]|date="Y-m-d H:i", ###}</td>
                 <td>
-                    <a href="{$subUrl}&id={$vo.id}" class="mr10">管理子栏目</a>
+                    <a href="{$subUrl}&parent_id={$vo.id}" class="mr10">管理子栏目</a>
                     <a href="{$editUrl}&id={$vo.id}" class="mr10">编辑</a>
                     <a href="{$delUrl}&id={$vo.id}">删除</a>
                 </td>

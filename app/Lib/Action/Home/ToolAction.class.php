@@ -1,34 +1,26 @@
 <?php
 /**
  * 微应用操作类
- * @author blue
+ * @author chen
  * @version 2013-12-27
  */
-class ToolAction extends WechatCommonAction {
+class ToolAction extends HomeAction {
     /**
      * 获取应用列表
      */
     public function toolList(){
-        $toolObj = D('PushTool');
-        //设置条件
+        $toolObj = D('WechatTool');
         $arrField = array('*');
         $arrMap['status'] = array('eq', 1);
-        $arrOrder = array('display_order');
-        //分页
-        $count = $toolObj->getCount($arrMap);
-        $page = page($count);
-        $pageHtml = $page->show();
-        //获取列表
+        $arrOrder = array('sort_order');
+        $page = page($toolObj->getCount($arrMap));
         $toolList = $toolObj->getList($arrField, $arrMap, $arrOrder, $page->firstRow, $page->listRows);
-        $arrFormatField = array('mtime_text', 'status');
         foreach($toolList as $k=>$v){
-            $toolList[$k] = $toolObj->format($v, $arrFormatField);
+            $toolList[$k] = $toolObj->format($v, array('status_name'));
         }
-        //模板赋值
         $tplData = array(
-            'itemList' => $toolList,
-            'useUrl'   => U('Admin/Tool/useTool'),
-            'left_current' => 'toolList',
+            'toolList' => $toolList,
+            'useUrl'   => U('Home/Tool/useTool'),
         );
         $this->assign($tplData);
         $this->display();

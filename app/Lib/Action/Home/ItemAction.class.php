@@ -43,7 +43,7 @@ class ItemAction extends HomeAction
     public function itemList()
     {
         $itemObj = D('Item');
-        $id = $this->_get('id', 'intval');
+        $parent_id = $this->_get('parent_id', 'intval');
         $arrField = array();
 
         //search
@@ -53,21 +53,22 @@ class ItemAction extends HomeAction
         }
 
         //For the Parent item
-        if(empty($id)){$id = 0;}
+        if(empty($parent_id)){$parent_id = 0;}
         $arrMap['user_id'] = array('eq', $_SESSION['uid']);
-        $arrMap['parent_id'] = array('eq', $id);
+        $arrMap['parent_id'] = array('eq', $parent_id);
+        $page = page($itemObj->getCount($arrMap));
         $arrOrder = array('sort_order');
-        $itemList = $itemObj->getList($arrField, $arrMap, $arrOrder);
-        $arrFormatField = array('cover_name');
+        $itemList = $itemObj->getList($arrField, $arrMap, $arrOrder, $page->firstRow, $page->listRows);
         foreach($itemList as $k=>$v){
-            $itemList[$k] = $itemObj->format($v, $arrFormatField);
+            $itemList[$k] = $itemObj->format($v, array('cover_name'));
         }
         $data = array(
-            'addUrl'   => U('Home/Item/add', array('id'=>$id)),
-            'editUrl'  => U('Home/Item/edit'),
+            'addUrl'   => U('Home/Item/itemInfo', array('parent_id'=>$parent_id)),
+            'editUrl'  => U('Home/Item/itemInfo'),
             'delUrl'   => U('Home/Item/del'),
             'subUrl'   => U('Home/Item/itemList'),
             'itemList' => $itemList,
+            'pageHtml' => $pageHtml,
         );
         $this->assign($data);
         $this->display();
@@ -76,56 +77,52 @@ class ItemAction extends HomeAction
     /**
      * 添加内容
      */
-    public function add()
+    public function itemInfo()
     {
-        $itemData = $this->_post('item');
-        if(empty($itemData)){
+        $itemObj = D('Item');
+        if(empty($_POST)){
             $id = $this->_get('id', 'intval');
+            if(!empty($id)){
+                //更新显示
+                $itemInfo = $itemObj->getInfoById($id);
+                $itemInfo = $itemObj->format($itemInfo, array('cover_name'));
+                $parent_id = $itemInfo['parent_id'];
+                $this->assign('itemInfo', $itemInfo);
+                $this->assign('extList', D('Ext')->getExtList('item', $itemInfo['id']));
+            }else{
+                //添加显示
+                $parent_id = $this->_get('parent_id', 'intval');
+            }
+            $this->assign('getExtValueList', U('Home/Ext/getExtValueList'));
+            $this->assign('parent_id', $parent_id);
             $this->assign('tplList', D('ThemeTpl')->getTplList());
-            $this->assign('parent_id', $id);
-            $this->assign('addUrl', U('Home/Item/add'));
+            $this->assign('infoUrl', U('Home/Item/itemInfo'));
+            $this->assign('extUrl', U('Home/Ext/extList'));
             $this->display();
             exit;
         }
-        $itemObj = D('Item');
+        $data = $this->_post('item');
+        $data['date_modify'] = time();
 		if(!empty($_FILES['pic']['name'])){
 			$picList = uploadPic();
 			if($picList['code'] != 'error'){
-				$itemData['cover'] = $picList['pic']['savename'];
+				$data['cover'] = $picList['pic']['savename'];
 			}
 		}
-        $itemData['user_id'] = $_SESSION['uid'];
-        $itemData['date_add'] = $itemData['date_modify'] = time();
-        $id = $itemObj->add($itemData);
-        $this->success('添加成功');
-    }
-
-    /**
-     * 更新
-     */
-    public function edit()
-    {
-        $itemObj = D('Item');
-        $itemData = $this->_post('item');
-        if(empty($itemData)){
-            $id = $this->_get('id', 'intval');
-            $itemInfo = $itemObj->getInfoById($id);
-            $itemInfo = $itemObj->format($itemInfo, array('cover_name'));
-            $this->assign('tplList', D('ThemeTpl')->getTplList());
-            $this->assign('editUrl', U('Home/Item/edit'));
-            $this->assign('itemInfo', $itemInfo);
-            $this->display();
-            exit;
+        $item_id = $data['id'];
+        if(empty($item_id)){
+            //添加操作
+            $data['user_id'] = $_SESSION['uid'];
+            $data['date_add'] = time();
+            $item_id = $itemObj->add($data);
+        }else{
+            //更新操作
+            $itemObj->save($data);
         }
-		if(!empty($_FILES['pic']['name'])){
-			$picList = uploadPic();
-			if($picList['code'] != 'error'){
-				$itemData['cover'] = $picList['pic']['savename'];
-			}
-		}
-        $itemData['date_modify'] = time();
-        $itemObj->save($itemData);
-        $this->success('更新成功');
+        //增值属性操作
+        $extValData = $_POST['ext'];
+        D('ExtVal')->updateExtVal($extValData, $item_id);
+        $this->success('操作成功');
     }
 
     /**

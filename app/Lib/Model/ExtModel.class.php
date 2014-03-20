@@ -7,6 +7,19 @@
 class ExtModel extends CommonModel
 {
     /**
+     * 获取extlist
+     */
+    public function getExtList($res_type, $res_id)
+    {
+        $arrField = array();
+        $arrMap['reg_type'] = array('eq', $res_type);
+        $arrMap['reg_id'] = array('eq', $res_id);
+        $arrOrder = array('sort_order');
+        $extList = $this->getList($arrField, $arrMap, $arrOrder);
+        return $extList;
+    }
+
+    /**
      * 获取CmsField表中的cat_id
      */
     private function getCatId($cat_id, $obj_type){

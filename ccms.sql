@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2014 年 03 月 19 日 09:54
+-- 生成日期: 2014 年 03 月 20 日 10:08
 -- 服务器版本: 5.6.12-log
 -- PHP 版本: 5.4.16
 
@@ -34,14 +34,14 @@ CREATE TABLE IF NOT EXISTS `ws_debug_log` (
   `info` varchar(255) NOT NULL COMMENT '内容',
   `date_add` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='纠错记录表' AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='纠错记录表' AUTO_INCREMENT=16 ;
 
 --
 -- 转存表中的数据 `ws_debug_log`
 --
 
 INSERT INTO `ws_debug_log` (`id`, `user_id`, `info`, `date_add`) VALUES
-(1, 1, '2', 1395208511);
+(15, 1, 'UPDATE `ws_ext_val` SET `ext_id`=3,`value`=''12'',`date_modify`=1395307623 WHERE ( `id` = 1 )', 1395307623);
 
 -- --------------------------------------------------------
 
@@ -58,7 +58,15 @@ CREATE TABLE IF NOT EXISTS `ws_ext` (
   `lable` varchar(50) NOT NULL COMMENT '标签',
   `sort_order` mediumint(8) unsigned NOT NULL COMMENT '排序',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+
+--
+-- 转存表中的数据 `ws_ext`
+--
+
+INSERT INTO `ws_ext` (`id`, `res_type`, `res_id`, `title`, `type`, `lable`, `sort_order`) VALUES
+(3, 'item', 2, '价格', 'text', 'price', 2),
+(4, 'item', 2, '颜色', 'text', 'color', 2);
 
 -- --------------------------------------------------------
 
@@ -71,8 +79,20 @@ CREATE TABLE IF NOT EXISTS `ws_ext_val` (
   `res_id` mediumint(8) unsigned NOT NULL COMMENT '资源ID',
   `ext_id` mediumint(8) unsigned NOT NULL COMMENT '扩展ID',
   `value` varchar(255) NOT NULL COMMENT '扩展内容',
+  `date_add` int(10) unsigned NOT NULL DEFAULT '0',
+  `date_modify` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+
+--
+-- 转存表中的数据 `ws_ext_val`
+--
+
+INSERT INTO `ws_ext_val` (`id`, `res_id`, `ext_id`, `value`, `date_add`, `date_modify`) VALUES
+(1, 3, 3, '12', 1395306972, 1395307782),
+(2, 3, 4, '红色', 1395307782, 1395307782),
+(3, 15, 3, '1500', 1395308478, 1395308478),
+(4, 15, 4, 'white', 1395308478, 1395308478);
 
 -- --------------------------------------------------------
 
@@ -96,16 +116,16 @@ CREATE TABLE IF NOT EXISTS `ws_item` (
   `date_add` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '添加时间',
   `date_modify` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=16 ;
 
 --
 -- 转存表中的数据 `ws_item`
 --
 
 INSERT INTO `ws_item` (`id`, `parent_id`, `user_id`, `title`, `cover`, `intro`, `info`, `status`, `template_id`, `views`, `likes`, `sort_order`, `date_add`, `date_modify`) VALUES
-(1, 0, 1, '关于我们', '201403/14/5322a1d3bf1e4.jpg', '关于我们描述', '关于我们内容0', 1, 1, 5, 0, 1, 1394776452, 1394778581),
-(2, 0, 1, '产品展示', '', '产品展示描述', '产品展示', 1, 1, 7, 0, 2, 1394776658, 1394776658),
-(3, 2, 1, '产品1', '', '产品1描述', '产品1内容', 1, 1, 0, 0, 1, 1394778104, 1394778104),
+(1, 0, 1, '关于我们', '201403/14/5322a1d3bf1e4.jpg', '关于我们描述0', '&lt;p&gt;关于我们内容00&lt;/p&gt;', 1, 1, 5, 0, 1, 1394776452, 1395285646),
+(2, 0, 1, '产品展示', '', '产品展示描述', '&lt;p&gt;产品展示&lt;/p&gt;', 1, 2, 7, 0, 2, 1394776658, 1395285853),
+(3, 2, 1, '产品1', '', '产品1描述', '&lt;p&gt;产品1内容&lt;/p&gt;', 1, 1, 0, 0, 1, 1394778104, 1395307782),
 (4, 0, 4, '男女服装', '', '男女服装1', '男女服装内容', 1, 2, 0, 0, 1, 1394806997, 1394812555),
 (5, 0, 4, '名包', '', '名包', '名包', 1, 2, 0, 0, 2, 1394807160, 1394812567),
 (6, 0, 4, '名表', '', '名比啊', '名表', 1, 1, 0, 0, 3, 1394807182, 1394807182),
@@ -113,7 +133,9 @@ INSERT INTO `ws_item` (`id`, `parent_id`, `user_id`, `title`, `cover`, `intro`, 
 (8, 0, 4, '香水', '', '香水', '香水', 1, 1, 0, 0, 5, 1394807214, 1394807214),
 (9, 0, 4, '化妆品', '', '化妆品', '化妆品', 1, 1, 0, 0, 6, 1394807242, 1394807242),
 (10, 0, 1, '在线留言', '', '在线留言', '在线留言', 1, 3, 22, 0, 3, 1394854819, 1394854849),
-(11, 0, 5, '关于海森', '', '关于海森描述', '关于海森内容', 1, 13, 0, 0, 1, 1395022506, 1395022666);
+(11, 0, 5, '关于海森', '', '关于海森描述', '关于海森内容', 1, 13, 0, 0, 1, 1395022506, 1395022666),
+(14, 0, 1, '联系方式', '', '联系方式', '联系方式&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;', 1, 8, 0, 0, 4, 1395285697, 1395285697),
+(15, 2, 1, 'z10', '', 'z10是', '&lt;p&gt;z10 is the blackberry first bb10 phone&lt;br/&gt;&lt;/p&gt;', 1, 1, 0, 0, 2, 1395308478, 1395308478);
 
 -- --------------------------------------------------------
 
@@ -431,7 +453,7 @@ CREATE TABLE IF NOT EXISTS `ws_wechat_menu` (
   `sort_order` mediumint(8) unsigned NOT NULL DEFAULT '5' COMMENT '排序',
   `date_modify` int(10) NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='菜单管理' AUTO_INCREMENT=113 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='菜单管理' AUTO_INCREMENT=114 ;
 
 --
 -- 转存表中的数据 `ws_wechat_menu`
@@ -440,7 +462,8 @@ CREATE TABLE IF NOT EXISTS `ws_wechat_menu` (
 INSERT INTO `ws_wechat_menu` (`id`, `parent_id`, `user_id`, `name`, `type`, `value`, `sort_order`, `date_modify`) VALUES
 (111, 0, 1, 'sfaf', 'click', 'dfadf', 2, 1395109221),
 (110, 0, 1, '半颗心', 'view', '001', 1, 1395107153),
-(112, 110, 1, 'afdaf ', 'click', 'ad', 3, 1395109305);
+(112, 110, 1, '哈哈哈哈', 'view', 'ad', 1, 1395281237),
+(113, 111, 1, '菜单策划', 'click', '关键字', 1, 1395281217);
 
 -- --------------------------------------------------------
 

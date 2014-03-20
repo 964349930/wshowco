@@ -53,17 +53,20 @@ class IndexAction extends HomeAction {
             '会员管理' => array(
                 '会员列表' => U('Home/Member/MemberList'),
             ),
-            '主题管理' => array(
-                '主题列表' => U('Home/Theme/themeList'),
-            ),
             '菜单管理' => array(
                 '菜单列表' => U('Home/Menu/menuList'),
+            ),
+            '主题管理' => array(
+                '主题列表' => U('Home/Theme/themeList'),
             ),
             '自动回复管理' => array(
                 '关注回复' => U('Home/News/special', array('keyword'=>'关注')),
                 '无匹配回复' => U('Home/News/special', array('keyword'=>'无匹配')),
                 '文字回复' => U('Home/News/textList'),
                 '图文回复' => U('Home/News/newsList'),
+            ),
+            '插件管理' => array(
+                '插件列表' => U('Home/Tool/toolList'),
             ),
         );
         $menu['setting'] = array(

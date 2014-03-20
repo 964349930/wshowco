@@ -1,11 +1,11 @@
 <?php
 /**
- * ²Ëµ¥Ä£ÐÍ
+ * èœå•æ¨¡åž‹
  */
 class WechatMenuModel extends CommonModel
 {
     /**
-     * »ñÈ¡token
+     * èŽ·å–token
      */
     public function getToken(){
         $userInfo = D('User')->where('id='.$_SESSION['uid'])->find();
@@ -14,18 +14,29 @@ class WechatMenuModel extends CommonModel
         $appsecret = $userInfo['appsecrect'];
         $url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type='.$grant_type.'&appid='.$appid.'&secret='.$appsecret;
 
-        $ch = curl_init();//³õÊ¼»¯curl
-        curl_setopt($ch, CURLOPT_URL, $url);//×¥È¡Ö¸¶¨ÍøÒ³
+        $ch = curl_init();//åˆå§‹åŒ–curl
+        curl_setopt($ch, CURLOPT_URL, $url);//æŠ“å–æŒ‡å®šç½‘é¡µ
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $result = curl_exec($ch);
         curl_close($ch);
-        //½«»ñÈ¡µ½µÄÄÚÈÝjson½âÂëÎªÀà
+        //å°†èŽ·å–åˆ°çš„å†…å®¹jsonè§£ç ä¸ºç±»
         $result = json_decode($result);
         if($result->expires_in !== 7200){
         }
         return $result->access_token;
+    }
+
+    /**
+     * format
+     */
+    public function format($arrInfo, $arrField)
+    {
+        if(in_array('type_name', $arrField)){
+            $arrInfo['type_name'] = ($arrInfo['type'] == 'view') ? 'é“¾æŽ¥' : 'å…³é”®å­—';
+        }
+        return $arrInfo;
     }
 
 }
