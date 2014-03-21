@@ -13,10 +13,10 @@ class WechatToolModel extends CommonModel {
      * @param array $arrFormatField 需要格式化的数组
      */
     public function format($info, $arrFormatField){
-        if(in_array('status', $arrFormatField)){
-            $info['status'] = D('WechatRoute')->checkKeyword($info['tool_name']);
-            $info['status_name'] = ($info['status']) ? '未使用'
-                : '已使用';
+        if(in_array('useStatus', $arrFormatField)){
+            $result = D('WechatRoute')->where("user_id=".$_SESSION['uid']." AND keyword='".$info['name']."'")->find();
+            $info['useStatus'] = ($result) ? '已使用'
+                : '未使用';
         }
         return $info;
     }

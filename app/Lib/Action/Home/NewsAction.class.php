@@ -11,7 +11,17 @@ class NewsAction extends HomeAction{
 	public function newsList(){
 		$newsObj = D('WechatNews');
 		$arrField = array('*');
+
+        /********筛选出特殊的图文列表********/
+        $keywordList = D('WechatRoute')->where("obj_type='common'")->getField('keyword' ,true);
+        $routeMap['user_id'] = array('eq', $_SESSION['uid']);
+        $routeMap['obj_type'] = array('eq', 'news');
+        $routeMap['keyword'] = array('not in', $keywordList);
+        $idList = D('WechatRoute')->where($routeMap)->getField('obj_id', true);
+        /********结束************************/
+
 		$arrMap['user_id'] = array('eq', $_SESSION['uid']);
+        $arrMap['id'] = array('in', $idList);
 		$arrOrder = array('date_modify desc');
 		$count = $newsObj->getCount($arrMap);
 		$page = page($count, 10);
@@ -40,7 +50,7 @@ class NewsAction extends HomeAction{
         if(empty($_POST)){
             $id = $this->_get('id', 'intval');
             if(!empty($id)){
-                $routeInfo = D('WechatRoute')->where("obj_type='news' AND obj_id=".$id)->find();
+                $routeInfo = D('WechatRoute')->getRoute('news', $id);
                 $this->assign('newsInfo', D('WechatNews')->getInfoById($id));
                 $this->assign('routeInfo', $routeInfo);
             }
@@ -64,9 +74,9 @@ class NewsAction extends HomeAction{
     public function special(){
         if(empty($_POST)){
             $keyword = $this->_get('keyword', 'trim');
-            $routeInfo = D('WechatRoute')->where("obj_type='news' AND keyword='".$keyword."'")->find();
+            $routeInfo = D('WechatRoute')->where("user_id=".$_SESSION['uid']." AND obj_type='news' AND keyword='".$keyword."'")->find();
             if(!empty($routeInfo)){
-                $metaInfo = D('WechatNewsMeta')->where('id='.$routeInfo['obj_id'])->find();
+                $metaInfo = D('WechatNewsMeta')->where('news_id='.$routeInfo['obj_id'])->find();
                 $metaInfo = D('WechatNewsMeta')->format($metaInfo, array('cover_name'));
                 $this->assign('routeInfo', $routeInfo);
                 $this->assign('newsInfo', D('WechatNews')->getInfoById($routeInfo['obj_id']));

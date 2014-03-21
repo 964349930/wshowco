@@ -79,9 +79,7 @@ class IndexAction extends HomeAction {
             '微信功能' => array(
                 '接口模拟' => U('Home/Wechat/sim'),
                 '通用关键字' => U('Home/Wechat/keywordList'),
-            ),
-            '工具管理' => array(
-                '工具列表' => U('Home/Tool/toolList'),
+                '插件管理' => U('Home/Tool/toolList'),
             ),
         );
         return $menu;

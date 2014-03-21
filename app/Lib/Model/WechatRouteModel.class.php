@@ -33,26 +33,6 @@ class WechatRouteModel extends CommonModel{
     }
 
     /**
-     * 添加路由信息
-     * @return boolen
-     * @param string $obj_type 资源类型
-     * @param int $obj_id 资源ID
-     * @param string $keyword 关键字
-     */
-    public function addRoute($obj_type, $obj_id, $keyword){
-        $routeObj = D('WechatRoute');
-        $insert = array(
-            'obj_type'  => $obj_type,
-            'obj_id'    => $obj_id,
-            'keyword'   => $keyword,
-            'date_add' => time(),
-            'date_modify' => time(),
-        );
-        $result = $routeObj->add($insert);
-        return $result;
-    }
-
-    /**
      * 获取关键字
      * @return string $keyword 关键字
      * @param string $obj_type 资源类型
@@ -61,6 +41,7 @@ class WechatRouteModel extends CommonModel{
     public function getRoute($obj_type, $obj_id){
         $routeObj = D('WechatRoute');
         $arrMap = array(
+            'user_id' => $_SESSION['uid'],
             'obj_type' => $obj_type,
             'obj_id'   => $obj_id,
         );
@@ -75,6 +56,7 @@ class WechatRouteModel extends CommonModel{
     public function updateRoute($obj_type, $obj_id, $route)
     {
         $routeObj = D('WechatRoute');
+        $route['user_id'] = $_SESSION['uid'];
         $route['obj_type'] = $obj_type;
         $route['obj_id'] = $obj_id;
         $route['date_modify'] = time();
@@ -112,6 +94,7 @@ class WechatRouteModel extends CommonModel{
      */
     public function delRoute($obj_type, $map){
         $routeObj = D('WechatRoute');
+        $map['user_id'] = $_SESSION['uid'];
         $map['obj_type'] = $obj_type;
         $routeObj->where($map)->delete();
     }

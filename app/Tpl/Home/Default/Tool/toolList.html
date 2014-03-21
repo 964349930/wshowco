@@ -6,7 +6,7 @@
 </div>
 <div class="toolbar">
     <eq name="_SESSION[uid]" value="1">
-    <a href="{$toolInfo}" class="btn" /><span>添加插件</span></a>
+    <a href="{$toolInfoUrl}" class="btn" /><span>添加插件</span></a>
     </eq>
 </div>
 <div class="list">
@@ -26,7 +26,10 @@
 	            <td>{$vo.name}</td>
                 <td>{$vo.intro}</td>
 	            <td>{$vo.date_modify|date="Y-m-d H:i", ###}</td>
-                <td></td>
+                <td>
+                    <eq name="_SESSION['uid']" value="1"><a href="{$toolInfoUrl}&id={$vo.id}" class="mr10">编辑</a>
+                    <a href="{$delUrl}&id={$vo.id}" class="mr10">删除</a></eq>
+                    <a href="{$useUrl}&id={$vo.id}">{$vo.useStatus}</a></td>
             </tr>
 	        </volist>
         </table>
