@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- 主机: localhost
--- 生成日期: 2014 年 03 月 20 日 10:08
+-- 生成日期: 2014 年 03 月 21 日 10:06
 -- 服务器版本: 5.6.12-log
 -- PHP 版本: 5.4.16
 
@@ -477,18 +477,20 @@ CREATE TABLE IF NOT EXISTS `ws_wechat_news` (
   `date_add` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
   `date_modify` int(10) unsigned NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=11 ;
 
 --
 -- 转存表中的数据 `ws_wechat_news`
 --
 
 INSERT INTO `ws_wechat_news` (`id`, `user_id`, `date_add`, `date_modify`) VALUES
-(1, 1, 0, 0),
-(2, 1, 0, 1395035603),
-(7, 5, 1395049721, 1395049844),
-(6, 5, 1395048849, 1395048849),
-(8, 1, 1395122783, 1395122783);
+(1, 1, 0, 1395372530),
+(2, 1, 0, 1395372565),
+(7, 5, 1395049721, 1395370169),
+(6, 5, 1395048849, 1395370173),
+(8, 1, 1395122783, 1395372616),
+(9, 5, 1395371238, 1395371238),
+(10, 5, 1395371503, 1395371503);
 
 -- --------------------------------------------------------
 
@@ -509,18 +511,20 @@ CREATE TABLE IF NOT EXISTS `ws_wechat_news_meta` (
   `date_add` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `date_modify` int(10) NOT NULL DEFAULT '0' COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='图文素材表' AUTO_INCREMENT=10 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='图文素材表' AUTO_INCREMENT=12 ;
 
 --
 -- 转存表中的数据 `ws_wechat_news_meta`
 --
 
 INSERT INTO `ws_wechat_news_meta` (`id`, `news_id`, `title`, `cover`, `description`, `content`, `url`, `sort_order`, `status`, `date_add`, `date_modify`) VALUES
-(1, 1, '图文测试', '', '图文描述', '', 'http://www.baidu.com', 255, 1, 1395034976, 1395034976),
-(2, 2, '欢迎欢迎', '201403/17/53268d2374660.jpg', '欢迎描书0', '', 'http://localhost/ccms/index.php?g=Mobile&amp;m=Index&amp;a=index&amp;user=haisen', 255, 1, 1395035427, 1395035603),
+(1, 1, '欢迎进入MY WORLD', '', '这里是XXX', '', 'http://www.baidu.com', 255, 1, 1395034976, 1395372530),
+(2, 2, '对不起，没有找到所需的内容', '201403/17/53268d2374660.jpg', 'I''m so sorry.', '', 'http://localhost/ccms/index.php?g=Mobile&amp;m=Index&amp;a=index&amp;user=haisen', 255, 1, 1395035427, 1395372565),
 (6, 6, '1212', '', '1313', '1313', '', 1, 1, 1395049864, 1395049864),
-(8, 8, '000', '', '0.', '0.0', '', 1, 1, 1395122798, 1395122798),
-(9, 8, '.2', '', '2.1', '\r\n1313', '', 2, 1, 1395122807, 1395122807);
+(8, 8, '图文1', '', '图为1描述', '图文2描述&lt;br/&gt;', '', 1, 1, 1395122798, 1395372641),
+(9, 8, '图文2', '', '图为呢2', '&lt;p&gt;图文2尼尔&lt;br/&gt;&lt;/p&gt;', '', 2, 1, 1395122807, 1395372666),
+(10, 9, '哈哈哈哈', '', '哈哈哈哈哈', '', '', 255, 1, 1395371238, 1395371238),
+(11, 10, '对不起，没有匹配到任何东西哦', '', '没有啊没有啊', '', '', 255, 1, 1395371503, 1395371503);
 
 -- --------------------------------------------------------
 
@@ -530,35 +534,42 @@ INSERT INTO `ws_wechat_news_meta` (`id`, `news_id`, `title`, `cover`, `descripti
 
 CREATE TABLE IF NOT EXISTS `ws_wechat_route` (
   `id` mediumint(8) unsigned NOT NULL AUTO_INCREMENT COMMENT '唯一ID',
+  `user_id` mediumint(8) unsigned NOT NULL COMMENT '用户ID',
   `obj_type` varchar(20) NOT NULL DEFAULT 'news' COMMENT '资源类型',
   `obj_id` varchar(10) NOT NULL COMMENT '资源ID',
   `keyword` varchar(20) NOT NULL COMMENT '唯一标识',
   `date_add` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `date_modify` int(10) NOT NULL DEFAULT '0' COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='响应路由表' AUTO_INCREMENT=21 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='响应路由表' AUTO_INCREMENT=28 ;
 
 --
 -- 转存表中的数据 `ws_wechat_route`
 --
 
-INSERT INTO `ws_wechat_route` (`id`, `obj_type`, `obj_id`, `keyword`, `date_add`, `date_modify`) VALUES
-(2, 'text', '8', '帮助1', 1395026605, 1395032563),
-(3, 'text', '10', '帮助2', 1395026788, 1395026941),
-(5, 'text', '11', '帮助3', 1395032588, 1395032588),
-(6, 'news', '1', '关注', 1395034976, 1395034976),
-(7, 'news', '2', '无匹配', 1395035427, 1395035603),
-(8, 'news', '7', '图文121', 1395045829, 1395049844),
-(11, 'text', '12', '测试', 1395104857, 1395104857),
-(10, 'news', '6', '图文3', 1395048849, 1395048849),
-(12, 'news', '8', '000', 1395122783, 1395122783),
-(18, 'common', '0', '取消关注', 1395222382, 1395222382),
-(14, 'common', '0', '关注', 1395222343, 1395222343),
-(15, 'common', '0', '天气', 1395222352, 1395222352),
-(16, 'common', '0', '新闻', 1395222360, 1395222360),
-(17, 'common', '0', '笑话', 1395222366, 1395222366),
-(19, 'common', '0', '默认', 1395222683, 1395222683),
-(20, 'text', '13', '哈哈哈哈', 1395222731, 1395222731);
+INSERT INTO `ws_wechat_route` (`id`, `user_id`, `obj_type`, `obj_id`, `keyword`, `date_add`, `date_modify`) VALUES
+(2, 5, 'text', '8', '帮助1', 1395026605, 1395370158),
+(3, 5, 'text', '10', '帮助2', 1395026788, 1395370163),
+(5, 5, 'text', '11', '帮助3', 1395032588, 1395370153),
+(6, 1, 'news', '1', '关注', 1395034976, 1395372530),
+(7, 1, 'news', '2', '无匹配', 1395035427, 1395372565),
+(8, 5, 'news', '7', '图文121', 1395045829, 1395370169),
+(11, 1, 'text', '12', '测试', 1395104857, 1395371174),
+(10, 5, 'news', '6', '图文3', 1395048849, 1395370173),
+(12, 1, 'news', '8', '发个图文吧', 1395122783, 1395372616),
+(18, 0, 'common', '0', '取消关注', 1395222382, 1395222382),
+(14, 0, 'common', '0', '关注', 1395222343, 1395222343),
+(15, 0, 'common', '0', '天气', 1395222352, 1395222352),
+(16, 0, 'common', '0', '新闻', 1395222360, 1395222360),
+(17, 0, 'common', '0', '笑话', 1395222366, 1395222366),
+(19, 0, 'common', '0', '默认', 1395222683, 1395222683),
+(20, 1, 'text', '13', '你是谁', 1395222731, 1395372592),
+(21, 1, 'tool', '2', '新闻', 1395370037, 1395370037),
+(22, 5, 'news', '9', '关注', 1395371238, 1395371238),
+(23, 5, 'news', '10', '无匹配', 1395371503, 1395371503),
+(24, 0, 'common', '0', '无匹配', 1395372479, 1395372479),
+(26, 5, 'tool', '5', '笑话', 1395374541, 1395374541),
+(27, 0, 'common', '0', '菜谱', 1395378986, 1395378986);
 
 -- --------------------------------------------------------
 
@@ -580,11 +591,11 @@ CREATE TABLE IF NOT EXISTS `ws_wechat_text` (
 --
 
 INSERT INTO `ws_wechat_text` (`id`, `user_id`, `content`, `date_add`, `date_modify`) VALUES
-(8, 5, '帮助测试文本1', 1395024768, 1395032563),
-(11, 5, '半天祝啊啊', 1395032588, 1395032588),
-(10, 5, '哈哈哈', 1395026788, 1395026941),
-(12, 1, '测试本文', 1395104857, 1395104857),
-(13, 1, '哈哈哈哈', 1395222731, 1395222731);
+(8, 5, '帮助测试文本1', 1395024768, 1395370158),
+(11, 5, '半天祝啊啊', 1395032588, 1395370153),
+(10, 5, '哈哈哈', 1395026788, 1395370163),
+(12, 1, '测试本文', 1395104857, 1395371174),
+(13, 1, '我是我哦', 1395222731, 1395372592);
 
 -- --------------------------------------------------------
 
@@ -602,7 +613,7 @@ CREATE TABLE IF NOT EXISTS `ws_wechat_tool` (
   `date_add` int(10) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `date_modify` int(10) NOT NULL DEFAULT '0' COMMENT '修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='插件详情表' AUTO_INCREMENT=6 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COMMENT='插件详情表' AUTO_INCREMENT=8 ;
 
 --
 -- 转存表中的数据 `ws_wechat_tool`
@@ -613,7 +624,8 @@ INSERT INTO `ws_wechat_tool` (`id`, `name`, `intro`, `function`, `status`, `sort
 (2, '新闻', '输入“新闻”，回复当前新浪头条新闻', 'sinaNews', 1, 0, 0, 0),
 (3, '翻译', '输入“翻译”加任意内容，回复翻译后的内容', 'trans', 0, 2, 0, 0),
 (4, '英语', '输入“英语”，回复一句随机英语', 'english', 1, 1, 0, 0),
-(5, '笑话', '回复“笑话”，回复一则随机笑话', 'joke', 1, 3, 0, 0);
+(5, '笑话', '回复“笑话”，回复一则随机笑话', 'joke', 1, 3, 0, 0),
+(6, '菜谱', '输入“菜谱”，随机返回一个菜谱', 'cookBook', 0, 4, 1395374131, 1395374359);
 
 -- --------------------------------------------------------
 
