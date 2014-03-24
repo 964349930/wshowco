@@ -247,7 +247,7 @@ function getPicPath($pic, $size)
         }
         */
     } else {
-        $path = SITE_IMG_PATH.'/nopic.png';
+        $path = './public/images/nopic.jpg';
     }
     return $path;
 }
