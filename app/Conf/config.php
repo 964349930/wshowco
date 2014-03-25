@@ -10,9 +10,9 @@ return array(
 
     'DB_TYPE' => 'mysql',
     'DB_HOST' => 'localhost',
-    'DB_NAME' => 'wshowco_ccms',
-    'DB_USER' => 'wshowco_ccms',
-    'DB_PWD' => 'chen250764',
+    'DB_NAME' => 'ccms',
+    'DB_USER' => 'root',
+    'DB_PWD' => '',
     'DB_PORT' => '3306',
     'DB_PREFIX' => 'ws_',
 

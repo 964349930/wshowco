@@ -1,1 +1,14 @@
-/app/Runtime/
+# ignore the app/Runtime dir
+app/Runtime/
+
+# ignore the emacs editor cache file
+*~
+
+# ignore the config file
+app/Conf/
+
+# ignore the data file
+data/
+
+# ignore the sql file
+*.sql
