@@ -5,7 +5,8 @@
     </ul>
 </div>
 <div class="edit">
-    <form method="post" action="{$editUrl}" enctype="multipart/form-data">
+    <form method="post" action="{$settingUrl}" enctype="multipart/form-data">
+        <input type="hidden" name="id" value="{$siteInfo.id}" />
         <dl>
             <dt>微网名称：</dt>
             <dd><input type="text" name="site_name" value="{$siteInfo.site_name}" /></dd>

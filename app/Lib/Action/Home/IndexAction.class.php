@@ -76,13 +76,16 @@ class IndexAction extends HomeAction {
             '用户管理' => array(
                 '用户列表' => U('Home/User/userList'),
             ),
+            '图片管理' => array(
+                '垃圾图片列表' => U('Home/Gallery/lostImgList'),
+            ),
             '主题管理' => array(
                 '主题列表' => U('Home/Theme/themeList'),
             ),
             '微信功能' => array(
                 '接口模拟' => U('Home/Wechat/sim'),
-                '通用关键字' => U('Home/Wechat/keywordList'),
                 '插件管理' => U('Home/Tool/toolList'),
+                '通用关键字' => U('Home/Wechat/keywordList'),
             ),
         );
         return $menu;

@@ -19,7 +19,7 @@ class UserModel extends CommonModel{
 		}
 		//头像
 		if(in_array('avatar_name', $arrFormatField)){
-			$info['avatar_name'] = getPicPath($info['avatar']);
+			$info['avatar_name'] = getPicPath(D('GalleryMeta')->getImg($info['avatar']));
 		}
         //url
         if(in_array('url', $arrFormatField)){

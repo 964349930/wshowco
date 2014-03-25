@@ -43,7 +43,7 @@ class SettingModel extends CommonModel {
 
         //logo
         if(in_array('logo_name', $arrFormatField)){
-            $info['logo_name'] = getPicPath($info['logo']);
+            $info['logo_name'] = getPicPath(D('GalleryMeta')->getImg($info['logo']));
         }
 
         //主题名称

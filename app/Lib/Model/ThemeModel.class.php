@@ -18,7 +18,7 @@ class ThemeModel extends CommonModel{
 		}
 		//效果图
 		if(in_array('cover_name', $arrFormatField)){
-			$info['cover_name'] = getPicPath($info['cover']);
+			$info['cover_name'] = getPicPath(D('GalleryMeta')->getImg($info['cover']));
 		}
 		//类型
 		if(in_array('type_name', $arrFormatField)){

@@ -54,30 +54,6 @@ class ThemeAction extends HomeAction{
 			$this->error('使用主题失败');
 		}
 	}
-    /**
-     * 添加主题
-     */
-    public function add()
-    {
-        $data = $this->_post();
-        if(empty($data)){
-            $this->assign('addUrl', U('Home/Theme/add'));
-            $this->display();
-            exit;
-        }
-        $themeObj = D('Theme');
-        if(!empty($_FILES)){
-            $picList = uploadPic();
-            if($picList['code'] != 'error'){
-                if(!empty($picList['pic']['savename'])){
-                    $data['cover'] = $picList['pic']['savename'];
-                }
-            }
-        }
-        $data['date_add'] = $data['date_modify'] = time();
-        $themeObj->add($data);
-        $this->success('添加成功', U('Home/Theme/themeList'));
-    }
 
     /**
      * 更新
@@ -99,7 +75,7 @@ class ThemeAction extends HomeAction{
             $picList = uploadPic();
             if($picList['code'] != 'error'){
                 if(!empty($picList['pic']['savename'])){
-                    $data['cover'] = $picList['pic']['savename'];
+                    $data['cover'] = D('GalleryMeta')->addImg($picList['pic']['savename']);
                 }
             }
         }

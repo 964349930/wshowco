@@ -15,7 +15,7 @@ class WechatNewsMetaModel extends CommonModel
     public function format($arrInfo, $arrFormatField)
     {
         if(in_array('cover_name', $arrFormatField)){
-            $arrInfo['cover_name'] = getPicPath($arrInfo['cover']);
+            $arrInfo['cover_name'] = getPicPath(D('GalleryMeta')->getImg($arrInfo['cover']));
         }
         return $arrInfo;
     }

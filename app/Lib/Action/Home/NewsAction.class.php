@@ -93,7 +93,7 @@ class NewsAction extends HomeAction{
 		if(!empty($_FILES['pic']['name'])){
 			$picList = uploadPic();
 			if($picList['code'] != 'error'){
-				$meta['cover'] = $picList['pic']['savename'];
+				$meta['cover'] = D('GalleryMeta')->addImg($picList['pic']['savename']);
 			}
 		}
         $news_id = D('WechatNews')->updateNews($news);
@@ -179,7 +179,7 @@ class NewsAction extends HomeAction{
 		if(!empty($_FILES['pic']['name'])){
 			$picList = uploadPic();
 			if($picList['code'] != 'error'){
-				$meta['cover'] = $picList['pic']['savename'];
+				$meta['cover'] = D('GalleryMeta')->addImg($picList['pic']['savename']);
 			}
 		}
         D('WechatNewsMeta')->updateMeta($meta, $meta['news_id']);

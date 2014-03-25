@@ -73,7 +73,7 @@ class UserAction extends HomeAction{
 		if(!empty($_FILES['pic']['name'])){
 			$picList = uploadPic();
 			if($picList['code'] != 'error'){
-				$data['avatar'] = $picList['pic']['savename'];
+				$data['avatar'] = D('GalleryMeta')->addImg($picList['pic']['savename']);
 			}
 		}
         $userObj->save($data);

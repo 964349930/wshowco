@@ -196,7 +196,7 @@ class WxAction extends BaseAction
             //判断url是否需要处理
             $result = substr_count($v['cover'], 'http://');
             if(empty($result)){
-                $v['cover'] = str_replace('./', 'http://'.$_SERVER['HTTP_HOST'].'/', getPicPath($v['cover']));
+                $v['cover'] = str_replace('./', 'http://'.$_SERVER['HTTP_HOST'].'/', getPicPath(D('GalleryMeta')->getImg($v['cover'])));
             }
             if(empty($v['url'])){
                 $v['url'] = 'http://'.$_SERVER['HTTP_HOST'].U('Index/item', array(

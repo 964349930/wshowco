@@ -12,29 +12,28 @@ class ItemAction extends HomeAction
     public function setting()
     {
         $siteObj = D('Setting');
-        $data = $this->_post();
-        $siteInfo = $siteObj->where('user_id='.$_SESSION['uid'])->find();
-        if(empty($data)){
+        if(empty($_POST)){
+            $siteInfo = $siteObj->where('user_id='.$_SESSION['uid'])->find();
             $siteInfo = $siteObj->format($siteInfo, array('logo_name', 'url', 'theme_name'));
             $this->assign('siteInfo', $siteInfo);
-            $this->assign('editUrl', U('Home/Item/setting'));
+            $this->assign('settingUrl', U('Home/Item/setting'));
             $this->display();
             exit;
         }
-        if(empty($siteInfo)){
+        $data = $this->_post();
+		if(!empty($_FILES['pic']['name'])){
+			$picList = uploadPic();
+			if($picList['code'] != 'error'){
+                $data['logo'] = D('GalleryMeta')->addImg($picList['pic']['savename']);
+			}
+		}
+        if(empty($data['id'])){
             $data['user_id'] = $_SESSION['uid'];
-            if($siteObj->add($data)){
-                $this->success('添加成功');
-            }else{
-                $this->error('添加失败');
-            }
+            $siteObj->add($data);
         }else{
-            if($siteObj->save($data)){
-                $this->success('更新成功');
-            }else{
-                $this->error('更新失败');
-            }
+            $siteObj->save($data);
         }
+        $this->success('操作成功');
     }
 
     /**
@@ -106,7 +105,7 @@ class ItemAction extends HomeAction
 		if(!empty($_FILES['pic']['name'])){
 			$picList = uploadPic();
 			if($picList['code'] != 'error'){
-				$data['cover'] = $picList['pic']['savename'];
+				$data['cover'] = D('GalleryMeta')->addImg($picList['pic']['savename']);
 			}
 		}
         $item_id = $data['id'];
