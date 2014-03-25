@@ -511,18 +511,39 @@ function getOrderId(){
 	}
 	return array($date.$exp,$current);
 }
-    /**
-     * 输出用于测试的数据
-     */
-    function cbug($content)
-    {
-	    if(is_array($content)){
-		    $content = serialize($content);
-	    }
-        $data['user_id'] = $_SESSION['uid'];
-	    $data['info'] = $content;
-	    $data['date_add'] = time();
-	    D('DebugLog')->add($data);
-    }
+
+/**
+ * 输出用于测试的数据
+ */
+function cbug($content)
+{
+	if(is_array($content)){
+		$content = serialize($content);
+	}
+    $data['user_id'] = $_SESSION['uid'];
+	$data['info'] = $content;
+	$data['date_add'] = time();
+	D('DebugLog')->add($data);
+}
+
+/**
+ * 递归搜索文件
+ */
+
+function find_all_files($dir) 
+{ 
+    $root = scandir($dir); 
+    foreach($root as $value) { 
+        if($value === '.' || $value === '..') {continue;} 
+        if(is_file("$dir/$value")) {
+            if(preg_match('/_[bms]{1}/', "$dir/$value")){continue;}
+            else{$result[]="$dir/$value";continue;} 
+        }
+        foreach(find_all_files("$dir/$value") as $value) { 
+            $result[]=$value; 
+        } 
+    } 
+    return $result; 
+} 
 
 ?>

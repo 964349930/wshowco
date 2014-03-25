@@ -11,9 +11,48 @@ class GalleryAction extends HomeAction
      */
     public function lostImgList()
     {
-        $dir = 'data/attach/201403/25/';
-        $files = scandir($dir);
-        print_r($files);
+        $dir = './data/attach';
+        $allImgs = find_all_files($dir);
+        $sqlImgs = D('GalleryMeta')->getField('path', true);
+        foreach($sqlImgs as $k=>$v){
+            $sqlImgs[$k] = getPicPath($v);
+        }
+        $result = array_diff($allImgs, $sqlImgs);
+        $data = array(
+            'imgList' => $result,
+            'lostDelUrl' => U('Home/Gallery/lostDel'),
+        );
+        $this->assign($data);
+        $this->display();
+    }
+
+    /**
+     * lost img delete
+     */
+    public function lostDel()
+    {
+        $delImgs = array();
+		$postImgs = $this->_post('img');
+		if (!empty($postImgs)) {
+			$delImgs = $postImgs;
+		}
+		$getImg = trim($this->_get('img'));
+		if (!empty($getImg)) {
+			$delImgs[] = $getImg;
+		}
+		if (empty($delImgs)) {
+			$this->error('请选择您要删除的数据');
+		}
+        foreach($delImgs as $k=>$v){
+            $imgInfo = pathinfo($v);
+            foreach(array('_b', '_m', '_s') as $k2=>$v2){
+                $delImgs[] = $imgInfo['dirname'].'/'.basename($imgInfo['basename'], '.jpg').$v2.'.'.$imgInfo['extension'];
+            }
+        }
+        foreach($delImgs as $k=>$v){
+            unlink($v);
+        }
+        $this->success('删除成功');
     }
 
     /**
@@ -71,7 +110,7 @@ class GalleryAction extends HomeAction
 		if(!empty($_FILES['pic']['name'])){
 			$picList = uploadPic();
 			if($picList['code'] != 'error'){
-				$data['cover'] = $picList['pic']['savename'];
+				$data['cover'] = D('GalleryMeta')->addImg($picList['pic']['savename']);
 			}
 		}
         if(empty($data['id'])){

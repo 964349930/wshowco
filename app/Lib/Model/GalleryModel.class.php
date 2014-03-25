@@ -12,7 +12,7 @@ class GalleryModel extends CommonModel
     public function format($arrInfo, $arrFormat)
     {
         if(in_array('cover_name', $arrFormat)){
-            $arrInfo['cover_name'] = getPicPath($arrInfo['cover']);
+            $arrInfo['cover_name'] = getPicPath(D('GalleryMeta')->getImg($arrInfo['cover']));
         }
         return $arrInfo;
     }
