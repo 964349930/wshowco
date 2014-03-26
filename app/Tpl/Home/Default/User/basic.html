@@ -101,7 +101,12 @@ $(function(){
             text: '确定',
             click: function(){
                 var img_id = $("#imgList").find('input:checked').val();    
-                $("#avatar").val(img_id);
+                var upload_img = $("#tabs-2").find('input').val();
+                if(img_id != null){
+                alert('img_id is not null');
+                    $("#avatar").val(img_id);
+                    }
+                $("#pic").val(upload_img);
                 $(this).dialog('close')}
         },
         {
