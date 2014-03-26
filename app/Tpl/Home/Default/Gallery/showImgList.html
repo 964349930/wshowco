@@ -1,0 +1,12 @@
+<div class="">
+    <div id="imgList">
+        <ul class="gallery ui-helper-reset ui-helper-clearfix">
+            <volist name="imgList" id="vo">
+            <li class="ui-widget-content ui-corner-tr">
+                <img src="{$vo.path_name}" height="50px" />
+                <input type="radio" value="{$vo.id}" />
+            </li>
+            </volist>
+        </ul>
+    </div>
+</div>

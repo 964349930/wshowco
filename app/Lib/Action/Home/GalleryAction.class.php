@@ -7,6 +7,40 @@
 class GalleryAction extends HomeAction
 {
     /**
+     * get the gallery list for add new img
+     */
+    public function getGalleryList()
+    {
+        $galleryList = D('Gallery')->where('user_id='.$_SESSION['uid'])->select();
+        $html = '';
+        foreach($galleryList as $k=>$v){
+            $html .= "<option value='".$v['id']."'>".$v['title']."</option>";
+        }
+        echo $html;
+    }
+
+    /**
+     * show the gallery meta
+     */
+    public function showImgList()
+    {
+        $imgObj = D('GalleryMeta');
+        $gallery_id = $this->_post('gallery_id', 'intval');
+        if(empty($gallery_id)){
+            $gallery_id = D('Gallery')->getDefaultGalleryId();
+        }
+        $arrField = array();
+        $arrMap['gallery_id'] = array('eq', $gallery_id);
+        $arrOrder = array();
+        $imgList = $imgObj->getList($arrField, $arrMap, $arrOrder);
+        foreach($imgList as $k=>$v){
+            $imgList[$k] = $imgObj->format($v, array('path_name'));
+        }
+        $this->assign('imgList', $imgList);
+        $this->display();
+    }
+
+    /**
      * scan user img
      */
     public function lostImgList()
@@ -54,6 +88,8 @@ class GalleryAction extends HomeAction
         }
         $this->success('删除成功');
     }
+
+    /**********************图库管理*******************************/
 
     /**
      * 获取图库列表
@@ -153,6 +189,8 @@ class GalleryAction extends HomeAction
 		$this->success('删除成功');
     }
 
+
+    /*******************************图片管理******************************/
     /**
      * meta list
      */

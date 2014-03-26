@@ -10,7 +10,9 @@
     <dl>
         <dt>头像</dt>
         <notempty name="userInfo[avatar]"><dd><img src="{$userInfo[avatar_name]}" height="80" /></p></notempty>
-        <dd><input type="file" name="pic" value="{$userInfo.avatar}" />
+        <input type="hidden" name="pic" id="pic" value="" />
+        <input type="hidden" name="avatar" id="avatar" value="{$userInfo.avatar}" />
+        <dd><a href="javascript:void(0)" id="openDialog" class="ui-btn">选择图片</a></dd>
     </dl>
     <dl>
         <dt>用户名：</dt>
@@ -46,4 +48,67 @@
     </dl>
     </form>
 </div>
+<div id="dialog">
+    <ul>
+        <li><a href="#tabs-1">在线图库</a></li>
+        <li><a href="#tabs-2">本地上传</a></li>
+    </ul>
+    <div id="tabs-1">
+        <div id="select">
+            <select name="pic" id="gallery">
+            </select>
+        </div>
+        <div id="imgList">
+        </div>
+    </div>
+    <div id="tabs-2">
+        <p>浏览：</p><input type="file" name="upload_img" />
+    </div>
+</div>
+<script>
+$(function(){
+    /* 在线图片和本地上传切换 */
+    $("#dialog").tabs();
+
+    /* 获取图库列表 */
+    $.get(
+        "{:U('Home/Gallery/getGalleryList')}",
+        function(data){
+            $("#gallery").html(data);
+        });
+
+    /* 动态加载图片信息 */
+    function loadImgList(){
+        $("#imgList").load(
+            "{:U('Home/Gallery/showImgList')}",
+            {gallery_id: $("#gallery").val()}
+            );
+        }
+
+    $("#gallery").change(function(){loadImgList()});
+    /* 打开会话框 */
+    $("#openDialog").click(function(){
+        $("#dialog").dialog("open");
+        loadImgList();
+        });
+    $("#dialog").dialog({
+        autoOpen: false,
+        title: '选择图片',
+        height: 400,
+        width: 640,
+        buttons: [
+        {
+            text: '确定',
+            click: function(){
+                var img_id = $("#imgList").find('input:checked').val();    
+                $("#avatar").val(img_id);
+                $(this).dialog('close')}
+        },
+        {
+            text: '取消',
+            click: function(){ $(this).dialog('close')}
+        }]
+        })
+    });
+</script>
 <include file="Public:footer" />

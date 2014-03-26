@@ -11,7 +11,7 @@ class GalleryMetaModel extends CommonModel
      */
     public function format($arrInfo, $arrField){
         if(in_array('path_name', $arrField)){
-            $arrInfo['path_name'] = getPicPath($arrInfo['path']);
+            $arrInfo['path_name'] = getPicPath($arrInfo['path'], 'm');
         }
         return $arrInfo;
     }
@@ -42,7 +42,7 @@ class GalleryMetaModel extends CommonModel
             return 0;
             exit;
         }
-        $path = $this->where('id='.$img_id)->getField('path');
+        $path = $this->where('id='.$img_id)->getField('path', 'm');
         return $path; 
     }
 
