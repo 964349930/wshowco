@@ -1,0 +1,16 @@
+<include file="Cakeshop:header" /> 
+<include file="Cakeshop:navigation" />
+<div class="container index product pb50 pt_rl">
+    <volist name="list" id="vo">
+    <div class="list clearfix">
+        <div class="col-xs-4 tc">
+            <a class="thumbnail" href="{$vo.url}"><img class="img-responsive" src="{$vo.cover_name}"></a>
+        </div>
+        <div class="col-xs-8">
+            <h4><a href="{$vo.url}">{$vo.title}</a></h4>
+            <span>￥{$vo.ext.price}</span>
+            <p>{$vo.intro}</p>
+        </div>
+    </div>
+    </volist>
+<include file="Cakeshop:footer" />

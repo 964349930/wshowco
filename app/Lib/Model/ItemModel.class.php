@@ -19,6 +19,9 @@ class ItemModel extends CommonModel
         if(in_array('template_name', $arrFormatField)){
             $arrInfo['template_name'] = D('ThemeTpl')->where('id='.$arrInfo['template_id'])->getField('spell');
         }
+        if(in_array('ext', $arrFormatField)){
+            $arrInfo['ext'] = D('Ext')->getExtList('item', $arrInfo['id']);
+        }
         return $arrInfo;
     }
 }

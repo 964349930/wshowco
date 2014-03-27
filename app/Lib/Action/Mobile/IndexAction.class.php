@@ -11,6 +11,8 @@ class IndexAction extends MobileAction
      */
     public function index()
     {
+        $siteInfo = $this->getSiteInfo();
+        $this->assign('bannerList', $this->getImgList($siteInfo['banner_id']));
         $this->display(ucfirst($this->theme_name).':index');
     }
 

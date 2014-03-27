@@ -70,7 +70,7 @@ class MobileAction extends BaseAction
     protected function getItemInfo($id)
     {
 		$itemInfo = D('Item')->where('id='.$id)->find();
-        $itemInfo = D('Item')->format($itemInfo, array('cover_name', 'template_name'));
+        $itemInfo = D('Item')->format($itemInfo, array('cover_name', 'template_name', 'ext'));
         return $itemInfo;
     }
 
@@ -82,7 +82,7 @@ class MobileAction extends BaseAction
     protected function getItemList($parent_id=0)
     {
         $itemList = D('Item')->where('parent_id='.$parent_id.' AND user_id='.$this->user_id.' AND status=1')->order('sort_order')->select();
-        $arrFormatField = array('cover_name');
+        $arrFormatField = array('cover_name', 'ext');
         foreach($itemList as $k=>$v){
             $itemList[$k] = D('Item')->format($v, $arrFormatField);
             $itemList[$k]['url'] = U('Index/item', array('user'=>$this->user, 'member_id'=>$this->member_id, 'id'=>$v['id']));
@@ -99,6 +99,19 @@ class MobileAction extends BaseAction
         $theme_id = D('Setting')->where('user_id='.$this->user_id)->getField('theme_id');
         $theme_name = D('Theme')->where('id='.$theme_id)->getField('spell');
         return ($theme_name) ? $theme_name : 'default';
+    }
+
+    /**
+     * Get the gallery img list
+     */
+    protected function getImgList($gallery_id)
+    {
+        $imgObj = D('GalleryMeta');
+        $imgList = $imgObj->where('gallery_id='.$gallery_id)->select();
+        foreach($imgList as $k=>$v){
+            $imgList[$k] = $imgObj->format($v, array('path_name'));
+        }
+        return $imgList; 
     }
 
 }

@@ -1,7 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>后台管理</title>
+        <title>微信平台</title>
         <link href="./public/Home/css/page.css" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="./public/js/jquery.js"></script>
     </head>
@@ -12,7 +12,7 @@
                 <td colspan="3">
                     <div class="header">
                         <div class="logo"><a href="{:U('admin/Index/index')}" >&nbsp;</a></div>
-                        <div class="nav_sub">您好,管理员&nbsp; |
+                        <div class="nav_sub">您好,{$_SESSION['userInfo']['name']}&nbsp; |
                             <a href="javascript:void(0);" onClick="refresh();">刷新</a> |
                             <a href="{:U('Home/Public/logout')}">退出</a><br/>
                             <div id="TopTime"></div>
