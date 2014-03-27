@@ -7,10 +7,9 @@
 <div class="edit">
     <form method="post" action="{$editUrl}" enctype="multipart/form-data" role="form">
     <input type="hidden" name="id" value="{$userInfo.id}" />
-    <dl>
+    <dl id="avatar">
         <dt>头像</dt>
         <notempty name="userInfo[avatar]"><dd><img src="{$userInfo[avatar_name]}" height="80" /></p></notempty>
-        <input type="hidden" name="pic" id="pic" value="" />
         <input type="hidden" name="avatar" id="avatar" value="{$userInfo.avatar}" />
         <dd><a href="javascript:void(0)" id="openDialog" class="ui-btn">选择图片</a></dd>
     </dl>
@@ -106,6 +105,10 @@ $(function(){
                 alert('img_id is not null');
                     $("#avatar").val(img_id);
                     }
+                if(upload_img != null){
+                    var data = "<dd><input type='file' name='pic' value='"+upload_img+"' /></dd>";
+                    $("#avatar").append(data);
+                }
                 $("#pic").val(upload_img);
                 $(this).dialog('close')}
         },
