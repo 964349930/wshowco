@@ -18,7 +18,7 @@ class MemberAction extends HomeAction
         $page = page($memberObj->getCount($arrMap));
         $memberList = $memberObj->getList($arrField, $arrMap, $arrOrder, $page->firstRow, $page->listRows);
         foreach($memberList as $k=>$v){
-            $memberList[$k] = $memberObj->format($v, array('avatar_name'));
+            $memberList[$k] = $memberObj->format($v, array('avatar_name', 'name', 'mobile'));
         }
         $data = array(
             'infoUrl' => U('Home/Member/memberInfo'),
@@ -98,14 +98,20 @@ class MemberAction extends HomeAction
         $member_id = $this->_get('member_id', 'intval');
         $msgObj = D('MemberMsg');
         $arrField = array();
-        $arrMap['member_id'] = array('eq', $member_id);
+        if(!empty($member_id)){
+            $arrMap['member_id'] = array('eq', $member_id);
+        }else{
+            $member_id_list = D('Member')->where('user_id='.$_SESSION['uid'])->getField('id', true);
+            $arrMap['member_id'] = array('in', $member_id_list);
+        }
         $arrOrder = array('date_msg desc');
         $page = page($msgObj->getCount($arrMap));
         $msgList = $msgObj->getList($arrField, $arrMap, $arrOrder, $page->firstRow, $page->listRows);
         foreach($msgList as $k=>$v){
-            $msgList[$k] = $msgObj->format($v, array('type_name'));
+            $msgList[$k] = $msgObj->format($v, array('type_name', 'member_name'));
         }
         $data = array(
+            'member_id' => $member_id,
             'msgList' => $msgList,
             'pageHtml' => $page->show(),
         );

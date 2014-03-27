@@ -52,6 +52,7 @@ class IndexAction extends HomeAction {
             ),
             '会员管理' => array(
                 '会员列表' => U('Home/Member/MemberList'),
+                '信息列表' => U('Home/Member/msgList'),
             ),
             '图库管理' => array(
                 '图库列表' => U('Home/Gallery/galleryList'),

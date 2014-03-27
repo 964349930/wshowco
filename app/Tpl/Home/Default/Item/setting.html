@@ -16,7 +16,8 @@
             <notempty name="siteInfo[logo_name]">
             <dd><img src="{$siteInfo.logo_name}" height="50px" /></dd>
             </notempty>
-            <dd><input type="file" name="pic" /></dd>
+            <dd><a href="javascript:void(0)" id="changeImg" />更改LOGO</a>
+            <input type="hidden" name="logo" id="img" value="{$siteInfo.logo}" />
         </dl>
         <dl>
             <dt>微网链接：</dt>

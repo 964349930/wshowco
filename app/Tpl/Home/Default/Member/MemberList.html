@@ -12,9 +12,8 @@
       <tr>
         <th width="20%">头像</th>
         <th width="10%">昵称</th>
-        <th width="10%">唯一微信号</th>
-        <th width="10%">手机号码</th>
-        <th width="20%">地址</th>
+        <th width="15%">唯一微信号</th>
+        <th width="15%">手机号码</th>
         <th width="10%">上次登录时间</th>
         <th width="20%">操作</th>
       </tr>
@@ -29,13 +28,12 @@
           <td>{$vo.name}</td>
           <td>{$vo.wechat_id}</td>
           <td>{$vo.mobile}</td>
-          <td>{$vo.address}</td>
           <td>{$vo.date_login|date="Y-m-d H:i", ###}</td>
           <td>
             <a href="{$infoUrl}&member_id={$vo.id}" class="mr10">会员信息</a>
             <a href="{$msgUrl}&member_id={$vo.id}" class="mr10">消息记录</a>
             <a href="{$viewUrl}&member_id={$vo.id}" class="mr10">浏览记录</a>
-            <a href="{$likeUrl}&member_id={$vo.id}">喜欢列表</a>
+            <a href="{$likeUrl}&member_id={$vo.id}">兴趣列表</a>
           </td>
         </tr>
       </volist>

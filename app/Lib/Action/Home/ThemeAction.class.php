@@ -28,10 +28,9 @@ class ThemeAction extends HomeAction{
 			$themeList[$k] = $themeObj->format($v, $arrFormatField);
 		}
 		$tplData = array(
-			'addUrl' => U('Home/Theme/add'),
 			'useUrl' => U('Home/Theme/toUse'),
-            'tplUrl' => U('Home/Theme/tplList'),
-			'editUrl' => U('Home/Theme/edit'),
+            'tplListUrl' => U('Home/Theme/tplList'),
+            'themeInfoUrl' => U('Home/Theme/themeInfo'),
 			'delUrl' => U('Home/Theme/del'),
 			'pageHtml' => $pageHtml,
 			'themeList' => $themeList,
@@ -58,19 +57,22 @@ class ThemeAction extends HomeAction{
     /**
      * 更新
      */
-    public function edit()
+    public function themeInfo()
     {
-        $data = $this->_post();
         $themeObj = D('Theme');
-        if(empty($data)){
-            $id = $this->_get('id', 'intval');
-            $themeInfo = $themeObj->getInfoById($id);
-            $themeInfo = $themeObj->format($themeInfo, array('cover_name'));
-            $this->assign('editUrl', U('Home/Theme/edit'));
-            $this->assign('themeInfo', $themeInfo);
+        if(empty($_POST)){
+            $theme_id = $this->_get('theme_id', 'intval');
+            if(!empty($theme_id)){
+                $themeInfo = $themeObj->getInfoById($theme_id);
+                $themeInfo = $themeObj->format($themeInfo, array('cover_name'));
+                $this->assign('themeInfo', $themeInfo);
+            }
+            $this->assign('themeInfoUrl', U('Home/Theme/themeInfo'));
             $this->display();
             exit;
         }
+        $data = $this->_post();
+        $data['date_modify'] = time();
         if(!empty($_FILES)){
             $picList = uploadPic();
             if($picList['code'] != 'error'){
@@ -79,12 +81,13 @@ class ThemeAction extends HomeAction{
                 }
             }
         }
-        $data['date_modify'] = time();
-        if($themeObj->save($data)){
-            $this->success('更新成功');
+        if(empty($data['id'])){
+            $data['date_add'] = time();
+            $themeObj->add($data);
         }else{
-            $this->error('更新失败');
+            $themeObj->save($data);
         }
+        $this->success('操作成功');
     }
 
     /**
@@ -134,9 +137,9 @@ class ThemeAction extends HomeAction{
         $data = array(
             'theme_name' => $theme_name,
             'tplList' => $tplList,
-            'addUrl' => U('Home/Theme/addTpl', array('theme_id'=>$id)),
-            'editUrl' => U('Home/Theme/editTpl'),
-            'delUrl' => U('Home/Theme/delTpl'),
+            'addUrl' => U('Home/Theme/tplInfo', array('theme_id'=>$id)),
+            'editUrl' => U('Home/Theme/tplInfo'),
+            'delUrl' => U('Home/Theme/tplDel'),
         );
         $this->assign($data);
         $this->display();
@@ -145,51 +148,38 @@ class ThemeAction extends HomeAction{
     /**
      * add the new template
      */
-    public function addTpl()
-    {
-        $data = $this->_post();
-        if(empty($data)){
-            $theme_id = $this->_get('theme_id', 'intval');
-            $this->assign('theme_id', $theme_id);
-            $this->assign('addUrl', U('Home/Theme/addTpl'));
-            $this->display();
-            exit;
-        }
-        $data['date_add'] = $data['date_modify'] = time();
-        if(D('ThemeTpl')->add($data)){
-            $this->success('添加成功');
-        }else{
-            $this->error('添加失败');
-        }
-    }
-
-    /**
-     * update the template 
-     */
-    public function editTpl()
+    public function tplInfo()
     {
         $tplObj = D('ThemeTpl');
-        $data = $this->_post();
-        if(empty($data)){
-            $id = $this->_get('id', 'intval');
-            $tplInfo = $tplObj->where('id='.$id)->find();
-            $this->assign('tplInfo', $tplInfo);
-            $this->assign('editUrl', U('Home/Theme/editTpl'));
+        if(empty($_POST)){
+            $tpl_id = $this->_get('tpl_id', 'intval');
+            if(!empty($tpl_id)){
+                $tplInfo = $tplObj->getInfoById($tpl_id);
+                $theme_id = $tplInfo['theme_id'];
+                $this->assign('tplInfo', $tplInfo);
+            }else{
+                $theme_id = $this->_get('theme_id', 'intval');
+            }
+            $this->assign('theme_id', $theme_id);
+            $this->assign('tplInfoUrl', U('Home/Theme/tplInfo'));
             $this->display();
             exit;
         }
+        $data = $this->_post();
         $data['date_modify'] = time();
-        if($tplObj->save($data)){
-            $this->success('更新成功');
+        if(empty($data['id'])){
+            $data['date_add'] = time();
+            $tplObj->add($data);
         }else{
-            $this->error('更新失败');
+            $tplObj->save($data);
         }
+        $this->success('操作成功');
     }
 
     /**
      * del the template
      */
-    public function delTpl()
+    public function tplDel()
     {
         $delIds = array();
 		$postIds = $this->_post('id');
@@ -207,7 +197,5 @@ class ThemeAction extends HomeAction{
 		D('ThemeTpl')->where($map)->delete();
 		$this->success('删除成功');
     }
-
-
 }
  

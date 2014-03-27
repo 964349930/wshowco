@@ -37,6 +37,15 @@ class MemberModel extends CommonModel
      */
     public function format($arrInfo, $arrFormat)
     {
+        if(in_array('name', $arrFormat)){
+            $arrInfo['name'] = ($arrInfo['name']) ? $arrInfo['name'] : '无名';
+        }
+        if(in_array('mobile', $arrFormat)){
+            $arrInfo['mobile'] = ($arrInfo['mobile']) ? $arrInfo['mobile'] : '无';
+        }
+        if(in_array('avatar_name', $arrFormat)){
+            $arrInfo['avatar_name'] = getPicPath(D('GalleryMeta')->getImg($arrInfo['avatar']), 'm');
+        }
         return $arrInfo;
     }
 

@@ -45,6 +45,10 @@ class MemberMsgModel extends CommonModel
         if(in_array('type_name', $arrFormatField)){
             $arrInfo['type_name'] = ($arrInfo['type'] == 1) ? '微信信息' : '网站留言';
         }
+        if(in_array('member_name', $arrFormatField)){
+            $member_name = D('Member')->where('id='.$arrInfo['member_id'])->getField('name');
+            $arrInfo['member_name'] = ($member_name) ? $member_name : '无名';
+        }
         if(in_array('mobile_name', $arrFormatField)){
             $arrInfo['mobile_name'] = ($arrInfo['mobile']) ? $arrInfo['mobile'] : '未知';
         }

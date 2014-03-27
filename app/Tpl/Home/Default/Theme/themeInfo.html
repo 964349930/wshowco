@@ -9,14 +9,14 @@
   
 <!--编辑表单 BEGIN-->
 <div class="edit">
-    <form action="{$editUrl}" method="post" enctype="multipart/form-data">
+    <form action="{$themeInfoUrl}" method="post" enctype="multipart/form-data">
         <input type="hidden" name="id" value="{$themeInfo.id}" />
         <div id="goods_info">
             <dl><dt>主题名称：</dt>
                 <dd><input type="text" name="name" value="{$themeInfo.name}" class="w200"/></dd></dl>
             <dl><dt>效果图：</dt>
                 <notempty name="themeInfo[cover]"><dd><img src="{$themeInfo.cover_name}" height="50px" /></dd></notempty>
-                <dd><input type="file" name="pic" class="w200" /></dd></dl>
+                <dd><a href="javascript:void(0)" id="changeImg">更改效果图</a></dd><input type="hidden" id="img" name="cover" value="{$themeInfo.cover}" /></dl>
             <dl><dt>标记：</dt>
                 <dd><input type="text" name="spell" value="{$themeInfo.spell}" class="w200" /></dd></dl>
             <dl><dt>描述：</dt>

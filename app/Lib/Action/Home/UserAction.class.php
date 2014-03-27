@@ -76,7 +76,6 @@ class UserAction extends HomeAction{
 				$data['avatar'] = D('GalleryMeta')->addImg($picList['pic']['savename']);
 			}
 		}
-        print_r($data);exit;
         $userObj->save($data);
         $this->success('更新成功');
 	}
