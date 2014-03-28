@@ -114,8 +114,31 @@ class MemberAction extends HomeAction
             'member_id' => $member_id,
             'msgList' => $msgList,
             'pageHtml' => $page->show(),
+            'msgDelUrl' => U('Home/Member/msgDel'),
         );
         $this->assign($data);
         $this->display();
+    }
+
+    /**
+     * 删除
+     */
+    public function msgDel()
+    {
+        $delIds = array();
+		$postIds = $this->_post('id');
+		if (!empty($postIds)) {
+			$delIds = $postIds;
+		}
+		$getId = intval($this->_get('id'));
+		if (!empty($getId)) {
+			$delIds[] = $getId;
+		}
+		if (empty($delIds)) {
+			$this->error('请选择您要删除的数据');
+		}
+		$map['id'] = array('in', $delIds);
+		D('MemberMsg')->where($map)->delete();
+		$this->success('删除成功');
     }
 }

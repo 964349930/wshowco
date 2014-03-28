@@ -1,6 +1,10 @@
-<include file="../Public/header" />
+<include file="Public:header" />
+<link rel="stylesheet" href="{$Think.template|dirname}/css/page.css">
+<link rel="stylesheet" href="{$Think.template|dirname}/css/index.css" />
+<script src="{$Think.template|dirname}/js/page.js"></script>
+
 <div data-role="page" id="main"  data-dom-cache="false">
-    <include file="../Public/navigation" />
+    <include file="Public:navigation" />
     <div class="details pl20 pr20 tc pb50">
         <h2>{$info.title}</h2>
         <em>{$info.ctime_text}</em>
@@ -8,5 +12,5 @@
         <p>{$info.content}</p>
     </div> 
     
-<include file="../Public/footer" />
+<include file="Public:footer" />
  

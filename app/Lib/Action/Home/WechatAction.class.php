@@ -12,6 +12,16 @@ class WechatAction extends HomeAction
     public function sim()
     {
         if(empty($_POST)){
+            $xml = '<xml>
+<ToUserName><![CDATA[ccms]]></ToUserName>
+<FromUserName><![CDATA[chanmo]]></FromUserName> 
+<CreateTime>1348831860</CreateTime>
+<MsgType><![CDATA[text]]></MsgType>
+<Content><![CDATA[测试]]></Content>
+<MsgId>1234567890123456</MsgId>
+</xml>';
+            $this->assign('testUrl', 'http://'.$_SERVER['HTTP_HOST'].U('Home/Wx/wxapi', array('user'=>$_SESSION['userInfo']['name'])));
+            $this->assign('testXml', $xml);
             $this->assign('url', U('Home/Wechat/sim'));
             $this->display();
             exit;
@@ -26,8 +36,8 @@ class WechatAction extends HomeAction
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		$result = curl_exec($ch);
 		curl_close($ch);
-        $this->assign('url', $url);
-        $this->assign('xml', $xml);
+        $this->assign('testUrl', $url);
+        $this->assign('testXml', $xml);
         $this->assign('result', htmlspecialchars($result));
         $this->display();
     }

@@ -1,6 +1,10 @@
-<include file="../Public/header" />
+<include file="Public:header" />
+<link rel="stylesheet" href="{$Think.template|dirname}/css/page.css">
+<link rel="stylesheet" href="{$Think.template|dirname}/css/index.css" />
+<script src="{$Think.template|dirname}/js/page.js"></script>
+
 <div data-role="page" id="main" class="pr">  
-    <include file="../Public/navigation" />
+    <include file="Public:navigation" />
     <div class="ui-grid-a commodity-list">
         <volist name="list" id="vo">
         <div <eq name="key%2" value="0">class="ui-block-a p5"<else />class="ui-block-b p5"</eq>>
@@ -16,4 +20,4 @@
         </volist>
     </div>     
 
-<include file="../Public/footer" />
+<include file="Public:footer" />

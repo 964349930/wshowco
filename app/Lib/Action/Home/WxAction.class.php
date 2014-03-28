@@ -80,7 +80,7 @@ class WxAction extends BaseAction
         //根据post数组获取返回数据内容
         $content = $this->getContent($keyword);
         //组装xml头部
-        $content = $this->setHeader($arrPost, $content);
+        $content = D('Wx')->setHeader($arrPost, $content);
         echo $content;
     }
 
@@ -137,22 +137,6 @@ class WxAction extends BaseAction
     }
 
     /**
-     * 设置头部
-     * @return xml $content 最后输出的信息
-     * @param array $arrPost 用户POST提交的数据
-     * @param xml $content 输出信息的BODY
-     */
-    private function setHeader($arrPost, $content)
-    {
-        $fromUsername = $arrPost['FromUserName'];
-        $toUsername = $arrPost['ToUserName'];
-        $time = time();
-        $texttpl = M('WechatTpl')->where('type="header"')->getField('texttpl');
-        $resultStr = sprintf($texttpl, $fromUsername, $toUsername, $time, $content);
-        return $resultStr;
-    }
-
-    /**
      * get the push data
      * @param string $obj_type
      * @param int $obj_id
@@ -163,64 +147,20 @@ class WxAction extends BaseAction
     {
         switch($obj_type){
         case 'text':
-            $textInfo = D('WechatText')->where('id='.$Obj_id)->find();
-            $pushInfo = $this->setText($pushInfo);
+            $textInfo = D('WechatText')->where('id='.$obj_id)->getField('content');
+            $pushInfo = D('Wx')->setText($textInfo);
             break;
         case 'tool':
             $function = D('WechatTool')->where('id='.$obj_id)->getField('function');
-            $toolInfo = D('WechatTool')->$function($keyword);
-            $pushInfo = $this->setText($pushInfo);
+            $pushInfo = D('WechatTool')->$function($keyword, $this->member_id);
             break;
         case 'news':
             $newsList = D('WechatNewsMeta')->where('news_id='.$obj_id)->select();
             $count = count($newsList);
-            $pushInfo = $this->setNews($newsList, $count);
+            $pushInfo = D('Wx')->setNews($newsList, $count, $this->member_id);
             break;
         }
         return $pushInfo;
     }
-
-    /**
-     * 组装xml
-     * @return xml $content 组装为xml后的数据
-     * @param array $newsList 需要输出的图文数组
-     * @param int $count 数组的数量
-     */
-    private function setNews($newsList, $count)
-    {
-        $texttpl = D('WechatTpl')->where('type="news"')->getField('texttpl');
-        $content = "<MsgType><![CDATA[news]]></MsgType>";
-        $content .= "<ArticleCount>".$count."</ArticleCount>";
-        $content .= "<Articles>";
-        foreach($newsList as $k=>$v){
-            //判断url是否需要处理
-            $result = substr_count($v['cover'], 'http://');
-            if(empty($result)){
-                $v['cover'] = str_replace('./', 'http://'.$_SERVER['HTTP_HOST'].'/', getPicPath(D('GalleryMeta')->getImg($v['cover'])));
-            }
-            if(empty($v['url'])){
-                $v['url'] = 'http://'.$_SERVER['HTTP_HOST'].U('Index/item', array(
-                    'user'  => $this->user,
-                    'member_id' => $this->member_id,
-                    'id'    => $id,
-                ));
-            }else{
-                $v['url'] .= '&member_id='.$this->member_id;
-            }
-            $content .= sprintf($texttpl, $v['title'], $v['description'], $v['cover'], $v['url']);
-        }
-        $content .= "</Articles>";
-        return $content;
-	}
-
-	/**
-	 * 组装text
-	 */
-    private function setText($content)
-    {
-	  $texttpl = D('WechatTpl')->where('type="text"')->getField('texttpl');
-	  $content = sprintf($texttpl, $content);
-	  return ($content);
-	}
 
 }

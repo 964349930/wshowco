@@ -40,7 +40,7 @@ class WechatToolModel extends CommonModel {
     /**
      * 天气搜索
      */
-    private function weather($city){
+    public function weather($city){
         //$city = '济南';
         $map['city'] = $city;
         $cityCode = M('Weather')->where("`city`='".$city."'")->getField('citycode');
@@ -56,13 +56,13 @@ class WechatToolModel extends CommonModel {
         //json解码为对象
         $result = json_decode($result, true);
         $content = $result['weatherinfo']['city'].' '.$result['weatherinfo']['week'].' '.$result['weatherinfo']['temp3'];
-        return D('PushText')->setText($content);
+        return D('Wx')->setText($content);
     }
 
     /**
      * 百度翻译
      */
-    private function trans($keyword){
+    public function trans($keyword){
         $url = "http://openapi.baidu.com/public/2.0/bmt/translate?client_id=9peNkh97N6B9GGj9zBke9tGQ&q=".$keyword."&from=auto&to=auto";
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
@@ -74,13 +74,13 @@ class WechatToolModel extends CommonModel {
         //json解码为对象
         $result = json_decode($result, true);
         $content = $result['trans_result']['0']['dst'];
-        return D('PushText')->setText($content);
+        return D('Wx')->setText($content);
     }
 
     /**
      * 聊天机器人
      */
-    private function chat($content){
+    public function chat($content){
         $key = '92773352-3798-4737-859d-bbb5dbe77b26';
         $url = "http://sandbox.api.simsimi.com/request.p?key=".$key."&lc=ch&text=".$content;
         $ch = curl_init();
@@ -89,40 +89,7 @@ class WechatToolModel extends CommonModel {
         $result = curl_exec($ch);
         curl_close($ch);
         $result = json_decode($result, true);
-        return D('PushText')->setText($result['response']);
-    }
-
-    /**
-     * 虫洞api
-     */
-    private function chong($content){
-        //$url = "http://wap.unidust.cn/api/searchout.do?type=wap&ch=1001&info=".$content."&appid=71";
-        $url = "http://xyapi.sinaapp.com/Api/?type=joke";
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        //curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        //curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        //curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $result = curl_exec($ch);
-        curl_close($ch);
-        print_r($result);exit;
-    }
-
-    /**
-     * 获取地址位置
-     */
-    public function getLocation(){
-        $latitude = $this->_post('latitude');
-        $longitude = $this->_post('longitude');
-        if(!empty($latitude)){
-            $_SESSION['latitude'] = $latitude;
-            $_SESSION['longitude'] = $longitude;
-            $this->getAddress();
-            $this->redirect('Hotel/result');
-        }
-
+        return D('Wx')->setText($result['response']);
     }
 
     /**
@@ -162,13 +129,12 @@ class WechatToolModel extends CommonModel {
 
         }
         }
-        $content = D('PushNews')->setNews($newsList, 5);
-	    return ($content);
-
+        return D('Wx')->setNews($newsList, 5);
     }
 
     /**
      * 获取新浪RSS新闻数据
+     * 以文本形式输出新浪首条新闻
      */
     public function sinaNews(){
         $url = "http://rss.sina.com.cn/news/marquee/ddt.xml";
@@ -177,16 +143,6 @@ class WechatToolModel extends CommonModel {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $result = curl_exec($ch);
         curl_close($ch);
-        //$arrResult = (array)simplexml_load_string($result);
-        //$i = 0;
-        /*
-          foreach($arrResult['channel']->item as $k=>$v){
-          $arrNews[$i]['title'] = $v->title;
-          $arrNews[$i]['description'] = $v->description;
-          $i++;
-          }
-        */
-
         $parser = xml_parser_create();
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
         xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
@@ -206,13 +162,13 @@ class WechatToolModel extends CommonModel {
             }
         }
         $content = $arrNews[2]['title'].$arrNews[2]['description'];
-        return D('PushText')->setText($content);
+        return D('Wx')->setText($content);
     }
 
     /**
      * 笑话
      */
-    private function joke(){
+    public function joke(){
         $rand = rand(1, 1400);
         $url = 'http://m.haha365.com/zz_joke/index_'.$rand.'.htm';
         $ch = curl_init();
@@ -224,13 +180,13 @@ class WechatToolModel extends CommonModel {
         preg_match($pattern, $result, $content);
         $content = mb_convert_encoding($content[2], 'UTF-8', 'gbk');
         $content = strip_tags($content);
-        return D('PushText')->setText($content);
+        return D('Wx')->setText($content);
     }
 
     /**
      * 每日英语
      */
-    private function english(){
+    public function english(){
         $rand = rand('100', '727');
         $url = 'http://wap.iciba.com/dailysentence/content/'.$rand.'#anchor';
         $ch = curl_init();
@@ -241,14 +197,13 @@ class WechatToolModel extends CommonModel {
         $pattern = '/<div class="dayC" id="(.*)">(.*)<a(.*)<h2 class="cn">(.*)<\/h2>/Us';
         preg_match($pattern, $result, $content);
         $content[2] = strip_tags($content[2]);
-        return D('PushText')->setText($content[2].$content[4]);
-        //print_r($content);exit;
+        return D('Wx')->setText($content[2].$content[4]);
     }
 
     /**
      * 可乐
      */
-    private function kele(){
+    public function kele(){
         $rand = rand('01', '290');
         $url = 'http://www.kelepuzi.com/text/page/'.$rand.'.html';
         $ch = curl_init();
@@ -259,20 +214,34 @@ class WechatToolModel extends CommonModel {
         $pattern = '/<div class="post-content">(.*)<\/p>/Us';
         preg_match($pattern, $result, $content);
         $content = strip_tags($content[1]);
-        return D('PushText')->setText($content);
-        //print_r($content);exit;
+        return D('Wx')->setText($content);
     }
 
     /**
-     * engadget
+     * 我的信息
      */
-    public function engadget(){
-        $url = 'http://cn.engadget.com/rss.xml';
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $result = curl_exec($ch);
-        curl_close($ch);
-        print_r($result);
+    public function memberInfo($keyword, $member_id)
+    {
+        $memberObj = D('Member');
+        $memberInfo = $memberObj->getInfoById($member_id);
+        $memberInfo = $memberObj->format($memberInfo, array('name', 'mobile'));
+        $result = '您好，您的信息是：';
+        $result .= '昵称：'.$memberInfo['name'].'  ';
+        $result .= '手机号码：'.$memberInfo['mobile'].'  ';
+        $result .= '邮箱：'.$memberInfo['email'].'  ';
+        //$result .= '收藏的文章：'$memberInfo['like_count'].'  ';
+        $result .= '注册时间：'.date('Y-m-d H:i', $memberInfo['date_reg'].'  ');
+        return D('Wx')->setText($result);
+    }
+
+    /**
+     * 我的收藏
+     */
+    public function memberLike($keyword, $member_id)
+    {
+        $item_ids = D('MemberEvent')->where("id=".$member_id." AND event='like'")->order('date_event desc')->getField('item_id', true);
+        $map['id'] = array('in', $item_ids);
+        $itemList = D('Item')->where($map)->limit(5)->select();
+        return D('Wx')->setNews($itemList, 5, $member_id);
     }
 }

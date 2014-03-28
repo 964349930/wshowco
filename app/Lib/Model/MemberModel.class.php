@@ -17,16 +17,18 @@ class MemberModel extends CommonModel
     {
         $map['user_id'] = array('eq', $user_id);
         $map['wechat_id'] = array('eq', $wechat_id);
-        $result = D('Member')->where($map)->find();
+        $result = $this->where($map)->find();
         if(empty($result)){
             $data = array(
                 'user_id' => $user_id,
                 'wechat_id' => $wechat_id,
+                'name' => $wechat_id,
                 'date_reg' => time(),
                 'date_login' => time(),
             );
-            $member_id = D('Member')->add($data);
+            $member_id = $this->add($data);
         }else{
+            $this->where($map)->setField('date_login', time());
             $member_id = $result['id'];
         }
         return $member_id;

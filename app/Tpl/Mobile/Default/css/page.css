@@ -26,6 +26,8 @@ body{ background:#e3e3e3}
 .nav li:nth-child(2) a{ background:#7bb560;}
 .nav li:nth-child(3) a{ background:#6bb1e2;}
 .nav li:nth-child(4) a{ background:#ff9b39;}
+.nav li:nth-child(5) a{ background:#7E9F96;}
+.nav li:nth-child(6) a{ background:#372B1D;}
 
 .ui-header{ background:#ff8001;}
 .ui-header a{ border: 0 none;  border-radius: 0; background:none; box-shadow:none;}

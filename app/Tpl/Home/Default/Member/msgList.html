@@ -7,7 +7,7 @@
 <div class="toolbar">
 </div>
 <div class="list">
-    <form method="post" action="{$delUrl}" class="del-form">
+    <form method="post" action="{$msgDelUrl}" class="del-form">
   <table width="100%" border="0" cellspacing="0" cellpadding="0">
     <thead>
       <tr>
@@ -31,7 +31,7 @@
           <td>{$vo.info}</td>
           <td>{$vo.date_msg|date="Y-m-d H:i", ###}</td>
           <td>
-            <a href="{$delUrl}&msg_id={$vo.id}">删除</a>
+            <a href="{$msgDelUrl}&id={$vo.id}">删除</a>
           </td>
         </tr>
       </volist>
@@ -40,6 +40,7 @@
   </table>
 </div>
 <div class="toolbar">
+    <a href="javascript:void(0);" class="btn del-btn"><span>删除</span></a>
   <div class="page right">{$pageHtml}</div>
 </div>
 <include file="Public:footer" />
