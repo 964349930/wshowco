@@ -1,23 +1,16 @@
-<include file="../Public/header" />
-<div data-role="page" id="main">
-    <include file="../Public/navigation" />
-    <div class="leave  pl20 pr20 tc pb50 mt20">
-        <ul><form id="message" rel="external" action="{:U('Message/message', array('user'=>$user))}" method="post">
-            <li><input type="text" class="name" name="guest" autofocus="autofocus" placeholder="姓名"></li>
-            <li><input type="tel" class="number" pattern="[0-9]{11}" name="mobile" placeholder="手机号"></li>
-            <li><textarea cols="40" rows="8" name="content" pattern="*" placeholder="请输入留言内容..."></textarea></li>
-            <li><button class="ui-shadow ui-btn ui-corner-all" type="submit">提交</button></li>
-        </ul>
-    </div> 
-    <div id="popup" data-role="popup" data-overlay-theme="b" data-theme="b" class="ui-content">
+<include file="Public:header" />
+<div data-role="page">
+    <include file="Public:navigation" />
+    <div class="ui-content" role="main">
+        <form action="{:U('Message/message', array('user'=>$user))}" method="post">
+            <label for="guest" class="ui-hidden-accessible">Name:</label>
+            <input type="text" id="guest" name="guest" autofocus="autofocus" placeholder="姓名">
+            <label for="mobile" class="ui-hidden-accessible">Mobile:</label>
+            <input type="tel" pattern="[0-9]{11}" id="mobile" name="mobile" placeholder="手机号">
+            <label for="content" class="ui-hidden-accessible">Content</label>
+            <textarea id="content" name="content" pattern="*" placeholder="请输入留言内容..."></textarea>
+            <button id="send" class="ui-shadow ui-btn ui-corner-all" type="submit">提交</button>
+        </form>
     </div>
-<include file="../Public/footer" />
-<script>
-    function addMessage(){
-        var user = '{$user}';
-        $.post("{:U('Message/message', array('user'=>'"+user+"'))}", $("#message").serialize(), function(data){
-                $("#popup").html(data).popup("open");
-                }, 'json');
-        return false;
-    }
-</script>
+</div>
+<include file="Public:footer" />

@@ -1,25 +1,30 @@
-<include file="../Public/header" />
-<div data-role="page" id="main">
+<include file="Public:header" />
+<div data-role="page">
     <include file="../Public/navigation" />
-    <div class="contact  pl20 pr20 tc pb50">
-        <div class="contact-item clearfix">
-            <h2>一键拨号</h2>
-            <p><a href="tel://{$site.mobile}"><img src="../Public/images/dianhua2.png">{$site.mobile}</a></p> 
-        </div>
-        <div class="contact-item clearfix">
-            <h2>联系地址</h2>
-            <img class="mt30 mb30" src="../Public/images/zuobiao2.png">
-            <p>地址 ：{$site.address}</p>
-            <p>电话： {$site.tel}</p>
-            <p>E-mail：{$site.email}</p> 
-        </div>
-        <div class="contact-item clearfix map">
-            <h2>地图导航</h2>
-            <p><a href="###"><img src="http://api.map.baidu.com/staticimage?center={$site.longitude},{$site.latitude}&width=600&height=240&zoom=11"/></a></p> 
-        </div>
+    <div class="ui-content" role="main">
+        <ul data-role="listview" data-inset="true">
+            <li>
+                <h2>一键拨号</h2>
+                <h1 style="text-align:center;"><img style="margin-right:10px;" src="../Public/images/dianhua2.png"><a href="tel://{$site.tel}">{$site.tel}</a></h1> 
+            </li>
+            <li>
+                <h2>联系地址</h2>
+                <div style="width=20%;height=40px;">
+                    <img style="height=auto;" src="../Public/images/zuobiao2.png">
+                </div>
+                <div style="width=80%;float:right;height=40px;">
+                <p>地址 ：{$site.address}</p>
+                <p>电话： {$site.tel}</p>
+                <p>E-mail：{$site.email}</p></div> 
+            </li>
+            <li>
+                <h2>地图导航</h2>
+                <p><a href="javascript:void(0)"><img src="http://api.map.baidu.com/staticimage?center={$site.longitude},{$site.latitude}&width=600&height=240&zoom=11"/></a></p> 
+            </li>
+        </ul>
     </div>
-    
-<include file="../Public/footer" />
+</div>
+<include file="Public:footer" />
 <script>
 window.onload = function getLocation(){
     navigator.geolocation.getCurrentPosition(setLocation);
@@ -48,5 +53,3 @@ function setLocation(position){
     $(".map").find('a').attr("href", mobile_type+'origin={$site.latitude},{$site.longitude}&destination='+latitude+','+longitude+'&mode=driving&src=thinklancer')
 }
 </script>
-
-

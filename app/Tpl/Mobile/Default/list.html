@@ -1,23 +1,15 @@
 <include file="Public:header" />
-<link rel="stylesheet" href="{$Think.template|dirname}/css/page.css">
-<link rel="stylesheet" href="{$Think.template|dirname}/css/index.css" />
-<script src="{$Think.template|dirname}/js/page.js"></script>
-
-<div data-role="page" id="main" class="pr">  
+<div data-role="page">
     <include file="Public:navigation" />
-    <div class="ui-grid-a commodity-list">
-        <volist name="list" id="vo">
-        <div <eq name="key%2" value="0">class="ui-block-a p5"<else />class="ui-block-b p5"</eq>>
-                 <div class="commodity-nei">
-                   <a  href="{$vo.url}"  rel="external"><img src="{$vo.cover_name}"/>
-                   <div class="commodity-name">
-                     <span>{$vo.title}</span>                                           
-                     <em>{$vo.ups}</em>
-                   </div>
-                 </a>
-			</div>  
-          </div>
-        </volist>
-    </div>     
-
+    <div class="ui-content" role="main">
+        <ul data-role="listview" data-inset="true">
+            <volist name="list" id="item">
+            <li><a href="{$item.url}">
+                <img src="{$item.cover_name}" height="50px">
+                <h2>{$item.title}</h2>
+                <p>{$item.intro}</p>
+            </a></li>
+        </ul>
+    </div>
+</div>
 <include file="Public:footer" />

@@ -70,7 +70,9 @@ class MobileAction extends BaseAction
     protected function getItemInfo($id)
     {
 		$itemInfo = D('Item')->where('id='.$id)->find();
-        $itemInfo = D('Item')->format($itemInfo, array('cover_name', 'template_name', 'ext'));
+        $itemInfo = D('Item')->format($itemInfo, array('template_name', 'ext'));
+        $itemInfo['cover_name'] = getPicPath(D('GalleryMeta')->getImg($itemInfo['cover']), 'm');
+        $itemInfo['date_add_text'] = date('Y-m-d H:i', $itemInfo['date_add']);
         return $itemInfo;
     }
 
@@ -82,9 +84,10 @@ class MobileAction extends BaseAction
     protected function getItemList($parent_id=0)
     {
         $itemList = D('Item')->where('parent_id='.$parent_id.' AND user_id='.$this->user_id.' AND status=1')->order('sort_order')->select();
-        $arrFormatField = array('cover_name', 'ext');
+        $arrFormatField = array('ext');
         foreach($itemList as $k=>$v){
             $itemList[$k] = D('Item')->format($v, $arrFormatField);
+            $itemList[$k]['cover_name'] = getPicPath(D('GalleryMeta')->getImg($v['cover']), 'm');
             $itemList[$k]['url'] = U('Index/item', array('user'=>$this->user, 'member_id'=>$this->member_id, 'id'=>$v['id']));
         }
         return $itemList;
@@ -109,7 +112,7 @@ class MobileAction extends BaseAction
         $imgObj = D('GalleryMeta');
         $imgList = $imgObj->where('gallery_id='.$gallery_id)->select();
         foreach($imgList as $k=>$v){
-            $imgList[$k] = $imgObj->format($v, array('path_name'));
+            $imgList[$k]['path_name'] = getPicPath($v['path'], 'b');
         }
         return $imgList; 
     }
