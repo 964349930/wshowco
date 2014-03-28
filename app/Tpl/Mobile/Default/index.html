@@ -1,50 +1,33 @@
 <include file="Public:header" />  
-<link rel="stylesheet" href="{$Think.template|dirname}/css/page.css">
-<link rel="stylesheet" href="{$Think.template|dirname}/css/index.css" />
-<script src="{$Think.template|dirname}/js/page.js"></script>
 
-<div data-role="page"  id="menu" data-dom-cache="false">
-    <div class="container " style="padding:0; position:relative;">
-        <div class="banner">
-            <div id="wrapper" style="overflow: hidden; ">
-                <div id="scroller">
-                    <ul id="thelist">
-                        <volist name="bannerList" id="vo">
-                        <li><a href="javascript:void(0);"><img src="{$vo.path_name}"></a></li>
-                        </volist>
-                    </ul> 
-                </div>
-            </div>
-            <div id="nav" >
-                <div id="prev" onClick="javascript:myScroll.scrollToPage('prev', 0);"></div>
-                <ul id="indicator" class="fr pr20"></ul>
-                <div id="next" onClick="javascript:myScroll.scrollToPage('next', 0, 400, 2);"></div>
-            </div>
-            <div class="clr"></div>
+<!--Slide-->
+<link rel="stylesheet" href="../Public/jquery.bxslider/jquery.bxslider.css">
+<script src="../Public/jquery.bxslider/jquery.bxslider.min.js"></script>
+<!--Slide-->
+
+<div data-role="page">
+    <div data-role="header">
+        <ul class="bxslider">
+            <volist name="bannerList" id="vo">
+            <li><img src="{$vo.path_name}"></li>
+            </volist>
+        </ul> 
+    </div>
+    <div role="main" data-role="ui-content">
+        <div class="ui-grid-b ui-responsive">
+            <volist name="menuList" id="vo">
+            <div <eq name="key%2" value="0">class="ui-block-a"<else />class="ui-block-b"</eq>>
+                <div class="ui-bar ui-bar b" style="height:100px"><a href="{$vo.url}" class="ui-btn ui-shadow ui-corner-all">{$vo.title}</a></div></div>
+            </volist>
         </div>
-    </div>  
-
-    <div class="dianhua">
-        <a href="tel:{$site.tel}">{$site.tel}<em>一键拨号</em></a> 
-    </div> 
-    <ul class="nav ui-content">
-        <volist name="menuList" id="vo">
-        <li><a href="{$vo.url}"  rel="external"><img src="{$vo.cover_name}"><span>{$vo.title}</span></a></li>
-        </volist>
-    </ul>
+    </div>
+    <div data-role="footer">
+        <a href="tel:{$site.tel}" class="ui-btn ui-shadow ui-corner-all" date-theme="b">{$site.tel}<em>一键拨号</em></a> 
+    </div>
+</div>
 <script>
-                var myScroll;
-                function loaded() {
-                    myScroll = new iScroll('wrapper', {
-                        snap: true,
-                        momentum: false,
-                        hScrollbar: false,
-                        onScrollEnd: function() {
-                            document.querySelector('#indicator > li.active').className = '';
-                            document.querySelector('#indicator > li:nth-child(' + (this.currPageX + 1) + ')').className = 'active';
-                        }
-                    });
-                }
-                document.addEventListener('DOMContentLoaded', loaded, false);
-            </script>
+$(document).ready(function(){
+        $(".bxslider").bxSlider();
+        });
+</script>
 <include file="Public:footer" />
