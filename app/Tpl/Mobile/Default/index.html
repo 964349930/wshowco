@@ -10,7 +10,7 @@
     </div>
     <!-- /header -->
 
-    <div class="ui-content">
+    <div>
         <ul class="bxslider">
             <volist name="bannerList" id="vo">
             <li><img src="{$vo.path_name}"></li>
@@ -20,7 +20,7 @@
     <!-- slider -->
 
     <div class="ui-content" role="main">
-        <div class="ui-grid-b">
+        <div class="ui-grid-a">
             <volist name="menuList" id="vo">
             <div <eq name="key%2" value="0">class="ui-block-a"<else />class="ui-block-b"</eq>>
                 <div class="ui-bar ui-bar b"><a href="{$vo.url}" class="ui-btn ui-shadow ui-corner-all"><p><img src="{$vo.cover_name}"></p><h3>{$vo.title}</h3></a></div></div>
@@ -39,7 +39,6 @@
 $(document).ready(function(){
         $(".bxslider").bxSlider({
             auto:true,
-            controls:false,
             });
         });
 </script>
