@@ -141,18 +141,8 @@ class ItemAction extends HomeAction
 		if (empty($delIds)) {
 			$this->error('请选择您要删除的数据');
 		}
-		$map['id'] = array('in', $delIds);
+		$map['id'] = $subMap['parent_id'] = array('in', $delIds);
 		D('Item')->where($map)->delete();
 		$this->success('删除成功');
-    }
-
-    /**
-     * Get the sub item id
-     */
-    private function getSub($ids)
-    {
-        foreach($ids as $k=>$v){
-            $sub_id[] = D('Item')->where('parent_id='.$v)->getField('id');
-        }
     }
 }

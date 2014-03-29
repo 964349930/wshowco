@@ -2,13 +2,15 @@
 <div data-role="page">
     <include file="Public:navigation" />
     <div class="ui-content" role="main">
-        <ul data-role="listview" data-inset="true">
-            <volist name="list" id="item">
-            <li><a href="{$item.url}">
-                <img src="{$item.cover_name}" height="50px">
-                <h2>{$item.title}</h2>
-                <p>{$item.intro}</p>
+        <ul data-role="listview" data-inset="true" class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
+            <volist name="list" id="vo">
+            <li class="ui-li-hasthumb"><a href="{$vo.url}" class="ui-btn ui-btn-icon-right ui-icon-carat-r">
+                <img src="{$vo.cover_name}" class="ui-li-thumb">
+                <h2>{$vo.title}</h2>
+                <p>{$vo.intro}</p>
+                <p class="ui-li-aside">{$site.site_name}</p>
             </a></li>
+            </volist>
         </ul>
     </div>
 </div>

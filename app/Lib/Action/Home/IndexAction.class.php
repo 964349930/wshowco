@@ -18,22 +18,12 @@ class IndexAction extends HomeAction {
      * 头部菜单
      */
     protected function _getChannel() {
-        if($_SESSION['uid'] == 1){
-            return array(
-                'index' => '内容',
-                'setting' => '设置',
-            );
-        }else{
-            return array('index'=>'内容');
-        }
-        /*
 		$arrList = array();
-		$tabList = $this->getMenuList();
+		$tabList = D('Tab')->getTabList();
 		foreach($tabList as $k=>$v){
-			$arrList[$v['spell']] = $v['name'];
+			$arrList[$v['tag']] = $v['title'];
 		}
 		return $arrList;
-         */
 	}
 
     /**
@@ -41,86 +31,20 @@ class IndexAction extends HomeAction {
      */
     protected function _getMenu() {
         $menu = array();
-        $menu['index'] = array(
-            '我的信息' => array(
-                '基本信息' => U('Home/User/basic'),
-                '修改密码' => U('Home/User/password'),
-            ),
-            '微网管理' => array(
-                '网站设置' => U('Home/Item/setting'),
-                '栏目列表' => U('Home/Item/itemList'),
-            ),
-            '会员管理' => array(
-                '会员列表' => U('Home/Member/MemberList'),
-                '信息列表' => U('Home/Member/msgList'),
-            ),
-            '图库管理' => array(
-                '图库列表' => U('Home/Gallery/galleryList'),
-            ),
-            '菜单管理' => array(
-                '菜单列表' => U('Home/Menu/menuList'),
-            ),
-            '主题管理' => array(
-                '主题列表' => U('Home/Theme/themeList'),
-            ),
-            '自动回复管理' => array(
-                '关注回复' => U('Home/News/special', array('keyword'=>'关注')),
-                '无匹配回复' => U('Home/News/special', array('keyword'=>'无匹配')),
-                '文字回复' => U('Home/News/textList'),
-                '图文回复' => U('Home/News/newsList'),
-            ),
-            '插件管理' => array(
-                '插件列表' => U('Home/Tool/toolList'),
-            ),
-        );
-        $menu['setting'] = array(
-            '用户管理' => array(
-                '用户列表' => U('Home/User/userList'),
-            ),
-            '图片管理' => array(
-                '垃圾图片列表' => U('Home/Gallery/lostImgList'),
-            ),
-            '主题管理' => array(
-                '主题列表' => U('Home/Theme/themeList'),
-            ),
-            '微信功能' => array(
-                '接口模拟' => U('Home/Wechat/sim'),
-                '插件管理' => U('Home/Tool/toolList'),
-                '通用关键字' => U('Home/Wechat/keywordList'),
-            ),
-        );
-        return $menu;
-        /*
-        $menu = array();
-		$first_list = $this->getMenuList();
+		$first_list = D('Tab')->getTabList();
 		foreach($first_list as $k=>$v){
-			$second_list = $this->getMenuList($v['id']);	
+			$second_list = D('Tab')->getTabList($v['id']);	
 			foreach($second_list as $k2=>$v2){
-				$third_list = $this->getMenuList($v2['id']);
+				$third_list = D('Tab')->getTabList($v2['id']);
 				foreach($third_list as $k3=>$v3){
-					$third_real_list[$v3['name']] = U($v3['url']);
-					$second_real_list[$v2['name']] = $third_real_list;
+					$third_real_list[$v3['title']] = U($v3['url']);
+					$second_real_list[$v2['title']] = $third_real_list;
 				}
 				$third_real_list = array();
 			}
-			$menu[$v['spell']] = $second_real_list;
+			$menu[$v['tag']] = $second_real_list;
 			$second_real_list = array();
 		}
         return $menu;
-         */
     }
-
-	/**
-	 * 获取菜单列表
-	 */
-	private function getMenuList($id=0){
-		$tabObj = D('Tab');
-		$arrField = array('*');
-		$arrMap['fid'] = array('eq', $id);
-        //tab信息存储位置
-		$arrMap['id'] = array('in', $_SESSION['info']['tab']);
-		$arrOrder = array();
-		$tabList = $tabObj->getList($arrField, $arrMap, $arrOrder);
-		return $tabList;
-	}
 }

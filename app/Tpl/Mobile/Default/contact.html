@@ -2,26 +2,32 @@
 <div data-role="page">
     <include file="../Public/navigation" />
     <div class="ui-content" role="main">
-        <ul data-role="listview" data-inset="true">
-            <li>
-                <h2>一键拨号</h2>
-                <h1 style="text-align:center;"><img style="margin-right:10px;" src="../Public/images/dianhua2.png"><a href="tel://{$site.tel}">{$site.tel}</a></h1> 
-            </li>
-            <li>
+        <div class="ui-corner-all custom-corners">
+            <div class="ui-bar ui-bar-a">
+                <h3>一键拨号</h3>
+            </div>
+            <a href="tel://{$site.tel}"><div class="ui-body ui-body-a">
+                <h1><img style="margin-right:10px;" src="../Public/images/dianhua2.png">{$site.tel}</h1>
+            </div></a>
+        </div>
+        <div class="ui-corner-all custom-corners">
+            <div class="ui-bar ui-bar-a">
                 <h2>联系地址</h2>
-                <div style="width=20%;height=40px;">
-                    <img style="height=auto;" src="../Public/images/zuobiao2.png">
-                </div>
-                <div style="width=80%;float:right;height=40px;">
-                <p>地址 ：{$site.address}</p>
-                <p>电话： {$site.tel}</p>
-                <p>E-mail：{$site.email}</p></div> 
-            </li>
-            <li>
+            </div>
+            <div class="ui-body ui-body-a">
+                <p><img style="margin-right:10px;" src="../Public/images/zuobiao2.png">地址 ：{$site.address}</p>
+                <p style="margin-left:43px;">电话： {$site.tel}</p>
+                <p style="margin-left:43px;">E-mail：{$site.email}</p>
+            </div>
+        </div>
+        <div class="ui-corner-all custom-corners">
+            <div class="ui-bar ui-bar-a">
                 <h2>地图导航</h2>
+            </div>
+            <div class="ui-body ui-body-a">
                 <p><a href="javascript:void(0)"><img src="http://api.map.baidu.com/staticimage?center={$site.longitude},{$site.latitude}&width=600&height=240&zoom=11"/></a></p> 
-            </li>
-        </ul>
+            </div>
+        </div>
     </div>
 </div>
 <include file="Public:footer" />
