@@ -11,7 +11,7 @@ class TabModel extends CommonModel{
     public function  getTabList($parent_id=0){
         $arrField = array('*');
         $arrMap['parent_id'] = array('eq', $parent_id);
-        if($_SESSION['uid'] !== 1){
+        if($_SESSION['userInfo']['group_id'] != 1){
             //当用户为普通用户时，菜单显示方式
             $arrMap['status'] = array('eq', 2);
         }
