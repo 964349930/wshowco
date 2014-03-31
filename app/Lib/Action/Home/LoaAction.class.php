@@ -14,7 +14,7 @@ class LoaAction extends HomeAction
         $loaObj = D('Loa');
         $arrField = array();
         $arrMap = array();
-        $arrOrder = array('sort_order');
+        $arrOrder = array('module', 'sort_order');
         $loaList = $loaObj->getList($arrField, $arrMap, $arrOrder);
         $data = array(
             'loaList' => $loaList,
