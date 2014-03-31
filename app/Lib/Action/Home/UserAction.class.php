@@ -127,4 +127,53 @@ class UserAction extends HomeAction{
 		$this->success('删除成功');
     }
 
+    /*******************分组管理****************************/
+    /**
+     * group list
+     */
+    public function groupList()
+    {
+        $groupObj = D('UserGroup');
+        $arrField = array();
+        $arrMap = array();
+        $arrOrder = array();
+        $groupList = $groupObj->getList($arrField, $arrMap, $arrOrder);
+        foreach($groupList as $k=>$v){
+            $groupList[$k]['count'] = D('User')->getCount(array('group_id'=>$v['id']));
+        }
+        $data = array(
+            'groupList' => $groupList,
+            'groupInfoUrl' => U('Home/User/groupInfo'),
+        );
+        $this->assign($data);
+        $this->display();
+    }
+
+    /**
+     * gruop info
+     */
+    public function groupInfo()
+    {
+        $groupObj = D('UserGroup');
+        if(empty($_POST)){
+            $group_id = $this->_get('group_id', 'intval');
+            if(!empty($group_id)){
+                $groupInfo = $groupObj->getInfoById($group_id);
+                $this->assign('groupInfo', $groupInfo);
+            }
+            $this->assign('groupInfoUrl', U('Home/User/groupInfo'));
+            $this->display();
+            exit;
+        }
+        $data = $this->_post();
+        $data['date_modify'] = time();
+        if(empty($data['id'])){
+            $data['date_add'] = time();
+            $groupObj->add($data);
+        }else{
+            $groupObj->save($data);
+        }
+        $this->success('操作成功');
+    }
+
 } 

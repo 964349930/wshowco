@@ -14,18 +14,25 @@ class HomeAction extends BaseAction
         if(!isset($_SESSION['uid'])){
             $this->redirect('Public/login');
         }
+        $this->checkLoa();
     }
 
     /**
      * check user primission
      */
-    private function checkPro()
+    private function checkLoa()
     {
         $group_id = $_SESSION['userInfo']['group_id'];
-        $actionList = D('Promission')->where('group_id='.$group_id)->getField('action');
-        if(1){
-            $this->error('对不起，您没有权限执行此操作!');
-            exit;
+        $arrAction = __ACTION__;
+        $result = explode('/', $arrAction);
+        $map['module'] = array('eq', $result['3']);
+        $map['action'] = array('eq', $result['4']);
+        $loa_id = D('Loa')->where($map)->getField('id');
+        if(!empty($loa_id)){
+            if(!D('LoaGroup')->where('group_id='.$_SESSION['userInfo']['group_id'].' AND loa_id='.$loa_id)->find()){
+                $this->error('对不起，您没有权限执行此操作!');
+                exit;
+            }
         }
     }
 }

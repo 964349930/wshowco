@@ -4,6 +4,6 @@
  * @author chen
  * @version 2014-03-31
  */
-class LoaGroupModel class CommonModel
+class UserGroupModel extends CommonModel
 {
 }
