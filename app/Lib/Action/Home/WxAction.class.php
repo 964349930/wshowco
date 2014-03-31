@@ -159,6 +159,11 @@ class WxAction extends BaseAction
             $count = count($newsList);
             $pushInfo = D('Wx')->setNews($newsList, $count, $this->member_id);
             break;
+        case 'rss':
+            $rssList = D('WechatRss')->getPushList($obj_id);
+            $count = count($rssList);
+            $pushInfo = D('Wx')->setNews($rssList, $count);
+            break;
         }
         return $pushInfo;
     }

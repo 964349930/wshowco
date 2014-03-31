@@ -141,7 +141,10 @@ class ItemAction extends HomeAction
 		if (empty($delIds)) {
 			$this->error('请选择您要删除的数据');
 		}
-		$map['id'] = $subMap['parent_id'] = array('in', $delIds);
+		$where['id'] = array('in', $delIds);
+        $where['parent_id'] = array('in', $delIds);
+        $where['_logic'] = 'or';
+        $map['_complex'] = $where;
 		D('Item')->where($map)->delete();
 		$this->success('删除成功');
     }
