@@ -9,13 +9,14 @@
         <input type="hidden" name="id" value="{$siteInfo.id}" />
         <dl>
             <dt>微网名称：</dt>
-            <dd><input type="text" name="site_name" value="{$siteInfo.site_name}" /></dd>
+            <dd><input type="text" name="site_name" value="{$siteInfo.site_name}" class="w200" /></dd>
         </dl>
         <dl>
             <dt>LOGO</dt>
             <notempty name="siteInfo[logo_name]">
             <dd><img src="{$siteInfo.logo_name}" height="50px" /></dd>
             </notempty>
+            <dd><input type="file" name="pic" /></dd>
             <dd><a href="javascript:void(0)" id="changeImg" />更改LOGO</a>
             <input type="hidden" name="logo" id="img" value="{$siteInfo.logo}" />
         </dl>
@@ -25,15 +26,15 @@
         </dl>
         <dl>
             <dt>客服号码：</dt>
-            <dd><input type="tel" name="tel" value="{$siteInfo.tel}" /></dd>
+            <dd><input type="tel" name="tel" value="{$siteInfo.tel}" class="w200" /></dd>
         </dl>
         <dl>
             <dt>地址：</dt>
-            <dd><input type="text" name="address" value="{$siteInfo.address}" /></dd>
+            <dd><input type="text" name="address" value="{$siteInfo.address}" class="w200" /></dd>
         </dl>
         <dl>
             <dt>邮箱：</dt>
-            <dd><input type="email" name="email" value="{$siteInfo.email}" /></dd>
+            <dd><input type="email" name="email" value="{$siteInfo.email}" class="w200" /></dd>
         </dl>
         <dl>
             <dt>主题：</dt>
@@ -41,11 +42,15 @@
         </dl>
         <dl>
             <dt>首页幻灯片：</dt>
-            <dd><input type="number" name="banner_id" value="{$siteInfo.banner_id}" /></dd>
+            <dd><select name="banner_id">
+                <volist name="galleryList" id="vo">
+                <option value="{$vo.id}" <eq name="siteInfo[banner_id]" value="$vo[id]">selected="selected"</eq> >{$vo.title}</option>
+                </volist>
+            </select></dd>
         </dl>
         <dl>
             <dt></dt>
-            <dd><input type="submit" value="更 新" /></dd>
+            <dd><input type="submit" value="更 新" class="btn submit-btn" /></dd>
         </dl>
     </form>
 </div>

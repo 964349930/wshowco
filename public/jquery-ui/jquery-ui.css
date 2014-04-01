@@ -1,6 +1,6 @@
 /*! jQuery UI - v1.10.3 - 2013-05-03
 * http://jqueryui.com
-* Includes: jquery.ui.core.css, jquery.ui.accordion.css, jquery.ui.autocomplete.css, jquery.ui.button.css, jquery.ui.datepicker.css, jquery.ui.dialog.css, jquery.ui.menu.css, jquery.ui.progressbar.css, jquery.ui.resizable.css, jquery.ui.selectable.css, jquery.ui.slider.css, jquery.ui.spinner.css, jquery.ui.tabs.css, jquery.ui.tooltip.css, jquery.ui.theme.css
+* Includes: jquery.ui.core.css, jquery.ui.accordion(可折叠的).css, jquery.ui.autocomplete.css, jquery.ui.button.css, jquery.ui.datepicker.css, jquery.ui.dialog.css, jquery.ui.menu.css, jquery.ui.progressbar.css, jquery.ui.resizable.css, jquery.ui.selectable.css, jquery.ui.slider.css, jquery.ui.spinner.css, jquery.ui.tabs.css, jquery.ui.tooltip.css, jquery.ui.theme.css
 * Copyright 2013 jQuery Foundation and other contributors; Licensed MIT */
 /* Layout helpers
 ----------------------------------*/
@@ -9,21 +9,21 @@
 }
 .ui-helper-hidden-accessible {
 	border: 0;
-	clip: rect(0 0 0 0);
+	clip: rect(0 0 0 0);//裁剪
 	height: 1px;
 	margin: -1px;
-	overflow: hidden;
+	overflow: hidden;//溢出
 	padding: 0;
-	position: absolute;
+	position: absolute;//绝对定位
 	width: 1px;
 }
 .ui-helper-reset {
 	margin: 0;
 	padding: 0;
 	border: 0;
-	outline: 0;
+	outline: 0;//轮廓
 	line-height: 1.3;
-	text-decoration: none;
+	text-decoration: none;//文本修饰
 	font-size: 100%;
 	list-style: none;
 }
@@ -54,7 +54,7 @@
 }
 
 
-/* Interaction Cues
+/* Interaction Cues 交互
 ----------------------------------*/
 .ui-state-disabled {
 	cursor: default !important;
@@ -69,14 +69,14 @@
 	display: block;
 	text-indent: -99999px;
 	overflow: hidden;
-	background-repeat: no-repeat;
+	background-repeat: no-repeat;//背景重复
 }
 
 
-/* Misc visuals
+/* Misc visuals 杂项数据类型
 ----------------------------------*/
 
-/* Overlays */
+/* Overlays 图层 */
 .ui-widget-overlay {
 	position: fixed;
 	top: 0;

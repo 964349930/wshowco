@@ -39,6 +39,7 @@ $(function(){
         <dl>
             <dt>封面：</dt>
             <notempty name="itemInfo[cover]"><dd><img src="{$itemInfo.cover_name}" height="50px" /></dd></notempty>
+            <dd><input type="file" name="pic" /></dd>
             <dd><a href="javascript:void(0)" id="changeImg" />更改封面</a></dd>
             <input type="hidden" name="item[cover]" id="img" value="{$itemInfo.cover}" />
         </dl>

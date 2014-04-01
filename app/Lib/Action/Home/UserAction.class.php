@@ -27,6 +27,8 @@ class UserAction extends HomeAction{
 		}
 		$tplData = array(
 			'userList' => $userList,
+            'userInfoUrl' => U('Home/User/basic'),
+            'siteInfoUrl' => U('Home/Item/setting'),
 			'addUrl' => U('Home/User/add'),
             'delUrl' => U('Home/User/del'),
 		    'pageHtml' => $pageHtml,
@@ -62,7 +64,11 @@ class UserAction extends HomeAction{
 		$data = $this->_post();
 		$userObj = D('User');
         if(empty($data)){
-		    $id = $_SESSION['uid'];
+            if(($_SESSION['userInfo']['group_id'] == 1) AND (!empty($_GET['id']))){
+                $id = $this->_get('id', 'intval');
+            }else{
+		        $id = $_SESSION['uid'];
+            }
 		    $userInfo = $userObj->getInfoById($id);
 		    $userInfo = $userObj->format($userInfo, array('url', 'avatar_name'));
 		    $this->assign('editUrl', U('Home/User/basic'));

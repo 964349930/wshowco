@@ -13,8 +13,16 @@ class ItemAction extends HomeAction
     {
         $siteObj = D('Setting');
         if(empty($_POST)){
-            $siteInfo = $siteObj->where('user_id='.$_SESSION['uid'])->find();
+            if(($_SESSION['userInfo']['group_id'] == 1) AND (!empty($_GET['id']))){
+                $user_id = $this->_get('id', 'intval');
+            }else{
+                $user_id = $_SESSION['uid'];
+            }
+
+            $siteInfo = $siteObj->where('user_id='.$user_id)->find();
             $siteInfo = $siteObj->format($siteInfo, array('logo_name', 'url', 'theme_name'));
+            $galleryList = D('Gallery')->where('user_id='.$user_id)->select();
+            $this->assign('galleryList', $galleryList);
             $this->assign('siteInfo', $siteInfo);
             $this->assign('settingUrl', U('Home/Item/setting'));
             $this->display();
@@ -28,7 +36,7 @@ class ItemAction extends HomeAction
 			}
 		}
         if(empty($data['id'])){
-            $data['user_id'] = $_SESSION['uid'];
+            $data['user_id'] = $user_id;
             $siteObj->add($data);
         }else{
             $siteObj->save($data);
