@@ -84,7 +84,7 @@ class MobileAction extends BaseAction
      */
     protected function getItemList($parent_id=0)
     {
-        $itemList = D('Item')->where('parent_id='.$parent_id.' AND user_id='.$this->user_id.' AND status=1')->order('sort_order')->select();
+        $itemList = D('Item')->where('parent_id='.$parent_id.' AND user_id='.$this->user_id.' AND status=1')->order('sort_order')->limit('0', '4')->select();
         $arrFormatField = array('ext');
         foreach($itemList as $k=>$v){
             $itemList[$k] = D('Item')->format($v, $arrFormatField);

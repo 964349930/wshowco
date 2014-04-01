@@ -64,11 +64,7 @@ class UserAction extends HomeAction{
 		$data = $this->_post();
 		$userObj = D('User');
         if(empty($data)){
-            if(($_SESSION['userInfo']['group_id'] == 1) AND (!empty($_GET['id']))){
-                $id = $this->_get('id', 'intval');
-            }else{
-		        $id = $_SESSION['uid'];
-            }
+		    $id = $_SESSION['uid'];
 		    $userInfo = $userObj->getInfoById($id);
 		    $userInfo = $userObj->format($userInfo, array('url', 'avatar_name'));
 		    $this->assign('editUrl', U('Home/User/basic'));

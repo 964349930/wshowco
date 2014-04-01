@@ -1,4 +1,6 @@
 <include file="Public:header" />
+<link rel="stylesheet" href="../Public/iscrollview/" />
+<script src="../Public/js/pull.js" ></script>
 <div data-role="page">
     <include file="Public:navigation" />
     <div class="ui-content" role="main">
@@ -12,6 +14,9 @@
             </a></li>
             </volist>
         </ul>
+        <div class="iscroll-pullup">
+          <span class="iscroll-pull-icon"></span><span class="iscroll-pull-label" data-iscroll-loading-text="Custom loading text" data-iscroll-pulled-text="Custom pulled text">Custom reset text</span>
+        </div>
     </div>
 </div>
 <include file="Public:footer" />
