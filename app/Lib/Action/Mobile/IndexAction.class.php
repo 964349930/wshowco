@@ -26,7 +26,21 @@ class IndexAction extends MobileAction
         D('MemberEvent')->addEvent($this->member_id, 'view', $this->item_id, $itemInfo['title']);
         $this->assign('info', $itemInfo);
         $this->assign('list', $itemList);
-        $this->display(ucfirst($this->theme_name).':'.$itemInfo['template_name']);
+
+        /* 模版的定制优先原则 */
+        $relTplList = scandir('./app/Tpl/Mobile/'.ucfirst($this->theme_name));
+        if(in_array($itemInfo['template_name'].'.html', $relTplList)){
+            $themeDir = ucfirst($this->theme_name);
+        }else{
+            $themeDir = 'Default';
+        }
+        if(in_array('navigation.html', $relTplList)){
+            $nav = ucfirst($this->theme_name).':navigation';
+        }else{
+            $nav = 'Public:navigation';
+        }
+        $this->assign('nav', $nav);
+        $this->display($themeDir.':'.$itemInfo['template_name']);
     }
 
     /**

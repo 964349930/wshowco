@@ -12,3 +12,7 @@ data/
 
 # ignore the sql file
 *.sql
+
+# ignore the zip rar file
+*.rar
+*.zip

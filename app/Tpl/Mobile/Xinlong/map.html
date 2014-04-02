@@ -1,0 +1,33 @@
+<include file="Public:header" />
+<div data-role="page" role="main">
+    <include file="$nav" />
+    <div class="ui-content">
+        <a id="map" href=""><img src="http://api.map.baidu.com/staticimage?center={$site.longitude},{$site.latitude}&width=600&height=780&zoom=11"/></a>
+    </div>
+</div>
+<include file="Public:footer" />
+<script>
+window.onload = function getLocation(){
+    navigator.geolocation.getCurrentPosition(setLocation);
+}
+function setLocation(position){
+    var brower = navigator.appName
+    var version = navigator.appVersion
+
+    var latitude = position.coords.latitude;
+    var longitude = position.coords.longitude;
+
+    var is_iphone = new RegExp("iPhone");
+    var is_android = new RegExp("Android");
+
+    if(is_iphone.test(version)){
+        var mobile_type = 'baidumap://map/direction?';
+    }else if(is_android.test(version)){
+        var mobile_type = 'intent://map/direction?';
+    }else{
+        var mobile_type = 'http://api.map.baidu.com/direction?';
+    }
+    var url = mobile_type+'origin={$site.latitude},{$site.longitude}&destination='+latitude+','+longitude+'&mode=driving&src=thinklancer';
+    document.getElementById('map').href=url;
+}
+</script>

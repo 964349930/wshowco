@@ -1,0 +1,34 @@
+<include file="Public:header" />
+<div data-role="page">
+    <include file="$nav" />  
+    <div class="ui-content" role="main">
+        <div class="ui-corner-all custom-corners">
+            <div class="ui-bar ui-bar-a">
+                <h2>联系电话（一键拨打）</h2>
+            </div>
+            <div class="ui-body ui-body-a" style="text-align:center;">
+                <a href="tel:{$site.tel}"><h3>{$site.tel}</h3></a>
+            </div>
+        </div>
+        <div class="ui-corner-all custom-corners">
+            <div class="ui-bar ui-bar-a">
+                <h2>联系地址</h2>
+            </div>
+            <div class="ui-body ui-body-a">
+                <p>地址 ：{$site.address}</p>
+                <p>E-mail：{$site.email}</p>
+            </div>
+        </div>
+        <div class="ui-corner-all custom-corners">
+            <div class="ui-bar ui-bar-a">
+                <h2>鑫隆微信平台二维码</h2>
+            </div>
+            <div class="ui-body ui-body-a">
+                <p>微信公众号：xlcj111</p>
+                <p>您也可以通过微信扫描下面的二维码来关注我们。</p>
+                <img src="{$Think.template|dirname}/img/erwm.png">
+            </div>
+        </div>
+    </div>
+</div>
+<include file="Public:footer" />

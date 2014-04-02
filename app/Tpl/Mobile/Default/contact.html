@@ -1,31 +1,33 @@
 <include file="Public:header" />
 <div data-role="page">
-    <include file="../Public/navigation" />
-    <div class="ui-content" role="main">
-        <div class="ui-corner-all custom-corners">
+    <include file="$nav" />
+    <div class="ui-content jqm-content jqm-fullwidth" role="main">
+        <div class="ui-corner-all custom-corners" style="margin-bottom:15px;">
             <div class="ui-bar ui-bar-a">
-                <h3>一键拨号</h3>
+                <p class="ui-btn ui-btn-icon-notext ui-icon-phone ui-btn-inline ui-btn-corner-all"></p ><h1 class="ui-btn-line">一键拨号</h1>
             </div>
-            <a href="tel://{$site.tel}"><div class="ui-body ui-body-a">
-                <h1><img style="margin-right:10px;" src="../Public/images/dianhua2.png">{$site.tel}</h1>
+            <a href="tel://{$site.tel}" style="text-align:center;"><div class="ui-body ui-body-a">
+                <h1>{$site.tel}</h1>
             </div></a>
         </div>
-        <div class="ui-corner-all custom-corners">
+        <div class="ui-corner-all custom-corners" style="margin-bottom:15px;">
             <div class="ui-bar ui-bar-a">
-                <h2>联系地址</h2>
+                <p class="ui-btn ui-btn-icon-notext ui-icon-location ui-btn-inline ui-btn-corner-all"></p>
+                <h2 class="ui-btn-line">联系地址</h2>
             </div>
             <div class="ui-body ui-body-a">
-                <p><img style="margin-right:10px;" src="../Public/images/zuobiao2.png">地址 ：{$site.address}</p>
-                <p style="margin-left:43px;">电话： {$site.tel}</p>
-                <p style="margin-left:43px;">E-mail：{$site.email}</p>
+                <p>地址 ：{$site.address}</p>
+                <p>电话： {$site.tel}</p>
+                <p>E-mail：{$site.email}</p>
             </div>
         </div>
-        <div class="ui-corner-all custom-corners">
+        <div class="ui-corner-all custom-corners" style="margin-bottom:15px;">
             <div class="ui-bar ui-bar-a">
+                <p class="ui-btn ui-btn-icon-notext ui-icon-navigation ui-btn-inline ui-btn-corner-all"></p>
                 <h2>地图导航</h2>
             </div>
             <div class="ui-body ui-body-a">
-                <p><a href="javascript:void(0)"><img src="http://api.map.baidu.com/staticimage?center={$site.longitude},{$site.latitude}&width=600&height=240&zoom=11"/></a></p> 
+                <p><a href="javascript:void(0)"><img src="http://api.map.baidu.com/staticimage?center={$site.longitude},{$site.latitude}&width=450&height=240&zoom=11"/></a></p> 
             </div>
         </div>
     </div>

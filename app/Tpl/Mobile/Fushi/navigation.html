@@ -1,0 +1,19 @@
+<div data-role="footer" data-theme="b" data-position="fixed" class="ui-footer ui-footer-fullscreen ui-footer-fixed">
+   <div style="float:left; width:33.1%; text-align:center; border-right:1px solid #2d2d2d;">
+     <a href="javascript:window.history.back()" class="ui-btn ui-btn-icon-notext ui-icon-back ui-btn-corner-all"></a>
+   </div>
+   <div style="float:left; width:33.1%; text-align:center; border-right:1px solid #2d2d2d;"">  
+     <a href="{$home}" class="ui-btn ui-btn-icon-notext ui-icon-home ui-btn-corner-all"></a>
+   </div>
+   <div style="float:left; width:33.1%; text-align:center;">
+     <a href="#menu" class="ui-btn ui-btn-icon-notext ui-icon-bars ui-btn-corner-all"></a>
+   </div>
+</div>
+<div data-role="panel" id="menu" data-display="push" data-position="right" data-theme="b">
+    <ul data-role="listview" data-theme="b">
+        <li><a href="{$home}">首页</a></li>
+        <volist name="menuList" id="vo">
+        <li><a href="{$vo.url}">{$vo.title}</a></li>
+        </volist>
+    </ul>
+</div>
