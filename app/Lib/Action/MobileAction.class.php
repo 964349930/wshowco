@@ -58,7 +58,8 @@ class MobileAction extends BaseAction
     protected function getSiteInfo()
     {
         $siteInfo = D('Setting')->where('user_id='.$this->user_id)->find();
-        $siteInfo = D('Setting')->format($siteInfo, array('logo_name','theme_spell'));
+        $siteInfo['logo'] = getPicPath(D('GalleryMeta')->getImg($siteInfo['logo'], 'm'));
+        $siteInfo = D('Setting')->format($siteInfo, array('theme_spell'));
         return $siteInfo;
     }
 

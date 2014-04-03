@@ -17,7 +17,7 @@
                 <eq name="key%2" value="0"> style="background:#009ad6;"
                 <else /> style="background:#fff;"</eq> />
                 <a href="{$vo.url}"><div class="ui-bar" <eq name="key%2" value="0">style="height:80px;margin:5px;text-align:center;color:#fff;margin:5px;"<else />style="height:80px;margin:5px;text-align:center;color:#009ad6;margin:5px;"</eq>>
-                        <p><img src="{$Think.template|dirname}/images/nav_{$key+1}.png"  width="35px" height="30px"/></p>
+                        <p><img src="{$Think.template|dirname}/images/{$key+1}.png"  width="35px" height="30px"/></p>
                     <p>{$vo.title}</p>
             </div></a>
             </div>

@@ -28,7 +28,7 @@
             </tr>
   
             <tr>
-                <td width="200px" height="100%" valign="top" id="FrameTitle" background="./public/Home/images/left_bg.gif">
+                <td width="200px" height="100%" valign="top" id="FrameTitle" background="__PUBLIC__/Home/images/left_bg.gif">
                     <div class="LeftMenu">
                         <php>$iterator = 1;$home_url = '';</php>
                         <!-- 第一级菜单，即大频道 -->
@@ -137,10 +137,10 @@
         root = $('#tree_'+root);
         if (root.css('display') == 'block') {
             root.css('display', 'none');
-            root.parent().css('backgroundImage', 'url(./public/Home/images/ArrOn.png)');
+            root.parent().css('backgroundImage', 'url(__PUBLIC__/Home/images/ArrOn.png)');
         }else {
             root.css('display', 'block');
-            root.parent().css('backgroundImage', 'url(./public/Home/images/ArrOff.png)');
+            root.parent().css('backgroundImage', 'url(__PUBLIC__/Home/images/ArrOff.png)');
         }
     }
     

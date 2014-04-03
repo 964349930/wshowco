@@ -59,6 +59,10 @@ class IndexAction extends MobileAction
     public function message()
     {
         $data = $_POST;
+        if(empty($data)){
+            $this->display('Default:leave');
+            exit;
+        }
         $data['member_id'] = $this->member_id;
         $data['type'] = '2';
         $data['date_msg'] = time();

@@ -2,21 +2,25 @@
 <div data-role="page">
     <include file="$nav" />  
     <div class="ui-content" role="main">
-        <div class="ui-corner-all custom-corners">
+        <div class="ui-corner-all custom-corners" style="margin-bottom:10px">
             <div class="ui-bar ui-bar-a">
                 <h2>联系电话（一键拨打）</h2>
             </div>
-            <div class="ui-body ui-body-a" style="text-align:center;">
+            <div class="ui-body ui-body-a" style="text-align:center;line-height:36px;">
+                <img src="{$Think.template|dirname}/img/phone.png" style="float:left;" />
                 <a href="tel:{$site.tel}"><h3>{$site.tel}</h3></a>
             </div>
         </div>
-        <div class="ui-corner-all custom-corners">
+        <div class="ui-corner-all custom-corners" style="margin-bottom:10px">
             <div class="ui-bar ui-bar-a">
                 <h2>联系地址</h2>
             </div>
             <div class="ui-body ui-body-a">
-                <p>地址 ：{$site.address}</p>
-                <p>E-mail：{$site.email}</p>
+                <img src="{$Think.template|dirname}/img/address.png" style="float:left;" />
+                <div style="float:left;margin-left:15px;">
+                    <p>地址 ：{$site.address}</p>
+                    <p>E-mail：{$site.email}</p>
+                </div>
             </div>
         </div>
         <div class="ui-corner-all custom-corners">

@@ -1,47 +1,27 @@
 <include file="Public:header" />
-<style>
-@charset "utf-8";
-.ui-body-c a.ui-link,.ui-body-c a.ui-link:hover,.ui-body-c a.ui-link:visited { color:inherit;}
-p { text-align:left;}
-img { display:block; height:auto; margin:auto; max-width:100%;}
-
-body { background:url(../img/bg.jpg) repeat;}
-.main { position:relative;}
-
-.content { margin:15px 20px;}
-.content li { display:block; height:50px; margin:15px 0; background:#18120d;}
-.content li.active .bg_l { float:left; width:22px; height:50px;}
-.content li .bg_l { float:left; width:22px; height:50px; background:url(img/nr_bg02.png) no-repeat;}
-.content li .bg_r img { float:right;}
-.nav li a { display:block; height:50px; color:#cbcbcb; font-size:20px; line-height:50px;}
-.nav li a img { float:left; margin:12px 20px 0 30px;}
-.nav li a.ui-link { color:#ff9933; font-size:20px; line-height:50px;}
-.nav li a.ui-link .jt { float:right; width:13px; height:19px; margin:15px 20px 0 15px;}
-.nav li a .jt { float:right; background:url(../img/jt_02.png) no-repeat; width:13px; height:19px; margin:15px 20px 0 0;}
-
-.nr { margin:20px;}
-.btn { margin:20px 0; background:#ff9933; border:1px solid #ff862d; border-radius:3px; width:100%; height:40px; color:#fff; font-size:16px; font-family:"黑体-简";}
-.btn1 { background:#f2f2f2; border:1px solid #e0e0e0; border-radius:3px; width:100%; height:40px; color:#4a4a4a; font-size:16px; font-family:"黑体-简";}
-
-</style>
-<div data-role="page" role="main">
-    <div data-role="header" />
-        <h1>{$site.site_name}</h1>
+<div data-role="page">
+    <div data-role="header" style="background:#1F1F1F;text-align:center;padding: 10px 0;" />
+        <img src="{$site.logo}" style="height:30px;width=auto;" />
     </div>
-    <div>
+    <div style="margin-top:5px;">
         <ul class="bxslider">
             <volist name="bannerList" id="vo">
-            <li><img src="{$vo.path_name}"></li>
+            <li><img src="{$vo.path_name}" width="100%"></li>
             </volist>
         </ul>
     </div>
-    <div class="content nav">
-        <ul>
+    <div class="ui-content" role="main">
+        <ul style="margin:0 5px 0 5px;width:100%;">
             <volist name="menuList" id="vo">
-            <li>
-                <div class="bg_l"><img src="{$Think.template|dirname}/img/nr_bg01.png" /></div>
-                <div class="bg_r"><img src="{$Think.template|dirname}/img/nr_bg03.png"></div>
-                <a href="{$vo.url}"><img src="{$Think.template|dirname}/img/yycj_0{$key+1}.png">{$vo.title}<div class="jt"><img src="{$Think.template|dirname}/img/jt_01.png" /></div></a>
+            <li style="margin:5px 0;background:#18120D;color:#fff;line-height:50px;">
+                <div style="float:left;width:22px"><img src="{$Think.template|dirname}/img/nr_bg01.png" /></div>
+                <div style="float:right;width:21px;"><img src="{$Think.template|dirname}/img/nr_bg03.png"></div>
+                <a style="display:block;text-shadow:none;text-decoration:none;color:#fff;" href="{$vo.url}">
+				<img src="{$Think.template|dirname}/img/yycj_0{$key+1}.png" style="float:left;margin:12px 20px 0 30px;" >
+				{$vo.title}
+				<img src="{$Think.template|dirname}/img/jt_01.png" style="float:right;margin: 15px 20px;" />
+				</a>
+				
             </li>
             </volist>
         </ul>
