@@ -58,16 +58,20 @@ class IndexAction extends MobileAction
      */
     public function message()
     {
-        $data = $_POST;
-        if(empty($data)){
-            $this->display('Default:leave');
+        if(empty($this->member_id)){
+            $this->error('对不起，请使用微信访问本网站');
             exit;
         }
+        $data = $this->_post();
         $data['member_id'] = $this->member_id;
-        $data['type'] = '2';
+        $data['type'] = '2';    //微网浏览模式
         $data['date_msg'] = time();
         $result = D('MemberMsg')->add($data);
-        return $result;
+        if(!empty($result)){
+            $this->success('留言成功');
+        }else{
+            $this->error('留言失败');
+        }
     }
 
 }

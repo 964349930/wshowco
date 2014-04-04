@@ -1,0 +1,14 @@
+<include file="Public:header" />
+<div class="ui-content" role="main">
+    <present name="message">
+        <p class="success"><?php echo($message); ?></p>
+    <else/>
+        <p class="error"><?php echo($error); ?></p>
+    </present>
+</div>
+<script type="text/javascript">
+$(function(){
+        setTimeout(window.history.back(-2), 4500);
+        })
+</script>
+<include file="Public:footer" />

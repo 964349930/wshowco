@@ -2,13 +2,13 @@
 <div data-role="page">
     <include file="$nav" />
     <div class="ui-content" role="main">
-        <form action="{:U('Message/message', array('user'=>$user))}" method="post">
+        <form action="{:U('Index/message', array('user'=>$user))}" method="post" data-ajax="false">
             <label for="guest" class="ui-hidden-accessible">Name:</label>
             <input type="text" id="guest" name="guest" autofocus="autofocus" placeholder="姓名">
             <label for="mobile" class="ui-hidden-accessible">Mobile:</label>
             <input type="tel" pattern="[0-9]{11}" id="mobile" name="mobile" placeholder="手机号">
-            <label for="content" class="ui-hidden-accessible">Content</label>
-            <textarea id="content" name="content" pattern="*" placeholder="请输入留言内容..."></textarea>
+            <label for="info" class="ui-hidden-accessible">Info:</label>
+            <textarea id="info" name="info" pattern="*" placeholder="请输入留言内容..."></textarea>
             <button id="send" class="ui-shadow ui-btn ui-btn-b ui-corner-all" type="submit">提交</button>
         </form>
     </div>

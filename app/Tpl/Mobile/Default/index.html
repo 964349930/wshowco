@@ -1,6 +1,6 @@
 <include file="Public:header" />  
 <div data-role="page">
-    <div data-role="header">
+    <div data-role="header" data-theme="b">
         <h1>{$site.site_name}</h1>
     </div>
     <!-- /header -->
@@ -18,14 +18,15 @@
         <div class="ui-grid-a">
             <volist name="menuList" id="vo">
             <div <eq name="key%2" value="0">class="ui-block-a"<else />class="ui-block-b"</eq>>
-                <div class="ui-bar ui-bar b" style="height=50px;"><a href="{$vo.url}" class="ui-btn ui-shadow ui-corner-all"><p><img src="{$vo.cover_name}" height="50px"></p><h3>{$vo.title}</h3></a></div></div>
+                <div class="ui-bar ui-bar b"><a href="{$vo.url}" ><p><img src="{$vo.cover_name}" height="50px"></p><h3>{$vo.title}</h3></a></div></div>
             </volist>
         </div>
     </div>
     <!-- grid -->
 
-    <div data-role="footer">
-        <h4><a href="tel:{$site.tel}" class="ui-btn ui-shadow ui-corner-all" date-theme="b">{$site.tel}</a></h4>
+    <div data-role="footer" style="text-decoration:normal;text-align:center;" data-theme="b">
+        <!--a href="tel:{$site.tel}">{$site.tel}</a-->
+        <a href="http://wechat.wshow.co/index.php?g=Mobile&user=wshow" />本站点由WSHOW.CO提供技术支持</a>
     </div>
     <!-- tel -->
 

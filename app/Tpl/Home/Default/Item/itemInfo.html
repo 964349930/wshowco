@@ -66,14 +66,16 @@ $(function(){
             <dd><input type="number" name="item[sort_order]" value="{$itemInfo.sort_order}" /></dd>
         </dl>
         <dl>
+            <dt>状态：</dt>
+            <dd><input type="radio" name="item[status]" value="1" <eq name="itemInfo[status]" value="1">checked="checked"</eq> />显示&nbsp;&nbsp;
+            <input type="radio" name="item[stauts]" value="0" <eq name="itemInfo[status]" value="0">checked="checked"</eq> />不显示</dd>
+        </dl>
+        <dl>
             <dt>&nbsp;</dt>
             <dd><input type="submit"  value="提 交" class="btn submit-btn" /></dd>
         </dl>
     </form>
 </div>
+<include file="../Public/editor" />
+<include file="../Public/gallery" />
 <include file="../Public/footer" />
-<script type="text/javascript" src="./public/js/ueditor/ueditor.config.js"></script>
-<script type="text/javascript" src="./public/js/ueditor/ueditor.all.js"></script>
-<script type="text/javascript">
-UE.getEditor('content');
-</script>
