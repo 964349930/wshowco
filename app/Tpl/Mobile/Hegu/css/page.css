@@ -5,35 +5,76 @@ body {
 span {
 	font-family: "Arial";
 }
+*{padding:0;margin:0;font-size:12px; color:#3e3e3e;}
+
+.white{ background:#fff;} 	
+li{list-style-type:none;}
+a{text-decoration:none;}
+a:hover{text-decoration:none;}	
+h1{ float:left; margin:15px 0 0;}
+h1 a{text-indent:-9999px; width:213px; height:35px; background:url(../img/logo.png); display:block;}
+.thumbnail{ border:0; padding:0; margin:0;}
+.shouye{
+	position:relative;
+}
+.d1{
+	position:absolute;
+	top:370px;
+	left:50px;
+}
+.d2{
+	position:absolute;
+	top:230px;
+	left:90px;
+}
+.d3{
+	position:absolute;
+	top:240px;
+	left:42%;
+}
+.d4{
+	position:absolute;
+	top:360px;
+	left:62%;
+}
+.d5{
+	position:absolute;
+	top:520px;
+	left:65%;
+}
 
 /* 导航 */
-.main {
-	background: #9b3903;
-}
-
-.home-bg {
-	position:absolute;
-	bottom: 80px;
-}
-
-.menu+.menu {
-	margin-top: 15px;
-}
-
-.menu a {
-	display: block;
+.index-head { position:absolute;}
+.cont-nav a {
+	display:block;
 	width:100%;
 	height:100%;
-	font-size: 14px;
-	color: #000;
-	text-align: center;
-	border-radius: 50%;
-	background: #fff;
+	font-size:16px;
+	color: #fff;
+	text-align:center;
+	vertical-align:middle;
+	border-radius:50%;
 	/* 半透明 */
-	filter:alpha(Opacity=80);
-	-moz-opacity:0.5;
-	opacity: 0.7;
+	filter:alpha(Opacity=85);
+	-moz-opacity:0.85;
+	opacity: 0.85;
 	z-index:100;
+}
+.cont-nav .col-xs-7:nth-child(1) a{ background:#990203; font-size:32px;}
+.cont-nav .col-xs-3:nth-child(2) a{ background:#88ae10;}
+.cont-nav .col-xs-3:nth-child(3) a{ background:#ae7710;}
+.cont-nav .col-xs-3:nth-child(4) a{ background:#bc4a00;}
+.cont-nav .col-xs-3:nth-child(5) a{ background:#7f2a00;}
+@media (min-width: 640px) {
+   .container {
+    width: 640px;
+  }
+}
+@media (max-width: 640px) {
+ .cont-nav a{ font-size:16px;}
+}
+@media (max-width: 480px){
+ .cont-nav a{ font-size:12px;}
 }
 
 /* 子页全局 */
@@ -49,7 +90,7 @@ span {
 }
 
 .header-title {
-	padding: 5px;
+	padding: 5px 15px;
 	background: #9b3803;
 	color: #fff;
 	font-size: 18px;
@@ -64,6 +105,7 @@ span {
 	margin-left: 10px;
 	font-weight: normal;
 	font-size: 14px;
+	color:#fff;
 }
 /* 企业文化 */
 .content-box {
@@ -100,8 +142,10 @@ span {
 /* 品牌故事 */
 .story-bg, .introduce-bg, .news-bg {
 	padding: 15px 0;
-	background: url(../images/white_bg.png);
+	background:rgba(255,255,255,0.8);
+	display:inline-block;
 }
+.story-bg img { margin-left:15px;}
 /* 产品展示 */
 .product-box {
 	padding: 15px;
@@ -141,11 +185,14 @@ span {
 
 /* 产品介绍 */
 .introduce-bg img {
-	margin-bottom: 10px;
+	margin:20px;
 }
 
 .introduce-bg p {
 	font-size: 14px;
+	margin:0 20px;
+	text-indent:20px;
+	line-height:20px;
 }
 
 .introduce-bg p span {
