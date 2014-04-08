@@ -1,0 +1,33 @@
+<include file="Public:header" />
+<link rel="stylesheet" href="__PUBLIC__/circularnavigation/normalize.css">
+<link rel="stylesheet" href="__PUBLIC__/circularnavigation/component1.css">
+<link rel="stylesheet" href="__PUBLIC__/circularnavigation/demo.css">
+<script src="__PUBLIC__/circularnavigation/modernizr-2.6.2.min.js"></script>
+<div data-role="page">
+    <include file="$nav" />
+    <div class="ui-content" role="main">
+        <ul data-role="listview" class="ui-listview ui-shadow">
+            <li><img src=""></li>
+            <li>昵称：orange</li>
+            <li>编号：111</li>
+            <li>手机号码：15550005746</li>
+            <li>地址：山东济南</li>
+        </ul>
+    </div>
+<div>
+        <!-- Start Nav Structure -->
+		<button class="cn-button" id="cn-button">+</button>
+		<div class="cn-wrapper" id="cn-wrapper">
+			<ul>
+				<li><a href="#"><span class="icon-picture"></span></a></li>
+				<li><a href="#"><span class="icon-headphones"></span></a></li>
+				<li><a href="#"><span class="icon-home"></span></a></li>
+				<li><a href="#"><span class="icon-facetime-video"></span></a></li>
+				<li><a href="#"><span class="icon-envelope-alt"></span></a></li>
+			</ul>
+		</div>
+		<div id="cn-overlay" class="cn-overlay"></div>
+		<!-- End Nav Structure -->
+</div>
+<script src="__PUBLIC__/circularnavigation/polyfills.js"></script>
+<script src="__PUBLIC__/circularnavigation/demo1.js"></script>

@@ -2,7 +2,7 @@
 <div data-role="page">
     <include file="$nav" />
     <div class="ui-content" role="main">
-        <form action="{:U('Index/message', array('user'=>$user))}" method="post" data-ajax="false">
+        <form action="{:U('Index/message', array('user'=>$user,'member_id'=>$member_id))}" method="post" data-ajax="false">
             <label for="guest" class="ui-hidden-accessible">Name:</label>
             <input type="text" id="guest" name="guest" autofocus="autofocus" placeholder="姓名">
             <label for="mobile" class="ui-hidden-accessible">Mobile:</label>

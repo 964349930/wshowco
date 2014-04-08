@@ -32,7 +32,7 @@ class MenuAction extends HomeAction{
         }
         $tplData = array(
             'infoUrl' => U('Home/Menu/info'),
-            'updateUrl' => U('Home/Menu/update'),
+            'updateUrl' => U('Home/Menu/createMenu'),
             'delUrl' => U('Home/Menu/del'),
             'menuList' => $menuList,
         );
@@ -88,7 +88,7 @@ class MenuAction extends HomeAction{
      * 下载菜单
      */
     public function downMenu(){
-        $token = $this->getToken();
+        $token = D('WechatMenu')->getToken();
 		$url = 'https://api.weixin.qq.com/cgi-bin/menu/get?access_token='.$token;
 		$ch = curl_init();//初始化curl
 		curl_setopt($ch, CURLOPT_URL, $url);//抓取指定网页
@@ -130,7 +130,7 @@ class MenuAction extends HomeAction{
 	 * 操作：添加菜单
 	 */
 	public function createMenu(){
-		$token = $this->getToken();
+		$token = D('WechatMenu')->getToken();
         if(empty($token)){
             $this->error('获取TOKEN失败');
         }
