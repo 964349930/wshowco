@@ -40,10 +40,9 @@
             <div id="wrapper" style="overflow: hidden; ">
                <div id="scroller">
                  <ul id="thelist">
-                   <li><img src="{$Think.template|dirname}/img/banner_01.jpg"/></li>
-                   <li><img src="{$Think.template|dirname}/img/banner_03.jpg"/></li>  
-                   <li><img src="{$Think.template|dirname}/img/banner_01.jpg"/></li>
-                   <li><img src="{$Think.template|dirname}/img/banner_03.jpg"/></li>                 
+                     <volist name="bannerList" id="vo">
+                     <li><img src="{$vo.path_name}" /></li>                 
+                   </volist>
                 </ul>
               </div>
             </div>

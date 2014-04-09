@@ -12,6 +12,7 @@ class MobileAction extends BaseAction
     protected $member_id;
     protected $item_id;
     protected $theme_name;
+    private $relTplList;
 
 	/**
 	 * 判断用户
@@ -22,6 +23,7 @@ class MobileAction extends BaseAction
         $this->member_id = intval($_GET['member_id']);
         $this->user_id = D('User')->where("name='".$this->user."'")->getField('id');
         $this->theme_name = $this->getThemeName();
+        $this->setTplList();
         $this->item_id = intval($_GET['id']);
         $data = array(
             'user'          => $this->user,
@@ -119,4 +121,40 @@ class MobileAction extends BaseAction
         return $imgList; 
     }
 
+    /**
+     * get template file list
+     */
+    private function setTplList()
+    {
+        /* 模版的定制优先原则 */
+        $relTplList = scandir('./app/Tpl/Mobile/'.ucfirst($this->theme_name));
+        $this->relTplList = $relTplList;
+    }
+
+
+    /**
+     * get nav template
+     */
+    protected function getNav()
+    {
+        if(in_array('navigation.html', $this->relTplList)){
+            $nav = ucfirst($this->theme_name).':navigation';
+        }else{
+            $nav = 'Public:navigation';
+        }
+        return $nav;
+    }
+
+    /**
+     * get theme dir
+     */
+    protected function getRelTpl($tplName)
+    {
+        if(in_array($tplName.'.html', $this->relTplList)){
+            $themeDir = ucfirst($this->theme_name);
+        }else{
+            $themeDir = 'Default';
+        }
+        return $themeDir.':'.$tplName;
+    }
 }

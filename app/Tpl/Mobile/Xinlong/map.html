@@ -1,33 +1,43 @@
 <include file="Public:header" />
+<script type="text/javascript" src="http://api.map.baidu.com/api?type=quick&ak=5c1da412cb98cbde54f87d45d8feda56&v=1.0"></script>
 <div data-role="page" role="main">
     <include file="$nav" />
-    <div class="ui-content">
-        <a id="map" href=""><img src="http://api.map.baidu.com/staticimage?center={$site.longitude},{$site.latitude}&width=600&height=780&zoom=11" width="100%" /></a>
+    <div class="ui-content" id="map" style="width=100%;height:100%;overflow:hidden;margin:0;">
     </div>
 </div>
 <include file="Public:footer" />
-<script>
-window.onload = function getLocation(){
-    navigator.geolocation.getCurrentPosition(setLocation);
-}
-function setLocation(position){
-    var brower = navigator.appName
-    var version = navigator.appVersion
+<script type="text/javascript">  
+    var window_height = $(window).height();
+    $("#map").height(window_height - 44);
 
-    var latitude = position.coords.latitude;
-    var longitude = position.coords.longitude;
+    var map = new BMap.Map("map");  
+    var longitude = '{$site.longitude}';
+    var latitude = '{$site.latitude}';
+    map.centerAndZoom(new BMap.Point(longitude, latitude), 14);  
 
-    var is_iphone = new RegExp("iPhone");
-    var is_android = new RegExp("Android");
+    var zoomControl=new BMap.ZoomControl({anchor:BMAP_ANCHOR_TOP_RIGHT});  
+    map.addControl(zoomControl);//添加缩放控件  
+    var scaleControl=new BMap.ScaleControl({anchor:BMAP_ANCHOR_TOP_RIGHT});  
+    map.addControl(scaleControl);//添加比例尺控件 
 
-    if(is_iphone.test(version)){
-        var mobile_type = 'baidumap://map/direction?';
-    }else if(is_android.test(version)){
-        var mobile_type = 'intent://map/direction?';
-    }else{
-        var mobile_type = 'http://api.map.baidu.com/direction?';
-    }
-    var url = mobile_type+'origin={$site.latitude},{$site.longitude}&destination='+latitude+','+longitude+'&mode=driving&src=thinklancer';
-    document.getElementById('map').href=url;
-}
-</script>
+    var marker = new BMap.Marker(new BMap.Point(longitude, latitude));// 创建标注      
+    map.addOverlay(marker);
+
+    /*
+    var routeSearch=new BMap.RouteSearch();  
+    var start = {  
+      latlng:new BMap.Point(longitude, latitude-2),  
+      name:"故宫"  
+    }  
+    var end = {  
+     latlng:new BMap.Point(longitude, latitude-4),  
+     name:"肯德基（汉光店）"  
+    }  
+    var opts = {  
+     mode:BMAP_MODE_DRIVING,//公交、驾车、导航均修改该参数  
+     region:"北京"  
+    }  
+    var ss = new BMap.RouteSearch();  
+    routeSearch.routeCall(start,end,opts);   
+    */
+</script> 

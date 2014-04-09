@@ -35,10 +35,10 @@ class WxModel extends CommonModel
                 $v['cover'] = str_replace('./', 'http://'.$_SERVER['HTTP_HOST'].'/', getPicPath(D('GalleryMeta')->getImg($v['cover'])));
             }
             if(empty($v['url'])){
-                $v['url'] = 'http://'.$_SERVER['HTTP_HOST'].U('Index/item', array(
+                $v['url'] = 'http://'.$_SERVER['HTTP_HOST'].U('Mobile/Index/push', array(
                     'user'  => $this->user,
                     'member_id' => $member_id,
-                    'id'    => $id,
+                    'id' => $v['id'],
                 ));
             }else{
                 $v['url'] .= '&member_id='.$member_id;
