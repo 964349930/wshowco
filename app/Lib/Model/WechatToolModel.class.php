@@ -41,9 +41,8 @@ class WechatToolModel extends CommonModel {
      * 天气搜索
      */
     public function weather($city){
-        //$city = '济南';
-        $map['city'] = $city;
-        $cityCode = M('Weather')->where("`city`='".$city."'")->getField('citycode');
+        $city = csubstr($city, 6);
+        $cityCode = D('Weather')->where("`city`='".$city."'")->getField('citycode');
         $url = 'http://m.weather.com.cn/data/'.$cityCode.'.html';
         $header = array("content-type: application/x-www-form-urlencoded; charset=UTF-8");
         $ch = curl_init();

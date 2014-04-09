@@ -122,6 +122,10 @@ class WxAction extends BaseAction
             'keyword' => $keyword,
         );
         $routeInfo = $routeObj->where($arrMap)->find();
+        if(empty($routeInfo)){
+            $arrMap['keyword'] = array('eq', csubstr($keyword,0,2));
+            $routeInfo = $routeObj->where($arrMap)->find();
+        }
         //如果无匹配，则直接退出
         if(empty($routeInfo)){
             $noneMap = array(

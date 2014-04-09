@@ -36,6 +36,11 @@ class IndexAction extends MobileAction
     public function push()
     {
         $pushInfo = D('WechatNewsMeta')->getInfoById($this->item_id);
+        $pushInfo['cover_name'] = getPicPath(D('GalleryMeta')->getImg($pushInfo['cover'], 'm'));
+        $pushInfo['intro'] = $pushInfo['description'];
+        $pushInfo['info'] = htmlspecialchars_decode($pushInfo['content']);
+        $pushInfo['date_add_text'] = date('Y-m-d H:i', $pushInfo['date_add']);
+
         $this->assign('info', $pushInfo);
         $this->display($this->getRelTpl('detail'));
     }
