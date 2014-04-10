@@ -16,3 +16,8 @@ data/
 # ignore the zip rar file
 *.rar
 *.zip
+
+# ignore the mobile template
+app/Tpl/Mobile
+!app/Tpl/Mobile/Default
+!app/Tpl/Mobile/Public
