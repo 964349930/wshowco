@@ -40,7 +40,7 @@ class MemberModel extends CommonModel
     public function format($arrInfo, $arrFormat)
     {
         if(in_array('name', $arrFormat)){
-            $arrInfo['name'] = ($arrInfo['name']) ? $arrInfo['name'] : '无名';
+            $arrInfo['name'] = ($arrInfo['name']) ? $arrInfo['name'] : '无';
         }
         if(in_array('mobile', $arrFormat)){
             $arrInfo['mobile'] = ($arrInfo['mobile']) ? $arrInfo['mobile'] : '无';

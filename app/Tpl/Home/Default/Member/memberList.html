@@ -30,10 +30,11 @@
           <td>{$vo.mobile}</td>
           <td>{$vo.date_login|date="Y-m-d H:i", ###}</td>
           <td>
-            <a href="{$infoUrl}&member_id={$vo.id}" class="mr10">会员信息</a>
-            <a href="{$msgUrl}&member_id={$vo.id}" class="mr10">消息记录</a>
+            <a href="{$infoUrl}&member_id={$vo.id}" class="mr10">详情</a>
+            <a href="{$pushUrl}&member_id={$vo.id}" class="mr10">消息记录</a>
             <a href="{$viewUrl}&member_id={$vo.id}" class="mr10">浏览记录</a>
-            <a href="{$likeUrl}&member_id={$vo.id}">兴趣列表</a>
+            <a href="{$likeUrl}&member_id={$vo.id}" class="mr10">收藏列表</a>
+            <a href="{$msgUrl}&member_id={$vo.id}">留言列表</a>
           </td>
         </tr>
       </volist>

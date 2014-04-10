@@ -4,7 +4,7 @@
  * @author chen
  * @version 2014-03-18
  */
-class MemberEventModel extends CommonModel
+class MemberColModel extends CommonModel
 {
     /**
      * add the event

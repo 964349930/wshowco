@@ -23,7 +23,7 @@ class IndexAction extends MobileAction
     {
         $itemInfo = $this->getItemInfo($this->item_id);
         $itemList = $this->getItemList($this->item_id);
-        D('MemberEvent')->addEvent($this->member_id, 'view', $this->item_id, $itemInfo['title']);
+        D('MemberVisit')->add(array('member_id'=>$this->member_id,'item_id'=>$itemInfo['id'],'date_visit'=>time()));
         $this->assign('info', $itemInfo);
         $this->assign('list', $itemList);
         $this->assign('nav', $this->getNav());
@@ -51,9 +51,8 @@ class IndexAction extends MobileAction
      */
     public function like()
     {
-        $item_name = D('Item')->where('id='.$this->item_id)->getField('title');
-        $result = D('MemberEvent')->addEvent($this->member_id, 'like', $this->item_id, $item_name);
-        return $result;
+        $id = D('MemberCol')->add(array('member_id'=>$this->member_id,'item_id'=>$this->item_id,'date_col'=>time()));
+        echo $id;
     }
 
     /**
@@ -67,7 +66,6 @@ class IndexAction extends MobileAction
         }
         $data = $this->_post();
         $data['member_id'] = $this->member_id;
-        $data['type'] = '2';    //微网浏览模式
         $data['date_msg'] = time();
         $result = D('MemberMsg')->add($data);
         if(!empty($result)){

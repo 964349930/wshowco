@@ -1,7 +1,7 @@
 <include file="Public:header" />
 <div class="tabs">
   <ul>
-    <li class="current"><a href="javascript:void(0)">会员浏览记录</a></li>
+    <li class="current"><a href="javascript:void(0)">浏览记录</a></li>
   </ul>
 </div>
 <div class="toolbar">
@@ -10,21 +10,21 @@
   <table width="100%" border="0" cellspacing="0" cellpadding="0">
     <thead>
       <tr>
-          <th width="70%">访问文章名称</th>
+        <th width="70%">访问文章名称</th>
         <th width="10%">访问时间</th>
         <th width="20%">操作</th>
       </tr>
     </thead>
     <tbody>
-      <empty name="eventList">
+      <empty name="visitList">
         <tr><td colspan="11" class="empty">暂无相关数据</td></tr>
       <else />
-      <volist name="eventList" id="vo">
+      <volist name="visitList" id="vo">
         <tr>
-            <td>{$vo.item_name}</td>
-          <td>{$vo.date_event|date="Y-m-d H:i", ###}</td>
+          <td>{$vo.item_title}</td>
+          <td>{$vo.date_visit|date="Y-m-d H:i", ###}</td>
           <td>
-            <a href="{$itemUrl}&item_id={$vo.item_id}" class="mr10">查看原文</a>
+            <!--a href="{$itemUrl}&item_id={$vo.item_id}" class="mr10">查看原文</a-->
           </td>
         </tr>
       </volist>

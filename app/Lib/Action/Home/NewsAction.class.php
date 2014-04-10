@@ -89,6 +89,7 @@ class NewsAction extends HomeAction{
         }
         $news = $this->_post('news');
         $meta = $this->_post('meta');
+        $meta['url'] = htmlspecialchars_decode($meta['url']);
         $route = $this->_post('route');
 		if(!empty($_FILES['pic']['name'])){
 			$picList = uploadPic();
@@ -176,6 +177,7 @@ class NewsAction extends HomeAction{
             exit;
         }
         $meta = $this->_post('meta');
+        $meta['url'] = htmlspecialchars_decode($meta['url']);
 		if(!empty($_FILES['pic']['name'])){
 			$picList = uploadPic();
 			if($picList['code'] != 'error'){

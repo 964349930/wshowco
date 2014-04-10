@@ -23,6 +23,7 @@ class MemberAction extends HomeAction
         $data = array(
             'infoUrl' => U('Home/Member/memberInfo'),
             'msgUrl' => U('Home/Member/msgList'),
+            'pushUrl' => U('Home/Member/pushList'),
             'viewUrl' => U('Home/Member/viewList'),
             'likeUrl' => U('Home/Member/likeList'),
             'memberList' => $memberList,
@@ -54,15 +55,17 @@ class MemberAction extends HomeAction
     public function viewList()
     {
         $member_id = $this->_get('member_id', 'intval');
-        $eventObj = D('MemberEvent');
+        $visitObj = D('MemberVisit');
         $arrField = array();
         $arrMap['member_id'] = array('eq', $member_id);
-        $arrMap['event'] = array('eq', 'view');
-        $arrOrder = array('date_event');
-        $page = page($eventObj->getCount($arrMap));
-        $eventList = $eventObj->getList($arrField, $arrMap, $arrOrder, $page->firstRow, $page->listRows);
+        $arrOrder = array('date_visit');
+        $page = page($visitObj->getCount($arrMap));
+        $visitList = $visitObj->getList($arrField, $arrMap, $arrOrder, $page->firstRow, $page->listRows);
+        foreach($visitList as $k=>$v){
+            $visitList[$k]['item_title'] = D('Item')->where('id='.$v['item_id'])->getField('title');
+        }
         $data = array(
-            'eventList' => $eventList,
+            'visitList' => $visitList,
             'pageHtml' => $page->show(),
         );
         $this->assign($data);
@@ -75,11 +78,10 @@ class MemberAction extends HomeAction
     public function likeList()
     {
         $member_id = $this->_get('member_id', 'intval');
-        $eventObj = D('MemberEvent');
+        $eventObj = D('MemberCol');
         $arrField = array();
         $arrMap['member_id'] = array('eq', $member_id);
-        $arrMap['event'] = array('eq', 'like');
-        $arrOrder = array('date_event');
+        $arrOrder = array('date_col');
         $page = page($eventObj->getCount($arrMap));
         $eventList = $eventObj->getList($arrField, $arrMap, $arrOrder, $page->firstRow, $page->listRows);
         $data = array(
@@ -91,7 +93,37 @@ class MemberAction extends HomeAction
     }
 
     /**
-     * view the message content
+     * wechat push list
+     */
+    public function pushList()
+    {
+        $member_id = $this->_get('member_id', 'intval');
+        $pushObj = D('MemberPush');
+        $arrField = array();
+        if(!empty($member_id)){
+            $arrMap['member_id'] = array('eq', $member_id);
+        }else{
+            $member_id_list = D('Member')->where('user_id='.$_SESSION['uid'])->getField('id', true);
+            $arrMap['member_id'] = array('in', $member_id_list);
+        }
+        $arrOrder = array('date_push desc');
+        $page = page($pushObj->getCount($arrMap));
+        $pushList = $pushObj->getList($arrField, $arrMap, $arrOrder, $page->firstRow, $page->listRows);
+        foreach($pushList as $k=>$v){
+            $pushList[$k]['member_name'] = D('Member')->where('id='.$v['member_id'])->getField('name');
+        }
+        $data = array(
+            'member_id' => $member_id,
+            'pushList' => $pushList,
+            'pageHtml' => $page->show(),
+            'pushDelUrl' => U('Home/Member/pushDel'),
+        );
+        $this->assign($data);
+        $this->display();
+    }
+
+    /**
+     * view the site message list
      */
     public function msgList()
     {
@@ -108,7 +140,7 @@ class MemberAction extends HomeAction
         $page = page($msgObj->getCount($arrMap));
         $msgList = $msgObj->getList($arrField, $arrMap, $arrOrder, $page->firstRow, $page->listRows);
         foreach($msgList as $k=>$v){
-            $msgList[$k] = $msgObj->format($v, array('type_name', 'member_name'));
+            $msgList[$k] = $msgObj->format($v, array('member_name'));
         }
         $data = array(
             'member_id' => $member_id,
@@ -118,6 +150,25 @@ class MemberAction extends HomeAction
         );
         $this->assign($data);
         $this->display();
+    }
+
+    public function pushDel()
+    {
+        $delIds = array();
+		$postIds = $this->_post('id');
+		if (!empty($postIds)) {
+			$delIds = $postIds;
+		}
+		$getId = intval($this->_get('id'));
+		if (!empty($getId)) {
+			$delIds[] = $getId;
+		}
+		if (empty($delIds)) {
+			$this->error('请选择您要删除的数据');
+		}
+		$map['id'] = array('in', $delIds);
+		D('MemberPush')->where($map)->delete();
+		$this->success('删除成功');
     }
 
     /**

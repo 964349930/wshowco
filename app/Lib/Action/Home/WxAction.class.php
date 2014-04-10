@@ -74,7 +74,7 @@ class WxAction extends BaseAction
         //get the member id
         $this->member_id = D('Member')->getMemberIdByWechatId($this->user_id, $arrPost['FromUserName']);
         //将访问信息存入数据库
-        D('MemberMsg')->addWechatMessage($arrPost, $this->member_id);
+        D('MemberPush')->addWechatMessage($arrPost, $this->member_id);
         //将用户发送的信息转换为关键字形式
         $keyword = $this->getKeyword($arrPost);
         //根据post数组获取返回数据内容
