@@ -33,7 +33,7 @@ $(function(){
         {
             text: '确定',
             click: function(){
-                var img_id = $("#imgList").find('input:checked').val();    
+                var img_id = $("#imgList").find('input:checked').val();
                 if(img_id != null){
                     $("#img").val(img_id);
                     }
@@ -48,20 +48,37 @@ $(function(){
 </script>
 <!--弹出框-->
 <div id="dialog">
-    <ul>
-        <li><a href="#tabs-1">在线图库</a></li>
-        <!--li><a href="#tabs-2">本地上传</a></li-->
-    </ul>
-    <div id="tabs-1">
-        <div id="select">
-            <select name="gallery_pic" id="gallery">
-            </select>
-        </div>
-        <div id="imgList">
-        </div>
+  <ul>
+    <li><a href="#tabs-1">在线图库</a></li>
+    <li><a href="#tabs-2">本地上传</a></li>
+  </ul>
+  <div id="tabs-1">
+    <div id="select">
+      <select name="gallery_pic" id="gallery">
+      </select>
     </div>
-    <!--div id="tabs-2">
-        <p>浏览：</p><input type="file" name="pic" />
-    </div-->
+    <div id="imgList">
+    </div>
+  </div>
+  <div id="tabs-2">
+    <ul>
+      <form id="imgForm" onSubmit="return uploadImg()" enctype="multipart/form-data">
+        <li>浏览：<input type="file" name="pic" /></li>
+        <li><input type="submit" value="上传" /></li>
+      </form>
+    </ul>
+  </div>
 </div>
-
+<script>
+  function uploadImg(){
+    $.post(
+      '{:U(Home/Gallery/uploadImg)}',
+      $("#imgForm").serialize(),
+      function(data){
+        alert(data);
+      },
+      'json'
+    );
+    return false;
+  }
+</script>

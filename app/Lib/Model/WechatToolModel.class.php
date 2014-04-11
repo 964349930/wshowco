@@ -1,4 +1,4 @@
-<?php
+<?Php
 /**
  * 通用工具模型
  * @author blue

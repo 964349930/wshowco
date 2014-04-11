@@ -25,11 +25,12 @@ class MobileAction extends BaseAction
         $this->theme_name = $this->getThemeName();
         $this->setTplList();
         $this->item_id = intval($_GET['id']);
+        $listData = $this->getItemList();
         $data = array(
             'user'          => $this->user,
             'member_id'     => $this->member_id,
             'site'          => $this->getSiteInfo(),
-            'menuList'      => $this->getItemList(),
+            'menuList'      => $listData['list'],
             'home'          => U('Index/index', array('user'=>$this->user, 'member_id'=>$this->member_id)),
         );
         $this->assign($data);
@@ -73,6 +74,11 @@ class MobileAction extends BaseAction
     protected function getItemInfo($id)
     {
 		$itemInfo = D('Item')->where('id='.$id)->find();
+
+        /** 使用接口 **/
+        if(!empty($itemInfo['api'])){
+            $this->redirect('Index/api', array('user'=>$this->user,'member_id'=>$this->member_id,'id'=>$id));exit;
+        }
         $itemInfo = D('Item')->format($itemInfo, array('template_name', 'ext'));
         $itemInfo['cover_name'] = getPicPath(D('GalleryMeta')->getImg($itemInfo['cover']), 'm');
         $itemInfo['date_add_text'] = date('Y-m-d H:i', $itemInfo['date_add']);
@@ -87,14 +93,25 @@ class MobileAction extends BaseAction
      */
     protected function getItemList($parent_id=0)
     {
-        $itemList = D('Item')->where('parent_id='.$parent_id.' AND user_id='.$this->user_id.' AND status=1')->order('sort_order')->limit('0', '20')->select();
+        $map = array(
+            'parent_id' => $parent_id,
+            'user_id' => $this->user_id,
+            'status' => 1,
+        );
+        $page = page(D('Item')->getCount($map), 5);
+        if($parent_id == 0){
+            $limit = array();
+        }else{
+            $limit = array($page->firstRow, $page->listRows);
+        }
+        $itemList = D('Item')->where($map)->order('sort_order')->limit($limit)->select();
         $arrFormatField = array('ext');
         foreach($itemList as $k=>$v){
             $itemList[$k] = D('Item')->format($v, $arrFormatField);
             $itemList[$k]['cover_name'] = getPicPath(D('GalleryMeta')->getImg($v['cover']), 'm');
             $itemList[$k]['url'] = U('Index/item', array('user'=>$this->user, 'member_id'=>$this->member_id, 'id'=>$v['id']));
         }
-        return $itemList;
+        return array('list'=>$itemList,'page'=>$page->show());
     }
 
     /**
@@ -156,5 +173,42 @@ class MobileAction extends BaseAction
             $themeDir = 'Default';
         }
         return $themeDir.':'.$tplName;
+    }
+
+    /**
+     * getApiData
+     */
+    protected function getApiInfo($url, $article_id){
+        $url .= '&article_id='.$article_id;
+        $info = $this->getCUrl($url);
+        return $info;
+    }
+
+    protected function getApiList($url, $article_id, $count){
+        $page = page($count, 2);
+        $url .= '&article_id='.$article_id.'&type=list&start='.$page->firstRow.'&length='.$page->listRows;
+        $list = $this->getCUrl($url);
+        if(!empty($list)){
+            foreach($list as $k=>$v){
+                $list[$k]['url'] = U('Index/api', array(
+                    'user'=>$this->user,
+                    'member_id'=>$member_id,
+                    'id'=>$this->item_id,
+                    'article_id'=>$v['id']
+                ));
+            }
+        }
+        return array('list'=>$list,'page'=>$page->show());
+    }
+
+    private function getCUrl($url){
+        if(empty($url)){return 0;exit;}
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        $info = json_decode($result, 'true');
+        return $info;
     }
 }

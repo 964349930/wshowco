@@ -7,6 +7,21 @@
 class GalleryAction extends HomeAction
 {
     /**
+     * upload the image
+     */
+    public function uploadImage()
+    {
+		if(!empty($_FILES['pic']['name'])){
+			$picList = uploadPic();
+			if($picList['code'] != 'error'){
+				$id = D('GalleryMeta')->addImg($picList['pic']['savename']);
+			}
+		}
+        echo $id;
+    }
+
+
+    /**
      * get the gallery list for add new img
      */
     public function getGalleryList()
