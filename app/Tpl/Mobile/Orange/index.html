@@ -1,0 +1,59 @@
+<html lang="zh-cn">
+  <head>
+    <title>{$site.site_name}</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta name="viewport" content="width=device-width,inital-scale=1.0,maximun-scale=1.0,user-scalable=no">
+
+    <link rel="stylesheet" href="__PUBLIC__/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="__PUBLIC__/responsiveslides/responsiveslides.css" />
+    <!-- css -->
+
+    <script src="__PUBLIC__/jquery/jquery-1.10.1.min.js"></script>
+    <script src="__PUBLIC__/bootstrap/bootstrap.min.js"></script>
+    <script src="__PUBLIC__/responsiveslides/responsiveslides.min.js"></script>
+    <!-- js -->
+    <style>
+      body {
+        background: #222 url("__PUBLIC__/responsiveslides/images/bg.png") repeat;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="rslides_container">
+        <ul class="rslides" id="slider">
+          <volist name="bannerList" id="vo">
+            <li>
+              <img src="{$vo.path_name}" />
+              <p class="caption">{$vo.title}</p>
+            </li>
+          </volist>
+        </ul>
+      </div>
+      <div style="row">
+        <volist name="menuList" id="vo">
+          <div class="col-xs-6">
+            <a href="{$vo.url}" class="thumbnail">
+              <img src="{$vo.cover_name}" alt="wshow.co">
+              <div class="caption">
+                <h4>{$vo.title}</h4>
+              </div>
+            </a>
+          </div>
+        </volist>
+      </div>
+      <div id="footer">
+      </div>
+    </div>
+  </body>
+</html>
+<script>
+  $(function(){
+  $("#slider").responsiveSlides({
+    auto: true,
+    pager: false,
+    nav: true,
+    speed: 500,
+  });
+  })
+</script>
