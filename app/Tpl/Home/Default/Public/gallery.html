@@ -1,5 +1,41 @@
+<!--弹出框-->
+<div id="dialog">
+  <ul>
+    <li><a href="#tabs-1">在线图库</a></li>
+    <li><a href="#tabs-2">本地上传</a></li>
+  </ul>
+  <div id="tabs-1">
+    <div id="select">
+      <select name="gallery_pic" id="gallery">
+      </select>
+    </div>
+    <div id="imgList">
+    </div>
+  </div>
+  <div id="tabs-2">
+    <form id="imgUpload" method="post" onsubmit="return uploadImg()" enctype="multipart/form-data">
+      <ul>
+        <li>图片标题：<input type="text" name="title" /></li>
+        <li>浏览：<input type="file" name="pic" /></li>
+        <li><input type="submit" value="上传" /></li>
+      </ul>
+    </form>
+  </div>
+</div>
 <script>
-$(function(){
+  function uploadImg(){
+    $.post(
+      "{:U('Home/Gallery/uploadImage')}",
+      $("#imgUpload").serialize(),
+      function(data){
+        alert(data);
+      },
+      'json'
+    );
+    return false;
+  }
+
+  $(function(){
     /* 在线图片和本地上传切换 */
     $("#dialog").tabs();
 
@@ -45,40 +81,4 @@ $(function(){
         }]
         })
     });
-</script>
-<!--弹出框-->
-<div id="dialog">
-  <ul>
-    <li><a href="#tabs-1">在线图库</a></li>
-    <li><a href="#tabs-2">本地上传</a></li>
-  </ul>
-  <div id="tabs-1">
-    <div id="select">
-      <select name="gallery_pic" id="gallery">
-      </select>
-    </div>
-    <div id="imgList">
-    </div>
-  </div>
-  <div id="tabs-2">
-    <ul>
-      <form id="imgForm" onSubmit="return uploadImg()" enctype="multipart/form-data">
-        <li>浏览：<input type="file" name="pic" /></li>
-        <li><input type="submit" value="上传" /></li>
-      </form>
-    </ul>
-  </div>
-</div>
-<script>
-  function uploadImg(){
-    $.post(
-      '{:U(Home/Gallery/uploadImg)}',
-      $("#imgForm").serialize(),
-      function(data){
-        alert(data);
-      },
-      'json'
-    );
-    return false;
-  }
 </script>

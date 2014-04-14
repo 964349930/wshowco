@@ -16,8 +16,14 @@ class GalleryAction extends HomeAction
 			if($picList['code'] != 'error'){
 				$id = D('GalleryMeta')->addImg($picList['pic']['savename']);
 			}
-		}
-        echo $id;
+            if(!empty($id)){
+                echo $id;
+            }else{
+                echo 'upload image field';
+            }
+		}else{
+            echo 'img is null';
+        }
     }
 
 
