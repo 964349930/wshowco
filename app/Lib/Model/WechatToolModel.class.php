@@ -43,7 +43,7 @@ class WechatToolModel extends CommonModel {
     public function weather($city){
         $city = csubstr($city, 6);
         $cityCode = D('Weather')->where("`city`='".$city."'")->getField('citycode');
-        $url = 'http://m.weather.com.cn/data/'.$cityCode.'.html';
+        $url = 'http://www.weather.com.cn/data/cityinfo/'.$cityCode.'.html';
         $header = array("content-type: application/x-www-form-urlencoded; charset=UTF-8");
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
@@ -54,7 +54,7 @@ class WechatToolModel extends CommonModel {
         curl_close($ch);
         //json解码为对象
         $result = json_decode($result, true);
-        $content = $result['weatherinfo']['city'].' '.$result['weatherinfo']['week'].' '.$result['weatherinfo']['temp3'];
+        $content = $result['weatherinfo']['city'].' '.$result['weatherinfo']['weather'].' 最高气温'.$result['weatherinfo']['temp1'].' 最低气温'.$result['weatherinfo']['temp2'];
         return D('Wx')->setText($content);
     }
 
@@ -108,7 +108,7 @@ class WechatToolModel extends CommonModel {
         xml_parse_into_struct($parser, $result, $values, $tags);
         xml_parser_free($parser);
 
-        for($i=0; $i<5; $i++){
+        For($i=0; $i<5; $i++){
         foreach ($tags as $k=>$v){
 
             if($k == 'title'){

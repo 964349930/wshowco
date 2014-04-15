@@ -13,19 +13,18 @@ function page($count, $listRows = '10', $theme = '')
     import('ORG.Util.Page');
     //初始化
     $page = new Page($count, $listRows);
-
-    //显示文字
-    $page->setConfig('first','首页');
-    $page->setConfig('last','尾页');
-    //样式
-    //prePage=上5页，upPage=上一页，downPage=下一页 nextPage=下5页
-    //$page->setConfig('theme', "%totalRow% %header% %nowPage%/%totalPage% 页 %upPage% %downPage% %first%  %prePage%  %linkPage%  %nextPage% %end%");
-    if ($theme = 'simple') {
-        $theme = "%first% %upPage% %downPage% %end% 共%totalPage%页";
+    if ($theme == 'simple') {
+        $page->setConfig('first', '<<');
+        $page->setConfig('last', '>>');
+        $page->setConfig('prev', '<');
+        $page->setConfig('next', '>');
+        $theme = "%first% %upPage% %linkPage% %downPage% %end%";
     } else {
+        $page->setConfig('first','首页');
+        $page->setConfig('last','尾页');
         $theme = "%first% %prePage% %upPage% %linkPage% %downPage% %nextPage% %end% 共%totalPage%页";
     }
-    $page->setConfig('theme', "%first% %prePage%  %upPage%   %linkPage% %downPage%  %nextPage%  %end%  共%totalPage%页");
+    $page->setConfig('theme',$theme);
     return $page;
 }
 

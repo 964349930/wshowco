@@ -57,7 +57,6 @@ class IndexAction extends MobileAction
         $url = htmlspecialchars_decode($itemInfo['api']);
         $info = $this->getApiInfo($url, $article_id);
         $data = $this->getApiList($url, $article_id, $info['count']);
-
         $this->assign('info', $info);
         $this->assign('list', $data['list']);
         $this->assign('nav', $this->getNav());

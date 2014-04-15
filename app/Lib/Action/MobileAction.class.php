@@ -98,7 +98,7 @@ class MobileAction extends BaseAction
             'user_id' => $this->user_id,
             'status' => 1,
         );
-        $page = page(D('Item')->getCount($map), 5);
+        $page = page(D('Item')->getCount($map), 5, 'simple');
         if($parent_id == 0){
             $limit = array();
         }else{
@@ -135,7 +135,7 @@ class MobileAction extends BaseAction
         foreach($imgList as $k=>$v){
             $imgList[$k]['path_name'] = getPicPath($v['path'], 'b');
         }
-        return $imgList; 
+        return $imgList;
     }
 
     /**
@@ -185,7 +185,7 @@ class MobileAction extends BaseAction
     }
 
     protected function getApiList($url, $article_id, $count){
-        $page = page($count, 2);
+        $page = page($count, 10, 'simple');
         $url .= '&article_id='.$article_id.'&type=list&start='.$page->firstRow.'&length='.$page->listRows;
         $list = $this->getCUrl($url);
         if(!empty($list)){
