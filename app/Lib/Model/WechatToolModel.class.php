@@ -38,6 +38,40 @@ class WechatToolModel extends CommonModel {
     }
 
     /**
+     * 公交查询
+     */
+    public function bus($data){
+        $city = csubstr($data, 0, 6);
+        $data = csubstr($data, 6);
+        preg_match('/[\x{4e00}-\x{9fa5}]+/u', $data, $arrCity);
+        preg_match('/[a-zA-Z]*-?[0-9]+/', $data, $arrCode);
+        $url = "http://openapi.aibang.com/bus/lines?app_key=f41c8afccc586de03a99c86097e98ccb&city=".$arrCity['0']."&q=".$arrCode['0'];
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        $parser = xml_parser_create();
+        xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
+        xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
+        Xml_Parse_into_struct($parser, $result, $values, $tags);
+        xml_parser_free($parser);
+        foreach($tags as $k2=>$v2){
+            foreach($values as $k1=>$v1){
+                if($k2 == 'name'){
+                    $bus['name'] = $values[$v2['0']]['value'];
+                }elseif($k2 == 'info'){
+                    $bus['info'] = $values[$v2['0']]['value'];
+                }elseif($k2 == 'stats'){
+                    $bus['stats'] = $values[$v2['0']]['value'];
+                }
+            }
+        }
+        $content = $bus['name'].$bus['info'].$bus['stats'];
+        return D('Wx')->setText($content);
+    }
+
+    /**
      * 天气搜索
      */
     public function weather($city){
@@ -59,9 +93,36 @@ class WechatToolModel extends CommonModel {
     }
 
     /**
+     * 美食
+     */
+    public function cook(){
+        $arrTitle = array();
+        while(empty($arrTitle)){
+            $rand = rand(1, 172031);
+            $url = "http://home.meishichina.com/wap.php?ac=recipe&id=".$rand."&t=1&fr=#utm_source=wap1_index_recipe_text";
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            $result = curl_exec($ch);
+            curl_close($ch);
+            $pattern = '/<div class="haha">(.*)<\/h3>(.*)<\/div>/Us';
+            preg_match("/<h1>(.*)<\/h1>/Us", $result, $arrTitle);
+        }
+        preg_match_all('/class="k">(.*)<\/p>/Us', $result, $arrInfo);
+        $content = '【'.$arrTitle['1'].'】';
+        foreach($arrInfo['1'] as $k=>$v){
+            $content .= $v;
+        }
+        //$content = mb_convert_encoding($content[2], 'UTF-8', 'gbk');
+        $content = strip_tags($content);
+        return D('Wx')->setText($content);
+    }
+
+    /**
      * 百度翻译
      */
-    public function trans($keyword){
+    public function trans($data){
+        $keyword = csubstr($data, 6);
         $url = "http://openapi.baidu.com/public/2.0/bmt/translate?client_id=9peNkh97N6B9GGj9zBke9tGQ&q=".$keyword."&from=auto&to=auto";
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
@@ -145,7 +206,7 @@ class WechatToolModel extends CommonModel {
         $parser = xml_parser_create();
         xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
         xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
-        xml_parse_into_struct($parser, $result, $values, $tags);
+        Xml_Parse_into_struct($parser, $result, $values, $tags);
         xml_parser_free($parser);
 
 
@@ -168,15 +229,21 @@ class WechatToolModel extends CommonModel {
      * 笑话
      */
     public function joke(){
-        $rand = rand(1, 1400);
-        $url = 'http://m.haha365.com/zz_joke/index_'.$rand.'.htm';
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $result = curl_exec($ch);
-        curl_close($ch);
-        $pattern = '/<div class="haha">(.*)<\/h3>(.*)<\/div>/Us';
-        preg_match($pattern, $result, $content);
+        $arrInfo = array();
+        while(empty($arrInfo)){
+            $rand = rand(1, 627785);
+            $type = array('zz_joke', 'xd_joke');
+            $type_id = array_rand($type);
+            $url = 'm.haha365.com/'.$type[$type_id].'/'.$rand.'.htm';
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            $result = curl_exec($ch);
+            curl_close($ch);
+            $pattern = '/<div class="haha"><h1>(.*)<\/h1>(.*)<\/div>/Us';
+            preg_match($pattern, $result, $arrInfo);
+        }
+        $content = '【'.$arrInfo['1'].'】'.$arrInfo['2'];
         $content = mb_convert_encoding($content[2], 'UTF-8', 'gbk');
         $content = strip_tags($content);
         return D('Wx')->setText($content);

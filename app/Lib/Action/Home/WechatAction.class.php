@@ -11,6 +11,12 @@ class WechatAction extends HomeAction
      */
     public function sim()
     {
+        /*
+        $data = '公交济南k308';
+        $data = csubstr($data, 6);
+        print_r($data);
+        preg_match('/[\x{4e00}-\x{9fa5}]+/u', $data, $result);
+        print_r($result);exit;*/
         if(empty($_POST)){
             $xml = '<xml>
 <ToUserName><![CDATA[ccms]]></ToUserName>
