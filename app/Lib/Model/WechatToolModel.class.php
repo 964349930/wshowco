@@ -229,24 +229,24 @@ class WechatToolModel extends CommonModel {
      * 笑话
      */
     public function joke(){
-        $arrInfo = array();
-        while(empty($arrInfo)){
-            $rand = rand(1, 627785);
-            $type = array('zz_joke', 'xd_joke');
-            $type_id = array_rand($type);
-            $url = 'm.haha365.com/'.$type[$type_id].'/'.$rand.'.htm';
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            $result = curl_exec($ch);
-            curl_close($ch);
-            $pattern = '/<div class="haha"><h1>(.*)<\/h1>(.*)<\/div>/Us';
-            preg_match($pattern, $result, $arrInfo);
-        }
+        /*
+        $rand = rand(1, 627785);
+        $type = array('zz_joke', 'xd_joke');
+        $type_id = array_rand($type);
+        $url = 'm.haha365.com/'.$type[$type_id].'/'.$rand.'.htm';*/
+        $url = "http://m.haha365.com/xd_joke/627798.htm";
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        print_r();exit;
+        //$pattern = '/<div class="haha">(.*)<\/h1>(.*)<\/div>/Us';
+        //preg_match($pattern, $result, $arrInfo);
         $content = '【'.$arrInfo['1'].'】'.$arrInfo['2'];
         $content = mb_convert_encoding($content[2], 'UTF-8', 'gbk');
         $content = strip_tags($content);
-        return D('Wx')->setText($content);
+        return D('Wx')->setText($result);
     }
 
     /**

@@ -5,6 +5,6 @@
  * @version 2014-03-20
  */
 return array(
-    DEFAULT_THEME => 'Default',
+    DEFAULT_THEME => 'Orange',
 );
 ?>

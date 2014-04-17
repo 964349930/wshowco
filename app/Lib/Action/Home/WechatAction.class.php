@@ -11,6 +11,17 @@ class WechatAction extends HomeAction
      */
     public function sim()
     {
+/*
+        $url = 'http://m.haha365.com/xd_joke/627798.htm';
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        print_r($result);exit;
+*/
+
+
         /*
         $data = '公交济南k308';
         $data = csubstr($data, 6);

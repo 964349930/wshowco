@@ -100,11 +100,10 @@ class MobileAction extends BaseAction
         );
         $page = page(D('Item')->getCount($map), 5, 'simple');
         if($parent_id == 0){
-            $limit = array();
+            $itemList = D('Item')->where($map)->order('sort_order')->limit($limit)->select();
         }else{
-            $limit = array($page->firstRow, $page->listRows);
+            $itemList = D('Item')->where($map)->order('sort_order')->limit($page->firstRow, $page->listRows)->select();
         }
-        $itemList = D('Item')->where($map)->order('sort_order')->limit($limit)->select();
         $arrFormatField = array('ext');
         foreach($itemList as $k=>$v){
             $itemList[$k] = D('Item')->format($v, $arrFormatField);
