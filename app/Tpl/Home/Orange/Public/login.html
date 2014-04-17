@@ -1,0 +1,16 @@
+<include file="Public:header" />
+<div class="container">
+  <form class="form-signin" role="form" method="post" action="{:U('Home/Public/doLogin')}">
+    <h2 class="form-signin-heading">微信管理平台</h2>
+    <input name="name" type="text" class="form-control" placeholder="用户名" required autofocus>
+    <input name="password" type="password" class="form-control" placeholder="密码" required>
+    <label class="checkbox">
+      <input type="checkbox" value="remember-me"> 记住我的登录状态
+    </label>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
+  </form>
+</div> <!-- /container -->
+<include file="Public:footer" />
+
+
+                            
