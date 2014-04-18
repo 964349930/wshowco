@@ -20,29 +20,14 @@ class PublicAction extends BaseAction
      */
     public function doLogin()
     {
-		$user = D('User');
-        // 检查账号
-        if (empty($_POST['name']) ) {
-			$this->error('账号不能为空');
-		}
-        //检查密码
-        if (empty($_POST['password']) ) {
-            $this->error('密码不能为空');
+        $name = $_POST['name'];
+        $pwd = $_POST['password'];
+		$userInfo = D('User')->where("name='".$name."' AND password='".md5($pwd)."'")->find();
+		if(empty($userInfo)){
+            echo json_encode(array('code'=>'0', 'msg'=>'用户名或密码错误'));exit;
         }
-
-		$map['name'] = array('eq', $_POST['name']);
-		$result = $user->where($map)->find();
-		if(empty($result)){
-			$this->error('账号不存在');
-		}else{
-			if($result['password'] === md5($_POST['password'])){
-                $this->setSession($result['id']);
-				$url = U('Home/Index/index');
-				$this->success('登录成功', $url);
-			}else{
-				$this->error('登录失败');
-			}
-		}
+        $this->setSession($userInfo['id']);
+        echo json_encode(array('code'=>'1', 'msg'=>'登录成功'));
     }
 
     /**

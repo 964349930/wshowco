@@ -1,0 +1,14 @@
+<include file="Public:header" />
+<include file="Public:nav" />
+<h2 class="page-header">相册</h2>
+<div class="row">
+    <volist name="galleryList" id="vo">
+    <div class="col-sm-3 col-md-2">
+        <a href="{:U('Home/Gallery/metaList', array('gallery_id'=>$vo[id]))}" class="thumbnail">
+            <img src="{$vo.cover_name}" alt="wshow.co" height="200px">
+            <h4>{$vo.title}</h4>
+        </a>
+    </div>
+    </volist>
+</div>
+<include file="Public:footer" />

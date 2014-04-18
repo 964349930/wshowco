@@ -217,7 +217,7 @@ class GalleryAction extends HomeAction
      */
     public function metaList()
     {
-        $gallery_id = $this->_post('gallery_id', 'intval');
+        $gallery_id = $this->_request('gallery_id', 'intval');
         $metaObj = D('GalleryMeta');
         $arrField = array();
         $arrMap['gallery_id'] = array('eq', $gallery_id);

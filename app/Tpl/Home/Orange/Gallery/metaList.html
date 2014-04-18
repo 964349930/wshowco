@@ -1,0 +1,24 @@
+<include file="Public:header" />
+<include file="Public:nav" />
+<link href="__PUBLIC__/fancybox/jquery.fancybox.css" rel="stylesheet">
+<h2 class="page-header">相册</h2>
+<ol class="">
+</ol>
+<div class="row">
+    <volist name="metaList" id="vo">
+    <div class="col-sm-3 col-md-2">
+        <a href="{$vo.path_name}" class="fancybox thumbnail" rel="group">
+            <img src="{$vo.path_name}" alt="wshow.co">
+            <h4>{$vo.title}</h4>
+        </a>
+    </div>
+    </volist>
+</div>
+<include file="Public:footer" />
+<script src="__PUBLIC__/fancybox/jquery.mousewheel-3.0.6.pack.js"></script>
+<script src="__PUBLIC__/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".fancybox").fancybox();
+	});
+</script>

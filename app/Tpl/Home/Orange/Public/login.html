@@ -1,16 +1,42 @@
 <include file="Public:header" />
-<div class="container">
-  <form class="form-signin" role="form" method="post" action="{:U('Home/Public/doLogin')}">
+<div class="container" style="max-width:400px">
+  <form class="form-signin" id="form" role="form" onsubmit="return login()">
     <h2 class="form-signin-heading">微信管理平台</h2>
-    <input name="name" type="text" class="form-control" placeholder="用户名" required autofocus>
-    <input name="password" type="password" class="form-control" placeholder="密码" required>
-    <label class="checkbox">
-      <input type="checkbox" value="remember-me"> 记住我的登录状态
-    </label>
+    <div class="alert hidden"></div>
+    <input name="name" type="text" class="form-control" placeholder="用户名" id="name" autofocus>
+    <input name="password" type="password" class="form-control" placeholder="密码" id="password">
     <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
   </form>
 </div> <!-- /container -->
 <include file="Public:footer" />
+<script>
 
+/** alert function **/
+function alert(status, msg){
+    x = '<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>';
+    $(".alert").removeClass("hidden").addClass(status+" show").html(msg+x);
+}
 
-                            
+function login(){
+    if($("#name").val() == ''){
+        alert('alert-danger', '用户名不能为空');
+    }else if($("#password").val() == ''){
+        alert('alert-danger', '密码不能为空');
+    }else{
+        $.post('{:U("Home/Public/doLogin")}',
+            $("#form").serialize(),
+            function(data){
+                alert(data.status, data.msg);
+                if(data.code == 1){
+                    alert('alert-success', data.msg);
+                    setTimeout(window.location='{:U("Home/Index/index")}', 2000);
+                }else{
+                    alert('alert-danger', data.msg);
+                }
+            },
+            'json'
+        );
+    }
+    return false;
+}
+</script>
