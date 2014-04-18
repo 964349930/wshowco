@@ -149,27 +149,30 @@ class MenuAction extends HomeAction{
         $arrOrder = array('sort_order');
         $menuList = $menuObj->getList($arrField, $arrMap, $arrOrder);
         foreach($menuList as $k=>$v){
-            $menuList[$k]['name'] = urlencode($v['name']);
+            $newList[$k]['name'] = urlencode($v['name']);
+            $newList[$k]['type'] = $v['type'];
             if($v['type'] == 'view'){
-                $menuList[$k]['url'] = $v['value'];
+                $newList[$k]['url'] = $v['value'];
             }else{
-                $menuList[$k]['key'] = urlencode($v['value']);
+                $newList[$k]['key'] = urlencode($v['value']);
             }
             //获取子菜单
-            $map['parent_id'] = array('eq', $v['id']);
-            $subMenuList = $menuObj->where($map)->select();
-            $menuList[$k]['sub_button'] = ($subMenuList) ? $subMenuList : array();
-            foreach($menuList[$k]['sub_button'] as $k2=>$v2){
-                $menuList[$k]['sub_button'][$k2]['name'] = urlencode($v2['name']);
-                $menuList[$k]['sub_button'][$k2]['value'] = urlencode($v2['value']);
+            $subMenuList = $menuObj->where('parent_id='.$v['id'])->select();
+            $newSubList = array();
+            if(!empty($subMenuList)){
+            foreach($subMenuList as $k2=>$v2){
+                $newSubList[$k2]['name'] = urlencode($v2['name']);
+                $newSubList[$k2]['type'] = $v2['type'];
                 if($v2['type'] == 'view'){
-                    $menuList[$k]['sub_button'][$k2]['url'] = $v2['value'];
+                    $newSubList[$k2]['url'] = $v2['value'];
                 }else{
-                    $menuList[$k]['sub_button'][$k2]['key'] = urlencode($v2['value']);
+                    $newSubList[$k2]['key'] = urlencode($v2['value']);
                 }
             }
+            }
+            $newList[$k]['sub_button'] = $newSubList;
         }
-        $menuList = array('button'=>$menuList);
+        $menuList = array('button'=>$newList);
         $json = json_encode($menuList);
 		$json = urldecode($json);
 		$url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=".$token;

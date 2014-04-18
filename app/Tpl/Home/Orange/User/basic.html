@@ -1,6 +1,59 @@
 <include file="Public:header" />
 <include file="Public:nav" />
-<h1 class="page-header">User Info</h1>
-<div class="">
+<h2 class="page-header">基本信息</h2>
+  <ol class="breadcrumb">
+    <li><a href="#">Home</a></li>
+    <li><a href="#">Library</a></li>
+    <li class="active">Data</li>
+  </ol>
+  <div class="row">
+      <div class="col-sm-2 col-md-2">
+  <ul class="nav nav-tabs nav-stacked">
+    <li><a href="#">修改头像</a></li>
+    <li><a href="#">基本信息</a></li>
+    <li><a href="#">修改密码</a></li>
+  </ul>
 </div>
-</include file="Public:footer" />
+<div class="col-sm-6 col-md-8">
+  <form role="form" method="post" action="{$editUrl}">
+    <input type="hidden" name="id" value="{$userInfo.id}">
+    <notempty name="userInfo[avatar]">
+    <img src="{$userInfo.avatar_name}" class="img-responsive img-circle" height="60">
+    </notempty>
+    <div class="form-group">
+      <label for="pic">头像</label>
+      <input type="file" id="pic">
+      <p class="help-block">选择上传头像</p>
+    </div>
+    <div class="form-group">
+      <label for="name">用户名</label>
+      <input type="text" class="form-control" id="name" name="name" value="{$userInfo.name}">
+    </div>
+    <div class="form-group">
+      <label for="mobile">手机号码</label>
+      <input type="number" class="form-control" id="mobile" name="mobile" value="{$userInfo.mobile}" placeholder="请输入手机号码">
+    </div>
+    <div class="form-group">
+      <label for="url">接口地址</label>
+      <input type="disabled" class="form-control" id="url" name="url" value="{$userInfo.url}" disabled>
+    </div>
+    <div class="form-group">
+      <label for="token">接口TOKEN</label>
+      <input type="text" class="form-control" id="token" name="token" value="{$userInfo.token}" placeholder="请输入自定义TOKEN">
+    </div>
+    <div class="form-group">
+      <label for="appid">APPID</label>
+      <input type="text"  class="form-control" id="appid" name="appid" value="{$userInfo.appid}" placeholder="请输入微信授权APPID">
+    </div>
+    <div class="form-group">
+      <label for="appsecrect">APPSECRECT</label>
+      <input type="text"  class="form-control" id="appsecrect" name="appsecrect" value="{$userInfo.appsecrect}" placeholder="请输入微信授权APPSECRECT">
+    </div>
+    <div class="form-group">
+      <label for="ip">本次登录IP</label>
+      <input type="text" disabled="disabled" class="form-control" id="ip" name="ip" value="{$_SESSION.current_ip}">
+    </div>
+    <button type="submit" class="btn btn-default">更新</button>
+  </form>
+</div>
+<include file="Public:footer" />

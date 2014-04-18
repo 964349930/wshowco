@@ -4,9 +4,9 @@
 
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
+  font-family: "微软雅黑";
   padding-top: 50px;
 }
-
 
 /*
  * Global add-ons
@@ -51,7 +51,11 @@ body {
 .nav-sidebar > li > a {
   padding-right: 20px;
   padding-left: 20px;
+  color: #aaa;
 }
+.nav-sidebar > li > a:hover {
+  color: #000;
+  background-color: #fff;
 .nav-sidebar > .active > a {
   color: #fff;
   background-color: #428bca;
