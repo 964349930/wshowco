@@ -11,7 +11,7 @@
       </button>
       <a class="navbar-brand" href="#">Wshow</a>
     </div>
-  
+
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <volist name="menu" id="vo">
@@ -35,13 +35,16 @@
           <li>
             <a data-toggle="collapse" data-toggle="collapse" data-parent="#menu" href="#{$vo.id}">
               <i class="fa fa-user"></i>
-              <span>{$vo.title}</span>
-              <i class="fa fa-angle-right"></i>
+              <span style="margin-left:20px;">{$vo.title}</span>
+              <i class="fa fa-angle-right pull-right"></i>
             </a>
-            <ul id="{$vo.id}" class="collapse">
+            <ul id="{$vo.id}" class="collapse sub-menu">
               <volist name="vo[meta]" id="voo">
                 <li>
-                  <a href="{$voo.url}">{$voo.title}</a>
+                  <a href="{$voo.url}">
+                    <i class="fa fa-book"></i>
+                    {$voo.title}
+                  </a>
                 </li>
               </volist>
             </ul>

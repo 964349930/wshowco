@@ -52,16 +52,25 @@ body {
   padding-right: 20px;
   padding-left: 20px;
   color: #aaa;
+  border-bottom: 1px solid #000;
+}
+.nav-sidebar > li > a:visited {
+  color: #fff;
+  background-color: #428bca;
 }
 .nav-sidebar > li > a:hover {
-  color: #000;
-  background-color: #fff;
+  color: #aaa;
+  background-color: #252525;
+}
+.nav-sidebar > li > a:active {
+  color: #fff;
+  background-color: #428bca;
+}
 .nav-sidebar > .active > a {
   color: #fff;
   background-color: #428bca;
 }
-
-
+.
 /*
  * Main content
  */

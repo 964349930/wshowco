@@ -5,4 +5,11 @@
 <script src="__PUBLIC__/bootstrap/bootstrap.min.js"></script>
 </body>
 </html>
-
+<script>
+  $(function(){
+    $(".nav-sidebar").find("li").click(function(){
+      $(this).addClass("active");
+      $(this).siblings("li").removeClass("active");
+    })
+  })
+</script>
