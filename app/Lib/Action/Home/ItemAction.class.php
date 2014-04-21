@@ -43,9 +43,12 @@ class ItemAction extends HomeAction
             $data['user_id'] = $_SESSION['uid'];
             $siteObj->add($data);
         }else{
-            $siteObj->save($data);
+            if($siteObj->save($data)){
+                echo json_encode(array('status'=>'alert-success','msg'=>'更新成功'));
+            }else{
+                echo json_encode(array('status'=>'alert-danger','msg'=>'更新失败'));
+            }
         }
-        $this->success('操作成功');
     }
 
     /**

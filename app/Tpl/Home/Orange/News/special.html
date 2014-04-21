@@ -3,29 +3,32 @@
 <style>
 #editor {overflow:scroll; max-height:300px}
 </style>
-
 <h2 class="page-header">推送管理</h2>
-<div class="row">
-    <div class="col-sm-2 col-md-3">
-        <ul class="nav nav-tabs nav-stacked">
-            <li><a href="#">关注回复</a></li>
-            <li><a href="#">默认回复</a></li>
-        </ul>
-    </div>
-    <div class="col-sm-7 col-md-7">
-        <form role="form">
-            <div class="form-group">
-                <label for="editor">内容</label>
-                <div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
-                    <div class="btn-group">
-                        <a class="btn btn-default" data-edit="bold"><i class="fa fa-bold"></i></a>
-                        <a class="btn btn-default" data-edit="italic"><i class="fa fa-italic"></i></a>
-                    </div>
+    <form role="form">
+        <input type="hidden" name="news[id]" value="{$newsInfo.id}">
+        <input type="hidden" name="route[id]" value="{$routeInfo.id}">
+        <input type="hidden" name="meta[id]" value="{$metaInfo.id}">
+        <input type="hidden" name="route[keyword]"> 
+        <div class="form-group">
+            <label for="title">标题</label>
+            <input class="form-control" id="title" name="meta[title]" type="text" value="{$metaInfo.title}">
+        </div>
+        <div class="form-group">
+            <label for="url">链接：</label>
+            <input class="form-control" id="url" name="meta[url]" type="url" value="{$metaInfo.url}">
+        </div>
+        <div class="form-group">
+            <label for="editor">内容</label>
+            <div class="btn-toolbar" id="editor" data-role="editor-toolbar" data-target="#editor">
+                <div class="btn-group">
+                    <a class="btn btn-default" data-edit="bold"><i class="fa fa-bold"></i></a>
+                    <a class="btn btn-default" data-edit="italic"><i class="fa fa-italic"></i></a>
                 </div>
-                <textarea class="form-control" id="editor" ></textarea>
             </div>
-        </form>
-    </div>
+            <textarea class="form-control" id="editor" ></textarea>
+        </div>
+        <button class="btn btn-primary" role="submit">更新</button>
+    </form>
 </div>
 <include file="Public:footer" />
 <script src="__PUBLIC__/bootstrap/bootstrap-wysiwyg.js"></script>
