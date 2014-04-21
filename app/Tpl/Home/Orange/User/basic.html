@@ -2,20 +2,11 @@
 <include file="Public:nav" />
 <h2 class="page-header">基本信息</h2>
   <ol class="breadcrumb">
-    <li><a href="#">Home</a></li>
-    <li><a href="#">Library</a></li>
-    <li class="active">Data</li>
+      <volist name="breadcrumbs" id="vo">
+      <li><a href="{$vo.url}">{$vo.title}</a></li>
+      </volist>
   </ol>
-  <div class="row">
-      <div class="col-sm-2 col-md-2">
-  <ul class="nav nav-tabs nav-stacked">
-    <li><a href="#">修改头像</a></li>
-    <li><a href="#">基本信息</a></li>
-    <li><a href="#">修改密码</a></li>
-  </ul>
-</div>
-<div class="col-sm-6 col-md-8">
-  <form role="form" method="post" action="{$editUrl}">
+  <form role="form" id="form" onsubmit="return edit()">
     <input type="hidden" name="id" value="{$userInfo.id}">
     <notempty name="userInfo[avatar]">
     <img src="{$userInfo.avatar_name}" class="img-responsive img-circle" height="60">
@@ -53,7 +44,31 @@
       <label for="ip">本次登录IP</label>
       <input type="text" disabled="disabled" class="form-control" id="ip" name="ip" value="{$_SESSION.current_ip}">
     </div>
-    <button type="submit" class="btn btn-default">更新</button>
+    <button type="submit" class="btn btn-primary">更新</button>
   </form>
-</div>
 <include file="Public:footer" />
+<script>
+function edit(){
+    $.post(
+            '{$editUrl}',
+            $("#form").serialize(),
+            function(data){
+                alert(data.status, data.msg);
+            },
+            'json'
+            );
+        return false;
+    }
+</script>
+<!--script>
+var timer;
+$("#name").mouseover(function(){
+        timer = setTimeout(function(){
+            if($('#name:hover').length > 0){
+                alert('hah');
+            }
+            }, 2000);
+        }).mouseout(function(){
+            clearTimeout(timer);
+        })
+</script-->

@@ -2,9 +2,9 @@
 <include file="Public:nav" />
 <h2 class="page-header">文章列表</h2>
 <ol class="breadcrumb">
-    <li><a href="#">首页</a></li>
-    <li><a href="#">微网管理</a></li>
-    <li class="active"><a href="#">栏目列表</a></li>
+    <volist name="breadcrumbs" id="vo">
+    <li><a href="{$vo.url}">{$vo.title}</a></li>
+    </volist>
 </ol>
 <div class="table-responsive">
 <table class="table table-striped">
@@ -21,10 +21,14 @@
     <volist name="itemList" id="vo">
     <tr>
         <td>{$vo.title}</td>
-        <td>{$vo.cover}</td>
+        <td><img src="{$vo.cover_name}" class="img-responsive img-thumbnail" /></td>
         <td>{$vo.intro}</td>
         <td>{$vo.date_modify|date='Y-m-d H:i', ###}</td>
-        <td><a href=""><i class="fa fa-edit"></i></a></td>
+        <td>
+            <a href="{$subUrl}&parent_id={$vo.id}" style="margin-right:10px;"><i class="fa fa-sitemap"></i></a>
+            <a href="{$editUrl}&id={$vo.id}"><i class="fa fa-edit" style="margin-right:10px;"></i></a>
+            <a href="{$delUrl}&id={$vo.id}" style="color:red;"><i class="fa fa-trash-o"></i></a>
+        </td>
     </tr>
     </volist>
     </tbody>

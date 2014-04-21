@@ -6,6 +6,15 @@
  */
 class ItemAction extends HomeAction
 {
+    public function _initialize()
+    {
+        parent::_initialize();
+        $this->breadcrumbs['1'] = array(
+            'title' => '文章管理',
+            'url' => U('Home/Item/itemList'),
+        );
+    }
+
     /**
      * 微网设置
      */
@@ -64,7 +73,11 @@ class ItemAction extends HomeAction
         foreach($itemList as $k=>$v){
             $itemList[$k] = $itemObj->format($v, array('cover_name'));
         }
+
+        /** 面包屑导航 **/
+         
         $data = array(
+            'breadcrumbs' => $this->breadcrumbs,
             'addUrl'   => U('Home/Item/itemInfo', array('parent_id'=>$parent_id)),
             'editUrl'  => U('Home/Item/itemInfo'),
             'delUrl'   => U('Home/Item/del'),

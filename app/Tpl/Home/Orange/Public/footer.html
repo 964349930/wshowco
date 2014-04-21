@@ -12,4 +12,10 @@
       $(this).siblings("li").removeClass("active");
     })
   })
+
+/** alert function **/
+function alert(status, msg){
+    html = '<div class="alert '+status+'">'+msg+'<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button></div>'
+    $(".main").prepend(html);
+}
 </script>

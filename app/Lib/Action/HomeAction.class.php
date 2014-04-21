@@ -6,6 +6,7 @@
  */
 class HomeAction extends BaseAction
 {
+    public $breadcrumbs;
     /**
      * initialize
      */
@@ -14,6 +15,10 @@ class HomeAction extends BaseAction
         if(!isset($_SESSION['uid'])){
             $this->redirect('Public/login');
         }
+        $this->breadcrumbs[] = array(
+            'title' => '首页',
+            'url' => U('Home/Index/index'),
+        );
         $this->assign('channel', $this->_getChannel());
         $this->assign('menu',    $this->_getMenu());
         $this->checkLoa();

@@ -78,8 +78,12 @@ class UserAction extends HomeAction{
 				$data['avatar'] = D('GalleryMeta')->addImg($picList['pic']['savename']);
 			}
 		}
-        $userObj->save($data);
-        $this->success('更新成功');
+        $result = $userObj->save($data);
+        if(empty($result)){
+            echo json_encode(array('status'=>'alert-danger','msg'=>'更新错误'));
+        }else{
+            echo json_encode(array('status'=>'alert-success','msg'=>'更新成功'));
+        }
 	}
 
     /**
@@ -87,23 +91,21 @@ class UserAction extends HomeAction{
      */
 	public function password() {
         if(empty($_POST)){
-            $this->assign('editUrl', U('Home/User/password'));
             $this->display();
             exit;
         }
 		$userObj = D('User');
 		$map['id'] = $_SESSION['uid'];
 		$map['password'] = md5($_POST['oldpassword']);
-		if(empty($_POST['newpassword']) OR empty($_POST['repassword'])){
-			$this->error('密码不能为空');
-		}elseif($_POST['newpassword'] !== $_POST['repassword']) {
-			$this->error('两次输入的密码不一致');
-        }elseif(!$userObj->where($map)->find()){
-            $this->error('原始密码输入错误');
+        if(!$userObj->where($map)->find()){
+            echo json_encode(array('status'=>'alert-danger', 'msg'=>'原始密码输入错误'));
 		}else{
             $password = md5($_POST['newpassword']);
-            $userObj->where('id='.$_SESSION['uid'])->setField('password', $password);
-            $this->success('密码修改成功！');
+            if($userObj->where('id='.$_SESSION['uid'])->setField('password', $password)){
+                echo json_encode(array('status'=>'alert-success', 'msg'=>'密码修改成功'));
+            }else{
+                echo json_encode(array('status'=>'alert-danger', 'msg'=>'密码修改失败'));
+            }
          }
     }
 
