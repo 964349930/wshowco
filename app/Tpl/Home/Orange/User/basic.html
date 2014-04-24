@@ -14,7 +14,7 @@
     <div class="form-group">
       <label for="pic">头像</label>
       <input type="file" id="pic">
-      <p class="help-block">选择上传头像</p>
+      <p class="help-block" id="changeImg">选择上传头像</p>
     </div>
     <div class="form-group">
       <label for="name">用户名</label>
@@ -47,6 +47,7 @@
     <button type="submit" class="btn btn-primary">更新</button>
   </form>
 <include file="Public:footer" />
+<include file="Public:gallery" />
 <script>
 function edit(){
     $.post(
@@ -60,15 +61,3 @@ function edit(){
         return false;
     }
 </script>
-<!--script>
-var timer;
-$("#name").mouseover(function(){
-        timer = setTimeout(function(){
-            if($('#name:hover').length > 0){
-                alert('hah');
-            }
-            }, 2000);
-        }).mouseout(function(){
-            clearTimeout(timer);
-        })
-</script-->

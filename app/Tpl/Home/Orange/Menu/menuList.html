@@ -1,0 +1,47 @@
+<include file="Public:header" />
+<include file="Public:nav" />
+<h2 class="page-header">菜单列表</h2>
+<ol class="breadcrumb">
+    <volist name="breadcrumbs" id="vo">
+    <li><a href="{$vo.url}">{$vo.title}</a></li>
+    </volist>
+</ol>
+<div class="table-responsive">
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>名称</th>
+            <th>类型</th>
+            <th>菜单值</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+    <volist name="menuList" id="vo">
+    <tr>
+        <td>{$vo.name}</td>
+        <td>{$vo.type_name}</td>
+        <td>{$vo.value}</td>
+        <td>
+            <a href="{$infoUrl}&id={$vo.id}"><i class="fa fa-edit" style="margin-right:10px;"></i></a>
+            <a href="{$delUrl}&id={$vo.id}" style="color:red;"><i class="fa fa-trash-o"></i></a>
+        </td>
+    </tr>
+    <notempty name="vo[sub_button]">
+    <volist name="vo[sub_button]" id="voo">
+    <tr>
+        <td>--{$voo.name}</td>
+        <td>{$voo.type_name}</td>
+        <td>{$voo.value}</td>
+        <td>
+            <a href="{$infoUrl}&id={$voo.id}"><i class="fa fa-edit" style="margin-right:10px;"></i></a>
+            <a href="{$delUrl}&id={$voo.id}" style="color:red;"><i class="fa fa-trash-o"></i></a>
+        </td>
+    </tr>
+    </volist>
+    </notempty>
+    </volist>
+    </tbody>
+</table>
+<include file="Public:footer" />
+
