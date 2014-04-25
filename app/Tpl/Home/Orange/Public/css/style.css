@@ -102,3 +102,22 @@ body {
   display: inline-block;
   border-radius: 50%;
 }
+
+.login {
+	float:left;
+	width:100%;
+	margin-top:-50px;
+	padding:0 20px;
+	background:url(../img/login-bg.jpg) top center;
+}
+.login .main {
+	margin-top:100px;
+	padding:30px 40px 40px;
+	background:url(../img/reg_bg1.png);
+}
+.login .main h2 {
+	margin-top:0;
+	margin-bottom:30px;
+	font-size:24px;
+	color:#fff;
+}

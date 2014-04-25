@@ -1,0 +1,66 @@
+<include file="Public:header" />
+<include file="Public:nav" />
+<h2 class="page-header">栏目管理</h2>
+<form role="main" id="form" onsubmit="return edit()">
+    <input type="hidden" name="item[id]" value="{$itemInfo.id}">
+    <input type="hidden" name="item[parent_id]" value="{$parent_id}">
+    <input type="hidden" name="item[cover]" id="img" value="{$itemInfo.cover}">
+    <div class="form-group">
+        <label for="title">标题</label>
+        <input type="text" name="item[title]" class="form-control" id="title" value="{$itemInfo.title}">
+    </div>
+    <div class="form-group">
+        <label for="pic">封面</label>
+        <input class="form-control" id="pic" name="pic" type="file">
+    </div>
+    <div class="form-group">
+        <label for="url">首页地址</label>
+        <input type="url" class="form-control" id="url" value="{$siteInfo.url}" disabled>
+    </div>
+    <div class="form-group">
+        <label for="tel">客服号码</label>
+        <input type="tel" name="tel" class="form-control" id="tel" value="{$siteInfo.tel}">
+    </div>
+    <div class="form-group">
+        <label for="address">公司地址</label>
+        <input type="text" name="address" class="form-control" id="address" value="{$siteInfo.address}">
+    </div>
+    <div class="form-group">
+        <label for="email">邮箱</label>
+        <input type="email" name="email" class="form-control" id="email" value="{$siteInfo.email}">
+    </div>
+    <div class="form-group">
+        <label for="theme">主题</label>
+        <input type="text" class="form-control" id="theme" value="{$siteInfo.theme_name}">
+    </div>
+    <div class="form-group">
+        <label for="banner">首页幻灯片</label>
+        <select class="form-control" id="banner" name="banner_id">
+            <volist name="galleryList" id="vo">
+            <option value="{$vo.id}" <eq name="siteInfo[banner_id]" value="$vo[id]">selected="selected"</eq>>{$vo.title}</option>
+            </volist>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="longitude">经度</label>
+        <input type="text" name="longitude" class="form-control" id="longitude" value="{$siteInfo.longitude}">
+    </div>
+    <div class="form-group">
+        <label for="latitude">纬度</label>
+        <input type="text" name="latitude" class="form-control" id="latitude" value="{$siteInfo.latitude}">
+    </div>
+    <button role="submit" class="btn btn-primary">更新</button>
+</form>
+<include file="Public:footer" />
+<script>
+function edit(){
+    $.post('{:U("Home/Item/setting")}',
+            $("#form").serialize(),
+            function(data){
+            alert(data.status, data.msg);
+            },
+            'json'
+            );
+        return false;
+}
+</script>

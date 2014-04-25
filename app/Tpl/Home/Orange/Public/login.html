@@ -1,12 +1,14 @@
 <include file="Public:header" />
-<div class="container main" style="max-width:400px">
-  <form class="form-signin" id="form" role="form" onsubmit="return login()">
+<div class="login pl20 pr20">
+  <div class="container main" style="max-width:600px;">
+    <form class="form-signin" id="form" role="form" onsubmit="return login()">
     <h2 class="form-signin-heading">微信管理平台</h2>
     <p><input name="name" type="text" class="form-control" placeholder="用户名" id="name" autofocus></p>
     <p><input name="password" type="password" class="form-control" placeholder="密码" id="password"></p>
     <p><button class="btn btn-lg btn-primary btn-block" type="submit">登录</button></p>
-  </form>
-</div> <!-- /container -->
+    </form>
+  </div> <!-- /container -->
+</div>
 <include file="Public:footer" />
 <script>
 function login(){
@@ -30,4 +32,8 @@ function login(){
     }
     return false;
 }
+$(function(){
+	var gao=$(window).height();
+	$('.login').height(gao);
+	})
 </script>
