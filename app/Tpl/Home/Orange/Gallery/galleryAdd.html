@@ -1,0 +1,32 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="myModalLabel">创建相册</h4>
+</div>
+<form id="form" role="form" onsubmit="return edit()">
+<div class="modal-body">
+    <div class="form-group">
+        <label for="title">相册名称</label>
+        <input class="form-control" id="title" name="title" type="text" required>
+    </div>
+    <div class="form-group">
+        <label for="intro">描述</label>
+        <textarea class="form-control" id="intro" name="intro" required></textarea>
+    </div>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+    <button type="submit" class="btn btn-primary" data-hidden="modal">执行</button>
+</div>
+</form>
+<script>
+function edit(){
+    $.post("{:U('Home/Gallery/galleryInfo')}",
+            $("#form").serialize(),
+            function(data){
+            alert(data.status, data.msg);
+            },
+            'json'
+            );
+        return false;
+}
+</script>

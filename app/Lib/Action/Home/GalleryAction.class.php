@@ -161,7 +161,7 @@ class GalleryAction extends HomeAction
             $this->display();
             exit;
         }
-        $data = $this->_post('gallery');
+        $data = $this->_post();
         $data['user_id'] = $_SESSION['uid'];
         $data['date_modify'] = time();
 		if(!empty($_FILES['pic']['name'])){
@@ -172,11 +172,18 @@ class GalleryAction extends HomeAction
 		}
         if(empty($data['id'])){
             $data['date_add'] = time();
-            $galleryObj->add($data);
+            if($galleryObj->add($data)){
+                echo json_encode(array('status'=>'alert-success','msg'=>'创建成功'));
+            }else{
+                echo json_encode(array('status'=>'alert-warning','msg'=>'创建失败'));
+            }
         }else{
-            $galleryObj->save($data);
+            if($galleryObj->save($data)){
+                echo json_encode(array('status'=>'alert-success','msg'=>'创建成功'));
+            }else{
+                echo json_encode(array('status'=>'alert-warning','msg'=>'创建失败'));
+            }
         }
-        $this->success('操作成功');
     }
 
     /**

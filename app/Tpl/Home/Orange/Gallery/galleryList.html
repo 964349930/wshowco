@@ -2,6 +2,10 @@
 <include file="Public:nav" />
 <h2 class="page-header">相册</h2>
 <div class="row">
+    <div>
+        <a class="btn btn-default" role="button" href="#">上传照片</a>
+        <a class="btn btn-default" role="modal" href="{:U('Home/Gallery/galleryAdd')}" data-toggle="modal" data-target="#myModal">创建相册</a>
+    </div>
     <volist name="galleryList" id="vo">
     <div class="col-sm-3 col-md-2">
         <a href="{:U('Home/Gallery/metaList', array('gallery_id'=>$vo[id]))}" class="thumbnail">
@@ -11,4 +15,10 @@
     </div>
     </volist>
 </div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 <include file="Public:footer" />
