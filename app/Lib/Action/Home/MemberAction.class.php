@@ -272,10 +272,10 @@ class MemberAction extends HomeAction
             $countList[$k] = $newList[$k] - $lostList[$k];
             $dateList[$k] = date('Y-m', $v);
         }
-    	$this->assign('dateList', $dateList);
-    	$this->assign('newList', $newList);
-    	$this->assign('lostList', $lostList);
-    	$this->assign('countList', $countList);
+    	$this->assign('dateList', json_encode($dateList));
+    	$this->assign('newList', json_encode($newList));
+    	$this->assign('lostList', json_encode($lostList));
+    	$this->assign('countList', json_encode($countList));
 		$this->display();
     }
 }
