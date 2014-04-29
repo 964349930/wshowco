@@ -5,7 +5,17 @@
 <include file="Public:footer" />
 <script src="__PUBLIC__/js/chart.min.js"></script>
 <script>
-var ctx = document.getElementById("myChart").getContext("2d");
-var data = {$data};
-var myNewChart = new Chart(ctx).Bar(data);
+    function getData(dataList){
+        var data = {
+            labels : {$keywordList},
+	        datasets : [{
+			    fillColor : "rgba(220,220,220,0.5)",
+			    strokeColor : "rgba(220,220,220,1)",
+			    pointColor : "rgba(220,220,220,1)",
+			    pointStrokeColor : "#fff",
+                data : dataList
+            },]};
+        return data;}
+    var ctx = document.getElementById("myChart").getContext("2d");
+    var myNewChart = new Chart(ctx).Bar(getData({$countList}));
 </script>

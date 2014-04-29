@@ -278,4 +278,21 @@ class MemberAction extends HomeAction
     	$this->assign('countList', json_encode($countList));
 		$this->display();
     }
+
+    /**
+     * push chart
+     */
+    public function pushChart()
+    {
+        $keywordList = D('WechatRoute')->where('user_id='.$_SESSION['uid'])->getField('keyword', true);
+        $memberIds = D('Member')->where('user_id='.$_SESSION['uid'])->getField('id', true);
+        foreach($keywordList as $k=>$v){
+            $map['member_id'] = array('in', $memberIds);
+            $map['info'] = array('eq', $v);
+            $countList[$k] = D('MemberPush')->where($map)->count();
+        }
+        $this->assign('keywordList', json_encode($keywordList));
+        $this->assign('countList', json_encode($countList));
+        $this->display();
+    }
 }
