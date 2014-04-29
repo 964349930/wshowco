@@ -1,0 +1,53 @@
+<include file="Public:header" />
+<include file="Public:nav" />
+<h2 class="page-header">会员统计图表</h2>
+<ul class="nav nav-tabs" id="myTab">
+  <li class="active"><a href="#home" data-toggle="tab">会员增长趋势图</a></li>
+  <li><a href="#profile" data-toggle="tab">会员丢失趋势图</a></li>
+  <li><a href="#messages" data-toggle="tab">会员数量趋势图</a></li>
+</ul>
+<div class="tab-content">
+    <div class="tab-pane fade in active" id="home">
+        <canvas id="new" width="900" height="400"></canvas>
+    </div>
+    <div class="tab-pane fade" id="profile">
+        <canvas id="lost" width="900" height="400"></canvas>
+    </div>
+    <div class="tab-pane fade" id="messages">
+        <canvas id="count" width="900" height="400"></canvas>
+    </div>
+</div>
+<include file="Public:footer" />
+<script src="__PUBLIC__/js/chart.min.js"></script>
+<script>
+  $(function () {
+    $('#myTab a:last').tab('show');
+
+    var data = {
+        labels : {$dateList},
+	    datasets : [
+		{
+			fillColor : "rgba(220,220,220,0.5)",
+			strokeColor : "rgba(220,220,220,1)",
+			pointColor : "rgba(220,220,220,1)",
+			pointStrokeColor : "#fff",
+            data : {$newList}
+		},
+		{
+			fillColor : "rgba(151,187,205,0.5)",
+			strokeColor : "rgba(151,187,205,1)",
+			pointColor : "rgba(151,187,205,1)",
+			pointStrokeColor : "#fff",
+            data : {$lostList}
+		}
+	]
+}
+    var m_new = document.getElementById("new").getContext("2d");
+    var myNewChart = new Chart(m_new).Line({$m_new});
+    var m_lost = document.getElementById("lost").getContext("2d");
+    var myNewChart = new Chart(m_lost).Line({$m_lost});
+    var m_count = document.getElementById("count").getContext("2d");
+    var myNewChart = new Chart(m_count).Line({$m_count});
+
+  })
+</script>

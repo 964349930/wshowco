@@ -114,10 +114,12 @@ body {
 	margin-top:100px;
 	padding:30px 40px 40px;
 	background:url(../img/reg_bg1.png);
+	border-radius:5px;
+	box-shadow:3px 3px 5px #333;
 }
 .login .main h2 {
 	margin-top:0;
 	margin-bottom:30px;
 	font-size:24px;
-	color:#fff;
+	color:#333;
 }

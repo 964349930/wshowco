@@ -1,0 +1,11 @@
+<include file="Public:header" />
+<include file="Public:nav" />
+<h2 class="page-header">会话记录图表</h2>
+<canvas id="myChart" width="1200" height="400"></canvas>
+<include file="Public:footer" />
+<script src="__PUBLIC__/js/chart.min.js"></script>
+<script>
+var ctx = document.getElementById("myChart").getContext("2d");
+var data = {$data};
+var myNewChart = new Chart(ctx).Bar(data);
+</script>
