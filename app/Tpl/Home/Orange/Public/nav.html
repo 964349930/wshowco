@@ -9,7 +9,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Wshow</a>
+      <a class="navbar-brand" href="#">Wsh<span>ow</span></a>
     </div>
 
     <div class="navbar-collapse collapse">
@@ -33,10 +33,11 @@
       <ul class="nav nav-sidebar">
         <volist name="menu[0][menu]" id="vo">
           <li>
-            <a data-toggle="collapse" data-toggle="collapse" data-parent="#menu" href="#{$vo.id}">
+            <a data-toggle="collapse" data-parent="#menu" href="#{$vo.id}" class="sidebar-nav">
               <i class="fa fa-user"></i>
               <span style="margin-left:20px;">{$vo.title}</span>
               <i class="fa fa-angle-right pull-right"></i>
+			  <span class="selected"> </span>
             </a>
             <ul id="{$vo.id}" class="collapse sub-menu">
               <volist name="vo[meta]" id="voo">

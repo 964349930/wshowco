@@ -207,7 +207,7 @@ class MobileAction extends BaseAction
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $result = curl_exec($ch);
         curl_close($ch);
-        $info = json_decode($result, 'true');
+        $info = json_decode($result, true);
         return $info;
     }
 }

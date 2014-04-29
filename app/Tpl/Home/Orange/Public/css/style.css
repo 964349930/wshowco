@@ -38,7 +38,7 @@ body {
     overflow-x: hidden;
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
     background-color: #303030;
-    border-right: 1px solid #000;
+ 
   }
 }
 
@@ -48,20 +48,30 @@ body {
   margin-bottom: 20px;
   margin-left: -20px;
 }
-.nav-sidebar > li > a:link {
+.nav-sidebar > li > a ,.nav-sidebar > li > a:hover,.nav-sidebar > li > a:focus{
   padding-right: 20px;
   padding-left: 20px;
   color: #aaa;
-  border-bottom: 1px solid #000;
+  border-top:1px solid #5C5C5C;
+  background: none ;
+  outline:none;
+  position:relative;
 }
-.nav-sidebar > li > a:visited {
-  color: #fff;
-  background-color: #428bca;
+.nav-sidebar > li.active > a span.selected{
+   background-image: url("../img/sidebar-menu-arrow.png");
+    display: block;
+    float: right;
+    height: 25px;
+    position: absolute;
+    right: 0;
+    top: 8px;
+    width: 8px;
 }
-.nav-sidebar > li > a:hover {
-  color: #aaa;
-  background-color: #252525;
+.nav-sidebar li.active a.sidebar-nav{
+      color:#fff;
+      background-color: #E02222 ;
 }
+ 
 .nav-sidebar > .active > a {
   color: #fff;
   background-color: #428bca;
@@ -122,4 +132,8 @@ body {
 	margin-bottom:30px;
 	font-size:24px;
 	color:#333;
+}
+.navbar-inverse .navbar-brand { color:#fff;}
+.navbar-brand span{
+    color:#b12020;
 }

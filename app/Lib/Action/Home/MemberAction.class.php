@@ -202,75 +202,40 @@ class MemberAction extends HomeAction
         // Create new PHPExcel object
         $objPHPExcel = new PHPExcel();
         // Set document properties
-        $objPHPExcel->getProperties()->setCreator("深蓝解码")
-							 ->setLastModifiedBy("深蓝解码")
-							 ->setTitle("蛋糕商城")
-							 ->setSubject("蛋糕商城")
-							 ->setDescription("蛋糕商城订单数据");
-        // Add some data
-        $orderInfoObj = D('OrderInfo');
-        $arrField = array();
-        $arrMap = array();
-        $arrOrder = array('ctime desc');
-        $orderList = $orderInfoObj->getList($arrField, $arrMap, $arrOrder);
-        $arrFormatField = array('order_status_name', 'goods_name', 'goods_size');
-		foreach ($orderList as $key => $value) {
-            $orderList[$key] = $orderInfoObj->format($value, $arrFormatField);
-			$orderList[$key]['pay_time'] = date("Y-m-d", $value['pay_time']);
-			$orderList[$key]['pay_type'] = ($value['pay_type'] == 0) ? '在线支付' : '货到付款';
-			$orderList[$key]['pay_status'] = ($value['pay_status'] == 0) ? '未付款' : '已付款';
-            $orderList[$key]['ctime_text'] = date("Y-m-d", $value['ctime']);
-		}
-
+        $objPHPExcel->getProperties()->setCreator("chen")
+							 ->setLastModifiedBy("chen")
+							 ->setTitle("会员信息列表")
+							 ->setSubject("会员信息列表")
+							 ->setDescription("会员信息列表");
+        $memberList = D('Member')->where('user_id='.$_SESSION['uid'])
+            ->field('id,wechat_id,name,mobile,email,date_reg,date_login')
+            ->order('date_login desc')
+            ->select();
         $objPHPExcel->setActiveSheetIndex(0)
-            ->setCellValue('A1', '订单ID')
-            ->setCellValue('B1', '订单编号')
-            ->setCellValue('C1', '用户姓名')
-            ->setCellValue('D1', '商品名称')
-            ->setCellValue('E1', '订单总额')
-            ->setCellValue('F1', '订购人姓名')
-            ->setCellValue('G1', '订购人手机号码')
-            ->setCellValue('H1', '订购人地址')
-            ->setCellValue('I1', '收货人姓名')
-            ->setCellValue('J1', '收货人手机号码')
-            ->setCellValue('K1', '收货人地区')
-            ->setCellValue('L1', '收货人详细地址')
-            ->setCellValue('M1', '运费')
-            ->setCellValue('N1', '送达时间')
-            ->setCellValue('O1', '订制语')
-            ->setCellValue('P1', '备注')
-            ->setCellValue('Q1', '支付方式')
-            ->setCellValue('R1', '支付状态')
-            ->setCellValue('S1', '订单创建时间');
-        foreach($orderList as $k=>$v){
+            ->setCellValue('A1', '会员ID')
+            ->setCellValue('B1', '微信号')
+            ->setCellValue('C1', '昵称')
+            ->setCellValue('D1', '手机号码')
+            ->setCellValue('E1', '邮箱')
+            ->setCellValue('F1', '注册时间')
+            ->setCellValue('G1', '上次访问时间');
+        foreach($memberList as $k=>$v){
             $objPHPExcel->getActiveSheet()
                 ->setCellValue('A'.($k+2), $v['id'])
-                ->setCellValue('B'.($k+2), $v['order_sn'])
-                ->setCellValue('C'.($k+2), $v['user_name'])
-                ->setCellValue('D'.($k+2), $v['goods_name'])
-                ->setCellValue('E'.($k+2), $v['order_total'])
-                ->setCellValue('F'.($k+2), $v['order_name'])
-                ->setCellValue('G'.($k+2), $v['order_mobile'])
-                ->setCellValue('H'.($k+2), $v['order_address'])
-                ->setCellValue('I'.($k+2), $v['consignee_name'])
-                ->setCellValue('J'.($k+2), $v['consignee_mobile'])
-                ->setCellValue('K'.($k+2), $v['consignee_district'])
-                ->setCellValue('L'.($k+2), $v['consignee_address'])
-                ->setCellValue('M'.($k+2), $v['freight'])
-                ->setCellValue('N'.($k+2), $v['arrive_time'])
-                ->setCellValue('O'.($k+2), $v['custom_lang'])
-                ->setCellValue('P'.($k+2), $v['postscript'])
-                ->setCellValue('Q'.($k+2), $v['pay_type'])
-                ->setCellValue('R'.($k+2), $v['pay_status'])
-                ->setCellValue('S'.($k+2), $v['ctime_text']);
+                ->setCellValue('B'.($k+2), $v['wechat_id'])
+                ->setCellValue('C'.($k+2), $v['name'])
+                ->setCellValue('D'.($k+2), $v['mobile'])
+                ->setCellValue('E'.($k+2), $v['email'])
+                ->setCellValue('F'.($k+2), date('Y-m-d H:i',$v['date_reg']))
+                ->setCellValue('G'.($k+2), date('Y-m-d H:i',$v['date_login']));
         }
         // Rename worksheet
-        $objPHPExcel->getActiveSheet()->setTitle('订单数据');
+        $objPHPExcel->getActiveSheet()->setTitle('会员信息列表');
         // Set active sheet index to the first sheet, so Excel opens this as the first sheet
         $objPHPExcel->setActiveSheetIndex(0);
         // Redirect output to a client’s web browser (Excel5)
         header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="订单数据.xls"');
+        header('Content-Disposition: attachment;filename="会员列表'.date('md').'.xls"');
         header('Cache-Control: max-age=0');
         // If you're serving to IE 9, then the following may be needed
         header('Cache-Control: max-age=1');
@@ -283,5 +248,34 @@ class MemberAction extends HomeAction
 
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         $objWriter->save('php://output');
+    }
+
+    /**
+     * member count chart
+     */
+    public function memberChart()
+    {
+        for($i=1, $dateList['1'] = time(); $i<=10; $i++){
+            if($i != 1){
+                $dateList[$i] = $dateList[$i-1] - '2629743';
+            }
+        }
+        $lostMap['type'] = array('eq', 'event');
+        $lostMap['info'] = array('eq', 'unsubscribe');
+        $dateList = array_reverse($dateList);
+        foreach($dateList as $k=>$v){
+            $newMap['date_reg']
+                = $lostMap['date_push']
+                = array('between', array($v, $v+'2629743'));
+            $newList[$k] = D('Member')->getCount($newMap);
+            $lostList[$k] = D('MemberPush')->getCount($lostMap);
+            $countList[$k] = $newList[$k] - $lostList[$k];
+            $dateList[$k] = date('Y-m', $v);
+        }
+    	$this->assign('dateList', $dateList);
+    	$this->assign('newList', $newList);
+    	$this->assign('lostList', $lostList);
+    	$this->assign('countList', $countList);
+		$this->display();
     }
 }
