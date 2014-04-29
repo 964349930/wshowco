@@ -56,6 +56,7 @@ body {
   background: none ;
   outline:none;
   position:relative;
+ 
 }
 .nav-sidebar > li.active > a span.selected{
    background-image: url("../img/sidebar-menu-arrow.png");
@@ -137,7 +138,7 @@ body {
 .navbar-brand span{
     color:#b12020;
 }
-.nav-sidebar > li  ul{ display:block; margin: 8px 0; padding:0;}
+.nav-sidebar > li  ul{  padding:0;}
 .nav-sidebar > li  ul > li {
     background: none;
     margin-bottom: 0;
@@ -159,3 +160,4 @@ background: none;
     text-decoration: none;
 	color:#BDBDBD;
 	}
+.nav-sidebar > li  ul > li  a:hover{ background: #666; color:#fff;}	
