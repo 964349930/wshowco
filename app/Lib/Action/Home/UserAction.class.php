@@ -5,6 +5,15 @@
  * Created Time: 2013-11-11 17:45:17
 */
 class UserAction extends HomeAction{
+
+    /**
+     * initialize
+     */
+    public function _initialize()
+    {
+        parent::_initialize();
+    }
+
 	/**
 	 * 会员列表
 	 */
@@ -69,6 +78,7 @@ class UserAction extends HomeAction{
 		    $userInfo = $userObj->format($userInfo, array('url', 'avatar_name'));
 		    $this->assign('editUrl', U('Home/User/basic'));
             $this->assign('userInfo', $userInfo);
+            $this->assign('current', 'user_basic');
 		    $this->display();
             exit;
         }
@@ -91,6 +101,7 @@ class UserAction extends HomeAction{
      */
 	public function password() {
         if(empty($_POST)){
+            $this->assign('current', 'user_pwd');
             $this->display();
             exit;
         }

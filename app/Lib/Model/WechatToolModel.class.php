@@ -301,6 +301,17 @@ class WechatToolModel extends CommonModel {
     }
 
     /**
+     * 我的足迹
+     */
+    public function memberVisit($keyword, $member_id)
+    {
+        $item_ids = D('MemberVisit')->where('member_id='.$member_id)->order('date_visit desc')->select();
+        $map['id'] = array('in', $item_ids);
+        $itemList = D('Item')->where($map)->limit(6)->select();
+        return D('Wx')->setNews($itemList, count($itemList), $member_id);
+    }
+
+    /**
      * 我的收藏
      */
     public function memberLike($keyword, $member_id)

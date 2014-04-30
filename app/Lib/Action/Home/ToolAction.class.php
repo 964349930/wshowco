@@ -25,6 +25,7 @@ class ToolAction extends HomeAction {
             'useUrl'   => U('Home/Tool/useTool'),
             'toolInfoUrl' => U('Home/Tool/toolInfo'),
             'delUrl'    => U('Home/Tool/del'),
+            'pageHtml' => $page->show(),
         );
         $this->assign($tplData);
         $this->display();

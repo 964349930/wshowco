@@ -13,7 +13,7 @@
     </div>
 
     <div class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
+      <ul class="nav navbar-nav nav-tabs">
         <volist name="menu" id="vo">
           <li><a href="#">{$vo.title}</a></li>
         </volist>
@@ -30,9 +30,11 @@
   <div class="row">
   <!-- Left Menu -->
     <div class="col-sm-3 col-md-2 sidebar">
+        <img class="img-circle img-responsive" src="{$_SESSION[userInfo][avatar_name]}"></p>
+        {$_SESSION[userInfo][name]}</p>
       <ul class="nav nav-sidebar" id="menu">
         <volist name="menu[0][menu]" id="vo">
-          <li>
+        <li>
             <a data-toggle="collapse" data-parent="#menu" href="#{$vo.id}" class="sidebar-nav">
               <i class="fa fa-user"></i>
               <span style="margin-left:20px;">{$vo.title}</span>
@@ -41,7 +43,7 @@
             </a>
             <ul id="{$vo.id}" class="collapse sub-menu">
               <volist name="vo[meta]" id="voo">
-                <li>
+                <li <eq name="current" value="$voo[tag]">class="active"</eq>>
                   <a href="{$voo.url}">
                     <i class="fa fa-book"></i>
                     {$voo.title}
