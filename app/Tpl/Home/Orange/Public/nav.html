@@ -9,19 +9,18 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Wsh<span>ow</span></a>
+      <a class="navbar-brand" href="#">Ws<span>how</span></a>
     </div>
 
     <div class="navbar-collapse collapse">
-      <ul class="nav navbar-nav nav-tabs">
+      <ul class="nav navbar-nav" id="topMenu">
         <volist name="menu" id="vo">
-          <li><a href="#">{$vo.title}</a></li>
+        <li><a href="#{$vo.tag}">{$vo.title}</a></li>
         </volist>
-        <li><a href="#">Help</a></li>
+        <li><a href="#">帮助</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">{$_SESSION[userInfo][name]}</a></li>
-        <li><a href="{:U('Home/Public/logout')}">Logout</a></li>
+        <li><a href="{:U('Home/Public/logout')}">注销</a></li>
       </ul>
     </div><!--/.nav-collapse -->
   </div>
@@ -30,12 +29,12 @@
   <div class="row">
   <!-- Left Menu -->
     <div class="col-sm-3 col-md-2 sidebar">
-        <img class="img-circle img-responsive" src="{$_SESSION[userInfo][avatar_name]}"></p>
-        {$_SESSION[userInfo][name]}</p>
-      <ul class="nav nav-sidebar" id="menu">
+        <img class="img-circle img-responsive" src="{$_SESSION[userInfo][avatar_name]}" style="height:80px;">
+        <p style="color:#fff;">{$_SESSION[userInfo][name]}</p>
+      <ul class="nav nav-sidebar" id="index">
         <volist name="menu[0][menu]" id="vo">
         <li>
-            <a data-toggle="collapse" data-parent="#menu" href="#{$vo.id}" class="sidebar-nav">
+            <a data-toggle="collapse" data-parent="#index" href="#{$vo.id}" class="sidebar-nav">
               <i class="fa fa-user"></i>
               <span style="margin-left:20px;">{$vo.title}</span>
               <i class="fa fa-angle-right pull-right"></i>
@@ -54,5 +53,28 @@
            </li>
           </volist>
         </ul>
+      <ul class="nav nav-sidebar hidden" id="setting">
+        <volist name="menu[1][menu]" id="vo">
+        <li>
+            <a data-toggle="collapse" data-parent="#setting" href="#{$vo.id}" class="sidebar-nav">
+              <i class="fa fa-user"></i>
+              <span style="margin-left:20px;">{$vo.title}</span>
+              <i class="fa fa-angle-right pull-right"></i>
+			  <span class="selected"> </span>
+            </a>
+            <ul id="{$vo.id}" class="collapse sub-menu">
+              <volist name="vo[meta]" id="voo">
+                <li <eq name="current" value="$voo[tag]">class="active"</eq>>
+                  <a href="{$voo.url}">
+                    <i class="fa fa-book"></i>
+                    {$voo.title}
+                  </a>
+                </li>
+              </volist>
+            </ul>
+           </li>
+          </volist>
+        </ul>
+
       </div>
       <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">

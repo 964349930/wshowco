@@ -7,10 +7,19 @@
 </html>
 <script>
     $(function(){
-        $(".nav-sidebar").find("li").click(function(){
-        $(this).addClass("active");
-        $(this).siblings("li").removeClass("active");
-        })
+        $("li.active").parents("li").addClass("active");
+        $("li.active").parents("ul").collapse("show");
+        $("li.active").parents("li").siblings("li").removeClass("active");
+        $("li.active").parents("ul").siblings("ul").collapse("hide");
+
+        /**头部导航切换**/
+        $("#topMenu").find("li").click(function(){
+            $(this).addClass("active")
+            var menu = $(this).find("a").attr("href");
+            $(menu).removeClass("hidden").addClass("show");
+            $(menu).siblings("ul").removeClass("show").addClass("hidden");
+            $(this).siblings("li").removeClass("active");
+            });
     })
 
     /** alert function **/

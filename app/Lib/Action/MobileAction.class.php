@@ -98,7 +98,7 @@ class MobileAction extends BaseAction
             'user_id' => $this->user_id,
             'status' => 1,
         );
-        $page = page(D('Item')->getCount($map), 5, 'simple');
+        $page = page(D('Item')->getCount($map), 15, 'simple');
         if($parent_id == 0){
             $itemList = D('Item')->where($map)->order('sort_order')->limit($limit)->select();
         }else{
