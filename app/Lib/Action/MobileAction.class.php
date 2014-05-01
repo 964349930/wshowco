@@ -80,7 +80,7 @@ class MobileAction extends BaseAction
             $this->redirect('Index/api', array('user'=>$this->user,'member_id'=>$this->member_id,'id'=>$id));exit;
         }
         $itemInfo = D('Item')->format($itemInfo, array('template_name', 'ext'));
-        $itemInfo['cover_name'] = getPicPath(D('GalleryMeta')->getImg($itemInfo['cover']), 'm');
+        $itemInfo['cover_name'] = getPicPath(D('GalleryMeta')->getImg($itemInfo['cover']), 'b');
         $itemInfo['date_add_text'] = date('Y-m-d H:i', $itemInfo['date_add']);
         $itemInfo['info'] = htmlspecialchars_decode($itemInfo['info']);
         return $itemInfo;
