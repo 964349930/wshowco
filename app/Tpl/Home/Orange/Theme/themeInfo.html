@@ -1,0 +1,31 @@
+<include file="Public:header" />
+<include file="Public:nav" />
+<h2 class="page-header">主题信息</h2>
+<form role="form" id="form" onsubmit="return edit()">
+    <div class="form-group">
+        <label for="name">主题名称</label>
+        <input type="text" class="form-control" id="name" name="name" value="{$themeInfo.name}">
+    </div>
+    <div class="form-group">
+        <label for="spell">标记</label>
+        <input type="text" class="form-control" id="spell" name="spell" value="{$themeInfo.spell}">
+    </div>
+    <div class="form-group">
+        <label for="author">作者</label>
+        <input type="text" class="form-control" id="author" name="author" value="{$themeInfo.author}">
+    </div>
+    <button type="submit" class="btn btn-primary">更新</button>
+</form>
+<include file="Public:footer" />
+<script>
+function edit(){
+    $.post('{$themeInfoUrl}',
+            $("#form").serialize(),
+            function(data){
+            alert(data.status, data.msg);
+            },
+            'json'
+            );
+    return false;
+}
+</script>

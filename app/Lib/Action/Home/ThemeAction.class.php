@@ -83,11 +83,18 @@ class ThemeAction extends HomeAction{
         }
         if(empty($data['id'])){
             $data['date_add'] = time();
-            $themeObj->add($data);
+            if($themeObj->add($data)){
+                echo json_encode(array('status'=>'alert-success','msg'=>'Success'));
+            }else{
+                echo json_encode(array('status'=>'alert-danger','msg'=>'Error'));
+            }
         }else{
-            $themeObj->save($data);
+            if($themeObj->save($data)){
+                echo json_encode(array('status'=>'alert-success','msg'=>'Success'));
+            }else{
+                echo json_encode(array('status'=>'alert-danger','msg'=>'Error'));
+            }
         }
-        $this->success('操作成功');
     }
 
     /**
