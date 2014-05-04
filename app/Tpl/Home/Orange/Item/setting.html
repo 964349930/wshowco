@@ -9,6 +9,7 @@
     </div>
     <div class="form-group">
         <label for="logo">Logo</label>
+        <input class="form-control" id="logo" name="logo" type="hidden" value="{$siteInfo.logo}">
         <img class="img-responsive" id="changeImg" height="60" data-toggle="tooltip" title="点击更换图片" src="{$siteInfo.logo_name}">
     <div class="form-group">
         <label for="url">首页地址</label>
@@ -49,6 +50,7 @@
     <button role="submit" class="btn btn-primary">更新</button>
 </form>
 <include file="Public:footer" />
+<include file="Public:gallery" />
 <script>
 function edit(){
     $.post('{:U("Home/Item/setting")}',
