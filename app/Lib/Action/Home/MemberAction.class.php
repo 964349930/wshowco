@@ -267,9 +267,10 @@ class MemberAction extends HomeAction
             $newMap['date_reg']
                 = $lostMap['date_push']
                 = array('between', array($v, $v+'2629743'));
+            $countMap['date_reg'] = array('lt', $v);
             $newList[$k] = D('Member')->getCount($newMap);
-            $lostList[$k] = D('MemberPush')->getCount($lostMap);
-            $countList[$k] = $newList[$k] - $lostList[$k];
+            $lostList[$k] = D('MemberPush')->getCount($lostMap) - $lostList[$k];
+            $countList[$k] = D('Member')->getCount($countMap);
             $dateList[$k] = date('Y-m', $v);
         }
     	$this->assign('dateList', json_encode($dateList));

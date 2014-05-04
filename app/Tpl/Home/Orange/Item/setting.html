@@ -8,6 +8,9 @@
         <input type="text" name="site_name" class="form-control" id="site_name" value="{$siteInfo.site_name}">
     </div>
     <div class="form-group">
+        <label for="logo">Logo</label>
+        <img class="img-responsive" id="changeImg" height="60" data-toggle="tooltip" title="点击更换图片" src="{$siteInfo.logo_name}">
+    <div class="form-group">
         <label for="url">首页地址</label>
         <input type="url" class="form-control" id="url" value="{$siteInfo.url}" disabled>
     </div>

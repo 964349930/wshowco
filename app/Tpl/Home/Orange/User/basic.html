@@ -1,20 +1,12 @@
 <include file="Public:header" />
 <include file="Public:nav" />
 <h2 class="page-header">基本信息</h2>
-  <ol class="breadcrumb">
-      <volist name="breadcrumbs" id="vo">
-      <li><a href="{$vo.url}">{$vo.title}</a></li>
-      </volist>
-  </ol>
   <form role="form" id="form" onsubmit="return edit()">
     <input type="hidden" name="id" value="{$userInfo.id}">
-    <notempty name="userInfo[avatar]">
-    <img src="{$userInfo.avatar_name}" class="img-responsive img-circle" height="60">
-    </notempty>
     <div class="form-group">
-      <label for="pic">头像</label>
-      <input type="file" id="pic">
-      <p class="help-block" id="changeImg">选择上传头像</p>
+        <label for="avatar">头像</label>
+        <input class="form-control" id="avatar" name="avatar" type="hidden" value="{$userInfo.avatar}">
+        <img src="{$userInfo.avatar_name}" class="img-responsive img-circle" id="changeImg" height="60" data-toggle="tooltip" title="点击更换图片">
     </div>
     <div class="form-group">
       <label for="name">用户名</label>

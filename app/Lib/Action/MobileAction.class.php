@@ -178,7 +178,9 @@ class MobileAction extends BaseAction
      * getApiData
      */
     protected function getApiInfo($url, $article_id){
-        $url .= '&article_id='.$article_id;
+        if(!empty($article_id)){
+            $url .= '&article_id='.$article_id;
+        }
         $info = $this->getCUrl($url);
         return $info;
     }
