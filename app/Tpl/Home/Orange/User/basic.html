@@ -46,7 +46,7 @@ function edit(){
             '{$editUrl}',
             $("#form").serialize(),
             function(data){
-                alert(data.status, data.msg);
+                calert(data.msg, data.status);
             },
             'json'
             );

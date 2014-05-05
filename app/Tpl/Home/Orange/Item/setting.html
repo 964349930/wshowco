@@ -56,7 +56,7 @@ function edit(){
     $.post('{:U("Home/Item/setting")}',
             $("#form").serialize(),
             function(data){
-            alert(data.status, data.msg);
+            calert(data.msg, data.status);
             },
             'json'
             );

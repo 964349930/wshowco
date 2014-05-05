@@ -13,18 +13,18 @@
 <script>
 function login(){
     if($("#name").val() == ''){
-        alert('alert-danger', '用户名不能为空');
+        calert('用户名不能为空', '0');
     }else if($("#password").val() == ''){
-        alert('alert-danger', '密码不能为空');
+        calert('密码不能为空', '0');
     }else{
         $.post('{:U("Home/Public/doLogin")}',
             $("#form").serialize(),
             function(data){
                 if(data.code == 1){
-                    alert('alert-success', data.msg);
+                    calert(data.msg, '1');
                     setTimeout(window.location='{:U("Home/Index/index")}', 2000);
                 }else{
-                    alert('alert-danger', data.msg);
+                    alert(data.msg, '0');
                 }
             },
             'json'

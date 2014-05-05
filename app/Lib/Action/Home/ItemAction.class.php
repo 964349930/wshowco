@@ -29,6 +29,7 @@ class ItemAction extends HomeAction
             $this->assign('galleryList', $galleryList);
             $this->assign('siteInfo', $siteInfo);
             $this->assign('settingUrl', U('Home/Item/setting'));
+            $this->assign('current', 'site_setting');
             $this->display();
             exit;
         }
@@ -44,9 +45,9 @@ class ItemAction extends HomeAction
             $siteObj->add($data);
         }else{
             if($siteObj->save($data)){
-                echo json_encode(array('status'=>'alert-success','msg'=>'更新成功'));
+                echo json_encode(array('status'=>'1','msg'=>'更新成功'));
             }else{
-                echo json_encode(array('status'=>'alert-danger','msg'=>'更新失败'));
+                echo json_encode(array('status'=>'0','msg'=>'更新失败'));
             }
         }
     }
@@ -87,6 +88,7 @@ class ItemAction extends HomeAction
             'subUrl'   => U('Home/Item/itemList'),
             'itemList' => $itemList,
             'pageHtml' => $pageHtml,
+            'current'  => 'site_item',
         );
         $this->assign($data);
         $this->display();
@@ -116,6 +118,7 @@ class ItemAction extends HomeAction
             $this->assign('tplList', D('ThemeTpl')->getTplList());
             $this->assign('infoUrl', U('Home/Item/itemInfo'));
             $this->assign('extUrl', U('Home/Ext/extList'));
+            $this->assign('current', 'site_item');
             $this->display();
             exit;
         }

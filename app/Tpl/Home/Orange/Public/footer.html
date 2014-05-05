@@ -24,8 +24,17 @@
     })
 
     /** alert function **/
-    function alert(status, msg){
-        html = '<div class="alert '+status+'">'+msg+'<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button></div>'
+    function calert(msg, status){
+        switch (status){
+            case '0':
+                var status_name = 'alert-danger';
+                break;
+            case '1':
+                var status_name = 'alert-success';
+                break;
+        }
+        html = '<div class="alert '+status_name+'">'+msg+'<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button></div>'
         $(".main").prepend(html);
+        window.setTimeout(function(){$(".alert").alert('close');}, 1500);
     }
 </script>

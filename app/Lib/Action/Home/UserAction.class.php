@@ -90,9 +90,9 @@ class UserAction extends HomeAction{
 		}
         $result = $userObj->save($data);
         if(empty($result)){
-            echo json_encode(array('status'=>'alert-danger','msg'=>'更新错误'));
+            echo json_encode(array('status'=>'0','msg'=>'更新错误'));
         }else{
-            echo json_encode(array('status'=>'alert-success','msg'=>'更新成功'));
+            echo json_encode(array('status'=>'1','msg'=>'更新成功'));
         }
 	}
 
@@ -109,13 +109,13 @@ class UserAction extends HomeAction{
 		$map['id'] = $_SESSION['uid'];
 		$map['password'] = md5($_POST['oldpassword']);
         if(!$userObj->where($map)->find()){
-            echo json_encode(array('status'=>'alert-danger', 'msg'=>'原始密码输入错误'));
+            echo json_encode(array('status'=>'0', 'msg'=>'原始密码输入错误'));
 		}else{
             $password = md5($_POST['newpassword']);
             if($userObj->where('id='.$_SESSION['uid'])->setField('password', $password)){
-                echo json_encode(array('status'=>'alert-success', 'msg'=>'密码修改成功'));
+                echo json_encode(array('status'=>'1', 'msg'=>'密码修改成功'));
             }else{
-                echo json_encode(array('status'=>'alert-danger', 'msg'=>'密码修改失败'));
+                echo json_encode(array('status'=>'0', 'msg'=>'密码修改失败'));
             }
          }
     }
