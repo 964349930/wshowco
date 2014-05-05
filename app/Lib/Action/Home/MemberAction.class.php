@@ -28,6 +28,7 @@ class MemberAction extends HomeAction
             'likeUrl' => U('Home/Member/likeList'),
             'memberList' => $memberList,
             'pageHtml' => $page->show(),
+            'current' => 'member_list',
         );
         $this->assign($data);
         $this->display();
