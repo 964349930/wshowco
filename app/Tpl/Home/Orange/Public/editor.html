@@ -1,0 +1,60 @@
+<div class="btn-toolbar" data-role="editor-toolbar" data-target="#editor">
+	<div class="btn-group">
+		<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="字体"><i class="fa fa-font"></i><b class="caret"></b></a>
+		<ul class="dropdown-menu">
+			<li><a style="font-family:宋体,SimSun" data-edit="fontName 宋体">宋体</a></li>
+			<li><a style="font-family:微软雅黑,Microsoft YaHei" data-edit="fontName 微软雅黑">微软雅黑</a></li>
+			<li><a style="font-family:楷体,楷体_GB2312, SimKai" data-edit="fontName 楷体">楷体</a></li>
+			<li><a style="font-family:黑体, SimHei" data-edit="fontName 黑体">黑体</a></li>
+			<li><a style="font-family:隶书, SimLi" data-edit="fontName 隶书">隶书</a></li>
+			<li><a style="font-family:andale mono" data-edit="fontName andale mono">andale mono</a></li>
+			<li><a style="font-family:arial, helvetica,sans-serif" data-edit="fontName arial">arial</a></li>
+			<li><a style="font-family:comic sans ms" data-edit="fontName comic sans ms">comic sans ms</a></li>
+			<li><a style="font-family:arial black,avant garde" data-edit="fontName arial black">arial black</a></li>
+			<li><a style="font-family:impact,chicago" data-edit="fontName impact">impact</a></li>
+			<li><a style="font-family:times new roman" data-edit="fontName times new roman">times new roman</a></li>
+		</ul>
+	</div>
+	<div class="btn-group">
+		<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="字体大小"><i class="fa fa-text-height"></i>&nbsp;<b class="caret"></b></a>
+		<ul class="dropdown-menu">
+			<li><a data-edit="fontSize 5"><font size="5">大号字体</font></a></li>
+			<li><a data-edit="fontSize 3"><font size="3">中等字体</font></a></li>
+			<li><a data-edit="fontSize 1"><font size="1">小号字体</font></a></li>
+		</ul>
+	</div>
+	<div class="btn-group">
+		<a class="btn btn-default" data-edit="bold" title="加粗"><i class="fa fa-bold"></i></a>
+		<a class="btn btn-default" data-edit="italic" title="倾斜"><i class="fa fa-italic"></i></a>
+		<a class="btn btn-default" data-edit="strikethrough" title="中划线"><i class="fa fa-strikethrough"></i></a>
+		<a class="btn btn-default" data-edit="underline" title="下划线"><i class="fa fa-underline"></i></a>
+	</div>
+	<div class="btn-group">
+		<a class="btn btn-default" data-edit="insertunorderedlist" title="圆点列表"><i class="fa fa-list"></i></a>
+		<a class="btn btn-default" data-edit="insertorderedlist" title="数字列表"><i class="fa fa-list-ol"></i></a>
+	</div>
+	<div class="btn-group">
+		<a class="btn btn-default" data-edit="justifyleft" title="左对齐"><i class="fa fa-align-left"></i></a>
+		<a class="btn btn-default" data-edit="justifycenter" title="居中"><i class="fa fa-align-center"></i></a>
+		<a class="btn btn-default" data-edit="justifyright" title="右对齐"><i class="fa fa-align-right"></i></a>
+		<a class="btn btn-default" data-edit="justifyfull" title="两端对齐"><i class="fa fa-align-justify"></i></a>
+	</div>
+	<div class="btn-group">
+		<a class="btn btn-default dropdown-toggle" data-toggle="dropdown" title="超链接"><i class="fa fa-chain"></i></a>
+		<div class="dropdown-menu input-append">
+			<input class="" placeholder="输入链接地址" type="text" data-edit="createLink"/>
+			<button class="btn btn-default" type="button">添加</button>
+		</div>
+		<a class="btn btn-default" data-edit="unlink" title="移除超链接"><i class="fa fa-chain-broken"></i></a>
+	</div>
+	<div class="btn-group">
+		<a class="btn btn-default" title="插入图片（或拖放）" id="pictureBtn"><i class="fa fa-picture-o"></i></a>
+		<input type="file" data-role="magic-overlay" class="hidden" data-target="#pictureBtn" data-edit="insertImage" />
+	</div>
+	<div class="btn-group">
+		<a class="btn btn-default" data-edit="undo" title="取消"><i class="fa fa-undo"></i></a>
+		<a class="btn btn-default" data-edit="redo" title="重做"><i class="fa fa-repeat"></i></a>
+	</div>
+	<input id="voiceBtn" type="text" x-webkit-speech="" data-edit="inserttext" style="" name="meta[description]">
+</div>
+

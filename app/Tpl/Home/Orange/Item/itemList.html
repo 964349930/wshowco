@@ -6,12 +6,12 @@
     <li><a href="{$vo.url}">{$vo.title}</a></li>
     </volist>
 </ol>
+<a class="btn btn-primary" href="{$addUrl}">添加文章</a>
 <div class="table-responsive">
 <table class="table table-striped">
     <thead>
         <tr>
             <th>标题</th>
-            <th>缩略图</th>
             <th>描述</th>
             <th>修改时间</th>
             <th>操作</th>
@@ -21,7 +21,6 @@
     <volist name="itemList" id="vo">
     <tr>
         <td>{$vo.title}</td>
-        <td><img src="{$vo.cover_name}" class="img-responsive img-thumbnail" /></td>
         <td>{$vo.intro}</td>
         <td>{$vo.date_modify|date='Y-m-d H:i', ###}</td>
         <td>

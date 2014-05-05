@@ -1,10 +1,10 @@
 <include file="Public:header" />
 <include file="Public:nav" />
 <style>
-#editor {overflow:scroll; max-height:300px}
+#editor {border:2px solid #ddd; overflow:scroll; min-height:300px}
 </style>
 <h2 class="page-header">推送管理</h2>
-    <form role="form">
+    <form role="form" id="form" onsubmit="return edit()">
         <input type="hidden" name="news[id]" value="{$newsInfo.id}">
         <input type="hidden" name="route[id]" value="{$routeInfo.id}">
         <input type="hidden" name="meta[id]" value="{$metaInfo.id}">
@@ -14,25 +14,39 @@
             <input class="form-control" id="title" name="meta[title]" type="text" value="{$metaInfo.title}">
         </div>
         <div class="form-group">
-            <label for="url">链接：</label>
-            <input class="form-control" id="url" name="meta[url]" type="url" value="{$metaInfo.url}">
+            <label for="cover">封面</label>
+            <button id="changeImg" name="meta[cover]">选择</button>
         </div>
         <div class="form-group">
             <label for="editor">内容</label>
-            <div class="btn-toolbar" id="editor" data-role="editor-toolbar" data-target="#editor">
-                <div class="btn-group">
-                    <a class="btn btn-default" data-edit="bold"><i class="fa fa-bold"></i></a>
-                    <a class="btn btn-default" data-edit="italic"><i class="fa fa-italic"></i></a>
-                </div>
+            <include file="Public:editor" />
+            <div id="editor" name="meta[description]">
+                {$metaInfo.description}
             </div>
-            <textarea class="form-control" id="editor" ></textarea>
+        </div>
+        <div class="form-group">
+            <label for="url">链接</label>
+            <input class="form-control" id="url" name="meta[url]" type="url" value="{$metaInfo.url}">
         </div>
         <button class="btn btn-primary" role="submit">更新</button>
     </form>
 </div>
 <include file="Public:footer" />
+<include file="Public:gallery" />
+<script src="__PUBLIC__/jquery/jquery.hotkeys.js"></script>
 <script src="__PUBLIC__/bootstrap/bootstrap-wysiwyg.js"></script>
 <script>
+function edit(){
+    $.post('{$editUrl}',
+        $("#form").serialize(),
+        function(data){
+            alert(data);
+        },
+        'json'
+        );
+    return false;
+}
+
 $(function(){
     $("#editor").wysiwyg();
 })

@@ -10,48 +10,50 @@
         <input type="text" name="item[title]" class="form-control" id="title" value="{$itemInfo.title}">
     </div>
     <div class="form-group">
-        <label for="pic">封面</label>
-        <input class="form-control" id="pic" name="pic" type="file">
+        <label for="cover">封面</label>
+        <input class="form-control" id="cover" name="item[cover]" type="hidden">
+        <notempty name="itemInfo[cover]">
+            <img class="img-responsive" id="changeImg" href="{$itemInfo.cover}">
+        <else />
+        <button id="changeImg">选择图片</button>
+        </notempty>
     </div>
     <div class="form-group">
-        <label for="url">首页地址</label>
-        <input type="url" class="form-control" id="url" value="{$siteInfo.url}" disabled>
+        <label for="intro">描述</label>
+        <textarea class="form-control" id="intro" name="item[intro]">{$itemInfo[intro]}</textarea>
     </div>
     <div class="form-group">
-        <label for="tel">客服号码</label>
-        <input type="tel" name="tel" class="form-control" id="tel" value="{$siteInfo.tel}">
+        <label for="info">内容</label>
+        <textarea class="form-control" id="info" name="item[info]">{$itemInfo[info]}</textarea>
     </div>
     <div class="form-group">
-        <label for="address">公司地址</label>
-        <input type="text" name="address" class="form-control" id="address" value="{$siteInfo.address}">
-    </div>
-    <div class="form-group">
-        <label for="email">邮箱</label>
-        <input type="email" name="email" class="form-control" id="email" value="{$siteInfo.email}">
-    </div>
-    <div class="form-group">
-        <label for="theme">主题</label>
-        <input type="text" class="form-control" id="theme" value="{$siteInfo.theme_name}">
-    </div>
-    <div class="form-group">
-        <label for="banner">首页幻灯片</label>
-        <select class="form-control" id="banner" name="banner_id">
-            <volist name="galleryList" id="vo">
-            <option value="{$vo.id}" <eq name="siteInfo[banner_id]" value="$vo[id]">selected="selected"</eq>>{$vo.title}</option>
+        <label for="template">模版</label>
+        <select class="form-control" id="template" name="item[template_id]">
+            <volist name="tplList" id="vo">
+            <option value="{$vo.id}" <eq name="itemInfo[template_id]" value="$vo[id]">selected="selected"</eq>>{$vo.name}</option>
             </volist>
         </select>
     </div>
     <div class="form-group">
-        <label for="longitude">经度</label>
-        <input type="text" name="longitude" class="form-control" id="longitude" value="{$siteInfo.longitude}">
+        <label for="api">接口地址</label>
+        <input type="url" name="item[api]" class="form-control" id="api" value="{$itemInfo.api}">
     </div>
     <div class="form-group">
-        <label for="latitude">纬度</label>
-        <input type="text" name="latitude" class="form-control" id="latitude" value="{$siteInfo.latitude}">
+        <label for="sort">排序</label>
+        <input type="number" name="item[sort_order]" class="form-control" id="sort" value="{$itemInfo.sort_order}">
     </div>
-    <button role="submit" class="btn btn-primary">更新</button>
+    <div class="form-group">
+        <label class="radio-inline">
+            <input id="radio1" name="item[status]" type="radio" value="1" <eq name="itemInfo[status]" value="1">checked</eq>>显示
+        </label>
+        <label class="radio-inline">
+            <input id="radio2" name="item[status]" type="radio" value="0" <eq name="itemInfo[status]" value="0">checked</eq>>隐藏
+        </label>
+    </div>
+    <button role="submit" class="btn btn-primary">提交</button>
 </form>
 <include file="Public:footer" />
+<include file="Public:gallery" />
 <script>
 function edit(){
     $.post('{:U("Home/Item/setting")}',

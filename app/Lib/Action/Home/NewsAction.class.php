@@ -97,6 +97,7 @@ class NewsAction extends HomeAction{
 				$meta['cover'] = D('GalleryMeta')->addImg($picList['pic']['savename']);
 			}
 		}
+        print_r($meta);exit;
         $news_id = D('WechatNews')->updateNews($news);
         D('WechatRoute')->updateRoute('news', $news_id, $route);
         D('WechatNewsMeta')->updateMeta($meta, $news_id);
