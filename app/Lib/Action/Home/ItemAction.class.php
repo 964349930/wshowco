@@ -9,10 +9,6 @@ class ItemAction extends HomeAction
     public function _initialize()
     {
         parent::_initialize();
-        $this->breadcrumbs['1'] = array(
-            'title' => '文章管理',
-            'url' => U('Home/Item/itemList'),
-        );
     }
 
     /**
@@ -77,9 +73,7 @@ class ItemAction extends HomeAction
         foreach($itemList as $k=>$v){
             $itemList[$k] = $itemObj->format($v, array('cover_name'));
         }
-
-        /** 面包屑导航 **/
-         
+        $this->setBCrumbs($parent_id);
         $data = array(
             'breadcrumbs' => $this->breadcrumbs,
             'addUrl'   => U('Home/Item/itemInfo', array('parent_id'=>$parent_id)),
@@ -89,9 +83,40 @@ class ItemAction extends HomeAction
             'itemList' => $itemList,
             'pageHtml' => $pageHtml,
             'current'  => 'site_item',
+            'parent_id' => $parent_id,
         );
         $this->assign($data);
         $this->display();
+    }
+
+    /**
+     * set the breadcrumbs
+     */
+    private function setBCrumbs($id)
+    {
+        $result = $this->get_ids($id);
+        $result = array_reverse($result);
+        if(!empty($id)){
+            $result = array_merge($result, array($id));
+        }
+        foreach($result as $k=>$v){
+            $this->breadcrumbs[$k+1]['id'] = $v;
+            $title = D('Item')->where('id='.$v)->getField('title');
+            $this->breadcrumbs[$k+1]['title'] = ($title) ? $title : '文章列表';
+            $this->breadcrumbs[$k+1]['url'] = U('Item/itemList', array('parent_id'=>$v));
+        }
+    }
+
+    /**
+     * get parent_id for breadcrumbs
+     */
+    private function get_ids($id, $i=0)
+    {
+        $pid[$i] = D('Item')->where('id='.$id)->getField('parent_id');
+        if(!empty($pid[$i])){
+            $pid = array_merge($pid, $this->get_ids($pid[$i],$i+1));
+        }
+        return $pid;
     }
 
     /**
@@ -113,12 +138,14 @@ class ItemAction extends HomeAction
                 //添加显示
                 $parent_id = $this->_get('parent_id', 'intval');
             }
+            $this->setBCrumbs($parent_id);
             $this->assign('getExtValueList', U('Home/Ext/getExtValueList'));
             $this->assign('parent_id', $parent_id);
             $this->assign('tplList', D('ThemeTpl')->getTplList());
             $this->assign('infoUrl', U('Home/Item/itemInfo'));
             $this->assign('extUrl', U('Home/Ext/extList'));
             $this->assign('current', 'site_item');
+            $this->assign('breadcrumbs', $this->breadcrumbs);
             $this->display();
             exit;
         }
@@ -135,15 +162,25 @@ class ItemAction extends HomeAction
             //添加操作
             $data['user_id'] = $_SESSION['uid'];
             $data['date_add'] = time();
-            $item_id = $itemObj->add($data);
+            if($item_id = $itemObj->add($data)){
+                echo json_encode(array('status'=>1,'msg'=>'添加成功'));
+            }else{
+                echo json_encode(array('status'=>0,'msg'=>'添加失败'));
+            }
         }else{
             //更新操作
-            $itemObj->save($data);
+            if($itemObj->save($data)){
+                echo json_encode(array('status'=>1,'msg'=>'添加成功'));
+            }else{
+                echo json_encode(array('status'=>0,'msg'=>'添加失败'));
+            }
         }
+        /*
         //增值属性操作
         $extValData = $_POST['ext'];
         D('ExtVal')->updateExtVal($extValData, $item_id);
         $this->success('操作成功');
+         */
     }
 
     /**

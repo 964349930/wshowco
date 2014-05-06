@@ -1,24 +1,43 @@
 <include file="Public:header" />
 <include file="Public:nav" />
-<link href="__PUBLIC__/fancybox/jquery.fancybox.css" rel="stylesheet">
+<!--link href="__PUBLIC__/fancybox/jquery.fancybox.css" rel="stylesheet"-->
 <h2 class="page-header">相册</h2>
-<ol class="">
-</ol>
-<div class="row">
-    <volist name="metaList" id="vo">
-    <div class="col-sm-3 col-md-2">
-        <a href="{$vo.path_name}" class="fancybox thumbnail" rel="group">
-            <img src="{$vo.path_name}" alt="wshow.co">
-            <h4>{$vo.title}</h4>
-        </a>
-    </div>
-    </volist>
+<include file="Public:breadcrumbs" />
+<a class="btn btn-default" role="button" href="{:U('Gallery/metaInfo', array('gallery_id'=>$gallery_id))}">上传照片</a>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>图片</th>
+                <th>标题</th>
+                <th>创建时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        <volist name="metaList" id="vo">
+            <tr>
+                <td><img src="{$vo.path_name}" height="50px"></td>
+                <td>{$vo.title}</td>
+                <td>{$vo.date_add|date='Y-m-d H:i', ###}</td>
+                <td>
+                    <a href="{:U('Gallery/metaInfo', array('id'=>$vo[id]))}"><i class="fa fa-edit" style="margin-right:10px;"></i></a>
+                    <a href="#" style="color:red;" data-toggle="modal" data-target="#isdelete" data-href="{:U('Gallery/metaDel', array('id'=>$vo[id]))}"><i class="fa fa-trash-o"></i></a>
+                </td>
+            </tr>
+        </volist>
+        </tbody>
+    </table>
 </div>
+<ul class="pagination" style="float:right;">
+{$pageHtml}
+</ul>
 <include file="Public:footer" />
-<script src="__PUBLIC__/fancybox/jquery.mousewheel-3.0.6.pack.js"></script>
+<include file="Public:modal_delete" />
+<!--script src="__PUBLIC__/fancybox/jquery.mousewheel-3.0.6.pack.js"></script>
 <script src="__PUBLIC__/fancybox/jquery.fancybox.pack.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$(".fancybox").fancybox();
 	});
-</script>
+</script-->

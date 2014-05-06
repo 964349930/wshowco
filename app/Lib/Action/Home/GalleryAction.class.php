@@ -130,10 +130,7 @@ class GalleryAction extends HomeAction
         }
         $data = array(
             'galleryList' => $galleryList,
-            'galleryAddUrl' => U('Home/Gallery/galleryInfo', array('parent_id'=>$parent_id)),
-            'galleryInfoUrl' => U('Home/Gallery/galleryInfo'),
-            'galleryDelUrl' => U('Home/Gallery/galleryDel'),
-            'galleryListUrl' => U('Home/Gallery/galleryList'),
+            'current' => 'gallery_list',
         );
         $this->assign($data);
         $this->display();
@@ -145,43 +142,36 @@ class GalleryAction extends HomeAction
     public function galleryInfo()
     {
         $galleryObj = D('Gallery');
+        $this->breadcrumbs['1'] = array(
+            'title' => '相册管理',
+            'url' => U('Gallery/galleryList'),
+        );
         if(empty($_POST)){
-            $gallery_id = $this->_get('gallery_id', 'intval');
-            if(!empty($gallery_id)){
-                $galleryInfo = $galleryObj->getInfoById($gallery_id);
+            $id = $this->_get('id', 'intval');
+            if(!empty($id)){
+                $galleryInfo = $galleryObj->getInfoById($id);
                 $galleryInfo = $galleryObj->format($galleryInfo, array('cover_name'));
-                $parent_id = $galleryInfo['parent_id'];
                 $this->assign('galleryInfo', $galleryInfo);
-            }else{
-                $parent_id = $this->_get('parent_id', 'intval');
             }
-            $this->assign('metaListUrl', U('Home/Gallery/metaList'));
-            $this->assign('galleryInfoUrl', U('Home/Gallery/galleryInfo'));
-            $this->assign('parent_id', $parent_id);
+            $this->assign('breadcrumbs', $this->breadcrumbs);
             $this->display();
             exit;
         }
         $data = $this->_post();
         $data['user_id'] = $_SESSION['uid'];
         $data['date_modify'] = time();
-		if(!empty($_FILES['pic']['name'])){
-			$picList = uploadPic();
-			if($picList['code'] != 'error'){
-				$data['cover'] = D('GalleryMeta')->addImg($picList['pic']['savename']);
-			}
-		}
         if(empty($data['id'])){
             $data['date_add'] = time();
             if($galleryObj->add($data)){
-                echo json_encode(array('status'=>'alert-success','msg'=>'创建成功'));
+                echo json_encode(array('code'=>'1','msg'=>'创建成功'));
             }else{
-                echo json_encode(array('status'=>'alert-warning','msg'=>'创建失败'));
+                echo json_encode(array('code'=>'2','msg'=>'创建失败'));
             }
         }else{
             if($galleryObj->save($data)){
-                echo json_encode(array('status'=>'alert-success','msg'=>'创建成功'));
+                echo json_encode(array('code'=>'1','msg'=>'创建成功'));
             }else{
-                echo json_encode(array('status'=>'alert-warning','msg'=>'创建失败'));
+                echo json_encode(array('code'=>'2','msg'=>'创建失败'));
             }
         }
     }
@@ -213,8 +203,11 @@ class GalleryAction extends HomeAction
         foreach($covers as $k=>$v){
             delImage($v);
         }
-		D('Gallery')->where($map)->delete();
-		$this->success('删除成功');
+        if(D('Gallery')->where($map)->delete()){
+            echo json_encode(array('code'=>'1','msg'=>'删除成功'));
+        }else{
+            echo json_encode(array('code'=>'0','msg'=>'删除失败'));
+        }
     }
 
 
@@ -229,15 +222,21 @@ class GalleryAction extends HomeAction
         $arrField = array();
         $arrMap['gallery_id'] = array('eq', $gallery_id);
         $arrOrder = array('date_modify desc');
-        $metaList = $metaObj->getList($arrField ,$arrMap, $arrOrder);
+        $page = page($metaObj->getCount($arrMap), 10);
+        $metaList = $metaObj->getList($arrField ,$arrMap, $arrOrder, $page->firstRow, $page->listRows);
         foreach($metaList as $k=>$v){
             $metaList[$k] = $metaObj->format($v, array('path_name'));
         }
+        $this->breadcrumbs['1'] = array(
+            'title' => D('Gallery')->where('id='.$gallery_id)->getField('title'),
+            'url' => U('Gallery/galleryList'),
+        );
         $data = array(
+            'breadcrumbs' => $this->breadcrumbs,
+            'gallery_id' => $gallery_id,
             'metaList' => $metaList,
-            'metaAddUrl' => U('Home/Gallery/metaInfo', array('gallery_id'=>$gallery_id)),
-            'metaInfoUrl' => U('Home/Gallery/metaInfo'),
-            'metaDelUrl' => U('Home/Gallery/metaDel'),
+            'pageHtml' => $page->show(),
+            'current' => 'gallery_list',
         );
         $this->assign($data);
         $this->display();
@@ -250,7 +249,7 @@ class GalleryAction extends HomeAction
     {
         $metaObj = D('GalleryMeta');
         if(empty($_POST)){
-            $id = $this->_get('meta_id', 'intval');
+            $id = $this->_get('id', 'intval');
             if(!empty($id)){
                 $metaInfo = $metaObj->getInfoById($id);
                 $metaInfo = $metaObj->format($metaInfo, array('path_name'));
@@ -260,7 +259,7 @@ class GalleryAction extends HomeAction
                 $gallery_id = $this->_get('gallery_id', 'intval');
             }
             $this->assign('gallery_id', $gallery_id);
-            $this->assign('metaInfoUrl', U('Home/Gallery/metaInfo'));
+            $this->assign('current', 'gallery_list');
             $this->display();
             exit;
         }
@@ -274,11 +273,18 @@ class GalleryAction extends HomeAction
 		}
         if(empty($data['id'])){
             $data['date_add'] = time();
-            $metaObj->add($data);
+            if($metaObj->add($data)){
+                echo json_encode(array('code'=>'1','msg'=>'更新成功'));
+            }else{
+                echo json_encode(array('code'=>'2','msg'=>'更新失败'));
+            }
         }else{
-            $metaObj->save($data);
+            if($metaObj->save($data)){
+                echo json_encode(array('code'=>'1','msg'=>'更新成功'));
+            }else{
+                echo json_encode(array('code'=>'2','msg'=>'更新失败'));
+            }
         }
-        $this->success('操作成功');
     }
 
     /**
@@ -303,8 +309,11 @@ class GalleryAction extends HomeAction
         foreach($paths as $k=>$v){
             delImage($v);
         }
-        D('GalleryMeta')->where($map)->delete();
-		$this->success('删除成功');
+        if(D('GalleryMeta')->where($map)->delete()){
+            echo json_encode(array('code'=>'1','msg'=>'删除成功'));
+        }else{
+            echo json_encode(array('code'=>'0','msg'=>'删除失败'));
+        }
     }
 
 }

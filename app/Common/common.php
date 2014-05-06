@@ -20,9 +20,11 @@ function page($count, $listRows = '10', $theme = '')
         $page->setConfig('next', '>');
         $theme = "%first% %upPage% %linkPage% %downPage% %end%";
     } else {
+        $page->setConfig('prev', '<<');
+        $page->setConfig('next', '>>');
         $page->setConfig('first','首页');
         $page->setConfig('last','尾页');
-        $theme = "%first% %prePage% %upPage% %linkPage% %downPage% %nextPage% %end% 共%totalPage%页";
+        $theme = "%first% %prePage% %upPage% %linkPage% %downPage% %nextPage% %end%";
     }
     $page->setConfig('theme',$theme);
     return $page;

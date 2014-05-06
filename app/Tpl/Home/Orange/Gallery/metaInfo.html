@@ -1,0 +1,34 @@
+<include file="Public:header" />
+<include file="Public:nav" />
+<h2 class="page-header">图片信息</h2>
+<include file="Public:breadcrumbs" />
+<form role="main" id="form" onsubmit="return edit()">
+    <input type="hidden" name="id" value="{$metaInfo.id}">
+    <input type="hidden" name="gallery_id" value="{$gallery.id}">
+    <div class="form-group">
+        <label for="title">名称</label>
+        <input type="text" name="title" class="form-control" id="title" value="{$metaInfo.title}">
+    </div>
+    <div class="form-group">
+        <label for="path">图片</label>
+        <notempty name="metaInfo[path]">
+        <img src="{$metaInfo.path_name}" height="50px">
+        </notempty>
+        <input class="form-control" id="path" name="pic" type="file">
+    </div>
+    <button role="submit" class="btn btn-primary">提交</button>
+</form>
+<include file="Public:footer" />
+<include file="Public:gallery" />
+<script>
+function edit(){
+    $.post('{:U("Home/Gallery/metaInfo")}',
+            $("#form").serialize(),
+            function(data){
+            calert(data.msg, data.code);
+            },
+            'json'
+            );
+        return false;
+}
+</script>

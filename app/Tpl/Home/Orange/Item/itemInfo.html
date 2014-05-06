@@ -1,6 +1,7 @@
 <include file="Public:header" />
 <include file="Public:nav" />
 <h2 class="page-header">栏目管理</h2>
+<include file="Public:breadcrumbs" />
 <form role="main" id="form" onsubmit="return edit()">
     <input type="hidden" name="item[id]" value="{$itemInfo.id}">
     <input type="hidden" name="item[parent_id]" value="{$parent_id}">
@@ -56,10 +57,10 @@
 <include file="Public:gallery" />
 <script>
 function edit(){
-    $.post('{:U("Home/Item/setting")}',
+    $.post('{:U("Home/Item/itemInfo")}',
             $("#form").serialize(),
             function(data){
-            alert(data.status, data.msg);
+            calert(data.msg, data.status);
             },
             'json'
             );

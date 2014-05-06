@@ -1,24 +1,32 @@
 <include file="Public:header" />
 <include file="Public:nav" />
 <h2 class="page-header">相册</h2>
-<div class="row">
-    <div>
-        <a class="btn btn-default" role="button" href="#">上传照片</a>
-        <a class="btn btn-default" role="modal" href="{:U('Home/Gallery/galleryAdd')}" data-toggle="modal" data-target="#myModal">创建相册</a>
-    </div>
-    <volist name="galleryList" id="vo">
-    <div class="col-sm-3 col-md-2">
-        <a href="{:U('Home/Gallery/metaList', array('gallery_id'=>$vo[id]))}" class="thumbnail">
-            <img src="{$vo.cover_name}" alt="wshow.co" height="200px">
-            <h4>{$vo.title}</h4>
-        </a>
-    </div>
-    </volist>
+<a class="btn btn-default" role="button" href="{:U('Home/Gallery/galleryInfo')}">创建相册</a>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>相册名称</th>
+                <th>描述</th>
+                <th>更新时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        <volist name="galleryList" id="vo">
+            <tr>
+                <td>{$vo.title}</td>
+                <td>{$vo.intro}</td>
+                <td>{$vo.date_modify|date='Y-m-d H:i', ###}</td>
+                <td>
+                    <a href="{:U('Gallery/metaList')}&gallery_id={$vo.id}" style="margin-right:10px;"><i class="fa fa-picture-o"></i></a>
+                    <a href="{:U('Gallery/galleryInfo')}&id={$vo.id}"><i class="fa fa-edit" style="margin-right:10px;"></i></a>
+                    <a href="#" style="color:red;" data-toggle="modal" data-target="#isdelete" data-href="{:U('Gallery/galleryDel',array('id'=>$vo[id]))}"><i class="fa fa-trash-o"></i></a>
+                </td>
+            </tr>
+        </volist>
+        </tbody>
+    </table>
 </div>
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
 <include file="Public:footer" />
+<include file="Public:modal_delete" />
