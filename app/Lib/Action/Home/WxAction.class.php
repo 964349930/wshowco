@@ -172,4 +172,39 @@ class WxAction extends BaseAction
         return $pushInfo;
     }
 
+    /**
+     *
+     */
+    public function get_wx_list()
+    {
+        $url = 'https://mp.weixin.qq.com/cgi-bin/getcontactinfo';
+        $url2 = 'https://mp.weixin.qq.com/cgi-bin/login?lang=zh_CN';
+        $url3 = 'https://mp.weixin.qq.com/cgi-bin/getcontactinfo?ajax=1&f=json&fakeid=2275366308&lang=zh_CN&random=0.5261212945143824&t=ajax-getcontactinfo&token=980882275';
+        $ch = curl_init();
+        $data = array(
+            'ajax'=>'1',
+            'f'=>'json',
+            'fakeid'=>'2787628281',
+            'lang'=>'zh_CN',
+            'random'=>'0.586590828487329',
+            't'=>'ajax-getcontactinfo',
+            'token'=>'980882275',
+        );
+        $data2 = array(
+            'f'=>'json',
+            'imgcode'=>'',
+            'pwd'=>'55d0e84efbab1786df01a5b60a9a91b5',
+            'username'=>'zhukaimiracle@hotmail.com',
+        );
+        curl_setopt($ch, CURLOPT_URL, $url3);
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch, CURLOPT_REFERER, "client website");
+        //curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        //curl_setopt($ch, CURLOPT_POSTFIELDS, $data2);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        print_r($result);exit;
+    }
 }

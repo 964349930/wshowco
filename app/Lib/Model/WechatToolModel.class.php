@@ -15,8 +15,8 @@ class WechatToolModel extends CommonModel {
     public function format($info, $arrFormatField){
         if(in_array('useStatus', $arrFormatField)){
             $result = D('WechatRoute')->where("user_id=".$_SESSION['uid']." AND keyword='".$info['name']."'")->find();
-            $info['useStatus'] = ($result) ? '已使用'
-                : '未使用';
+            $info['useStatus'] = ($result) ? '1'
+                : '0';
         }
         return $info;
     }

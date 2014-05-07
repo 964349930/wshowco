@@ -3,40 +3,31 @@
         <ul class="gallery ui-helper-reset ui-helper-clearfix">
             <volist name="imgList" id="vo">
             <li class="ui-widget-content  " >
-                <label for="path{$key+1}" class="thumbnail"><img src="{$vo.path_name}"  /></label>
-                <input type="radio" value="{$vo.id}" id="path{$key+1}" name="path" />
+            <label for="path{$key+1}" class="thumbnail"><img src="{$vo.path_name}" onclick="selImg({$vo[id]})" /></label>
             </li>
-			
             </volist>
         </ul>
+        <input type="hidden" id="selImgVal" value="" />
     </div>
 </div>
 
 <style>
 .gallery.custom-state-active { background: #eee; }
-<<<<<<< HEAD
 .gallery li { float: left; width: 20%; height:20%; padding: 0.4em; margin: 0 0.8em 0.8em 0; text-align: center;  overflow:hidden; border:0;  position:relative;}
 .gallery li a { float: right; }
 .gallery li a.ui-icon-zoomin { float: left; }
 .gallery li label{ padding:0; border:0; overflow:hidden; border-radius:0;}
 .gallery li .thumbnail > img{   cursor: pointer; }
 .gallery li input{ display:block; position:absolute; bottom:-50px; width:1px; height:1px;}
-=======
-.gallery li { float: left; width: 20%; height:20%; padding: 0.4em; margin: 0 0.4em 0.4em 0; text-align: center; }
-.gallery li a { float: right; }
-.gallery li a.ui-icon-zoomin { float: left; }
-.gallery li label{ padding:0; border:0; overflow:hidden; }
-.gallery li img {   cursor: pointer; }
-.gallery li input{ display:block; margin-left:-100px;}
->>>>>>> 2090276262e0f025f8f9380b97f53391afa5ccd2
-
 </style>
 <script>
+function selImg(id){
+    $("#selImgVal").val(id);
+}
   $(function(){
     var kuan=$(".gallery li").width();
 	$(".gallery li").height(kuan);
 	$(".gallery li label").height(kuan);
-<<<<<<< HEAD
 	var tuk=$(".gallery li .thumbnail > img");
 	for(var i=0;i<tuk.length;i++){
 	  var ww=tuk[i].width;
@@ -54,11 +45,12 @@
 		var ooto=(oo-kuan)/2;
 		tuk[i].style.left="-"+wwto+"px";
         tuk[i].style.bottom="-"+ooto+"px";
-		
-	  }
+      }
 	}
-=======
->>>>>>> 2090276262e0f025f8f9380b97f53391afa5ccd2
+	$(".gallery li").click(function(){
+	  $(this).aadClass("active");
+	});
+	
   })
 </script>
 

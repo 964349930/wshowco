@@ -29,8 +29,15 @@
   <div class="row">
   <!-- Left Menu -->
     <div class="col-sm-3 col-md-2 sidebar">
-        <img class="img-circle img-responsive" src="{$_SESSION[userInfo][avatar_name]}" style="height:80px;width:50%;">
-        <p style="color:#fff;">{$_SESSION[userInfo][name]}</p>
+	<div class="user-data clearfix">
+        <img class="img-circle img-responsive fl" src="{$_SESSION[userInfo][avatar_name]}" style="height:68px;width:68px;">
+        <h4 style="color:#fff;">{$_SESSION[userInfo][name]}</h4>
+		<p>
+		  <a href="##"><i class="fa fa-user"></i></a>
+		  <a href="##"><i class="fa fa-envelope-o"></i></a>
+		  <a href="##"><i class="fa fa fa-sign-out"></i></a>
+		</p>
+	</div>	
       <ul class="nav nav-sidebar" id="index">
         <volist name="menu[0][menu]" id="vo">
         <li>
