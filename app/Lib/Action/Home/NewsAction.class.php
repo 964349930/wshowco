@@ -32,12 +32,9 @@ class NewsAction extends HomeAction{
 			$newsList[$k] = $newsObj->format($v, $arrFormatField);
 		}
 		$tplData = array( 
-			'addUrl'   => U('Home/News/newsInfo'),
-            'subUrl'   => U('Home/News/metaList'),
-			'editUrl'  => U('Home/News/newsInfo'),
-			'delUrl'   => U('Home/News/delNews'),
             'newsList' => $newsList,
 			'pageHtml' => $pageHtml,
+            'current' => 'news_news',
 		);
 		$this->assign($tplData);
 		$this->display();
@@ -54,7 +51,7 @@ class NewsAction extends HomeAction{
                 $this->assign('newsInfo', D('WechatNews')->getInfoById($id));
                 $this->assign('routeInfo', $routeInfo);
             }
-            $this->assign('editUrl', U('Home/News/newsInfo'));
+            $this->assign('current', 'news_news');
             $this->display();
             exit;
         }
@@ -83,7 +80,7 @@ class NewsAction extends HomeAction{
                 $this->assign('metaInfo', $metaInfo);
             }
             $this->assign('keyword', $keyword);
-            $this->assign('editUrl', U('Home/News/special'));
+            $this->assign('current', 'news_sub');
             $this->display();
             exit;
         }
@@ -231,11 +228,9 @@ class NewsAction extends HomeAction{
             $textList[$k] = D('WechatText')->format($v, $arrFormatField);
         }
 		$textTpl = array(
-			'addUrl' => U('Home/News/textInfo'),
-			'editUrl' => U('Home/News/textInfo'),
-			'delUrl' => U('Home/News/delText'),
 			'pageHtml' => $pageHtml,
 			'textList' => $textList,
+            'current' => 'news_text',
 		);
 		$this->assign($textTpl);
 		$this->display();

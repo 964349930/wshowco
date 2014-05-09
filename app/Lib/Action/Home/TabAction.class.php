@@ -7,6 +7,36 @@
 class TabAction extends HomeAction
 {
     /**
+     * set the breadcrumbs
+     */
+    private function setBCrumbs($id)
+    {
+        $result = $this->get_ids($id);
+        $result = array_reverse($result);
+        if(!empty($id)){
+            $result = array_merge($result, array($id));
+        }
+        foreach($result as $k=>$v){
+            $this->breadcrumbs[$k+1]['id'] = $v;
+            $title = D('Tab')->where('id='.$v)->getField('title');
+            $this->breadcrumbs[$k+1]['title'] = ($title) ? $title : '菜单列表';
+            $this->breadcrumbs[$k+1]['url'] = U('Tab/tabList', array('parent_id'=>$v));
+        }
+    }
+
+    /**
+     * get parent_id for breadcrumbs
+     */
+    private function get_ids($id, $i=0)
+    {
+        $pid[$i] = D('Tab')->where('id='.$id)->getField('parent_id');
+        if(!empty($pid[$i])){
+            $pid = array_merge($pid, $this->get_ids($pid[$i],$i+1));
+        }
+        return $pid;
+    }
+
+    /**
      * Tab list
      */
     public function tabList()
@@ -20,12 +50,12 @@ class TabAction extends HomeAction
         $arrMap['parent_id'] = array('eq', $parent_id);
         $arrOrder = array('sort_order');
         $tabList = $tabObj->getList($arrField, $arrMap, $arrOrder);
+        $this->setBCrumbs($parent_id);
         $data = array(
+            'breadcrumbs' => $this->breadcrumbs,
             'parent_id' => $parent_id,
             'tabList' => $tabList,
-            'tabInfoUrl' => U('Home/Tab/tabInfo'),
-            'subListUrl' => U('Home/Tab/tabList'),
-            'tabDelUrl' => U('Home/Tab/tabDel'),
+            'current' => 'tab_list',
         );
         $this->assign($data);
         $this->display();
@@ -38,7 +68,7 @@ class TabAction extends HomeAction
     {
         $tabObj = D('Tab');
         if(empty($_POST)){
-            $tab_id = $this->_get('tab_id', 'intval');
+            $tab_id = $this->_get('id', 'intval');
             if(!empty($tab_id)){
                 $tabInfo = $tabObj->getInfoById($tab_id);
                 $parent_id = $tabInfo['parent_id'];
@@ -46,8 +76,10 @@ class TabAction extends HomeAction
             }else{
                 $parent_id = $this->_get('parent_id', 'intval');
             }
+            $this->setBCrumbs($parent_id);
+            $this->assign('current', 'tab_list');
+            $this->assign('breadcrumbs', $this->breadcrumbs);
             $this->assign('parent_id', $parent_id);
-            $this->assign('tabInfoUrl', U('Home/Tab/tabInfo'));
             $this->display();
             exit;
         }
@@ -55,11 +87,18 @@ class TabAction extends HomeAction
         $data['date_modify'] = time();
         if(empty($data['id'])){
             $data['date_add'] = time();
-            $tabObj->add($data);
+            if($tabObj->add($data)){
+                echo json_encode(array('code'=>'1','msg'=>'操作成功'));
+            }else{
+                echo json_encode(array('code'=>'2','msg'=>'操作失败'));
+            }
         }else{
-            $tabObj->save($data);
+            if($tabObj->save($data)){
+                echo json_encode(array('code'=>'1','msg'=>'操作成功'));
+            }else{
+                echo json_encode(array('code'=>'2','msg'=>'操作失败'));
+            }
         }
-        $this->success('操作成功');
     }
 
     /**

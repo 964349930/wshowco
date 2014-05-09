@@ -22,8 +22,8 @@ class RssAction extends HomeAction
         }
         $data = array(
             'rssList' => $rssList,
-            'rssInfoUrl' => U('Home/Rss/rssInfo'),
-            'rssDelUrl' => U('Home/Rss/rssDel'),
+            'current' => 'rss_list',
+            'breadcrumbs' => $this->breadcrumbs,
         );
         $this->assign($data);
         $this->display();
@@ -36,24 +36,26 @@ class RssAction extends HomeAction
     {
         $rssObj = D('WechatRss');
         if(empty($_POST)){
-            $rss_id = $this->_get('rss_id', 'intval');
+            $rss_id = $this->_get('id', 'intval');
             if(!empty($rss_id)){
                 $this->assign('rssInfo', $rssObj->getInfoById($rss_id));
                 $this->assign('routeInfo', D('WechatRoute')->getRoute('rss', $rss_id));
             }
-            $this->assign('rssInfoUrl', U('Home/Rss/rssInfo'));
+            $this->breadcrumbs['1'] = array('title' => 'RSS回复列表','url' => U('Rss/rssList'));
+            $this->assign('breadcrumbs', $this->breadcrumbs);
+            $this->assign('current', 'rss_list');
             $this->display();
             exit;
         }
         $data = $this->_post('rss');
         $route = $this->_post('route');
         if(!is_numeric($data['count'])){
-            $this->error('请输入数字');
+            echo json_encode(array('code'=>'0','msg'=>'请输入数字'));exit;
         }elseif(($data['count'] < 1) OR ($data['count'] > 8)){
-            $this->error('数字应在1到8之间');
+            echo json_encode(array('code'=>'0','msg'=>'数字应在1-8之间'));exit;
         }
         if(!D('WechatRoute')->checkKeyword($route['keyword'], $data['id'])){
-            $this->error('关键字不可用');
+            echo json_encode(array('code'=>'0','msg'=>'关键字不可用'));exit;
         }
         $data['date_modify'] = time();
         $data['url'] = htmlspecialchars_decode($data['url']);
@@ -65,8 +67,12 @@ class RssAction extends HomeAction
             $rssObj->save($data);
             $obj_id = $data['id'];
         }
-        D('WechatRoute')->updateRoute('rss', $obj_id, $route);
-        $this->success('操作成功');
+        if(!empty($obj_id)){
+            D('WechatRoute')->updateRoute('rss', $obj_id, $route);
+            echo json_encode(array('code'=>'1','msg'=>'操作成功'));
+        }else{
+            echo json_encode(array('code'=>'0','msg'=>'操作失败'));
+        }
     }
 
     /**
@@ -88,7 +94,10 @@ class RssAction extends HomeAction
 		}
 		$map['id'] = $routeMap['obj_id'] = array('in', $delIds);
         D('WechatRoute')->delRoute('rss', $routeMap);
-		D('WechatRss')->where($map)->delete();
-		$this->success('删除成功');
+        if(D('WechatRss')->where($map)->delete()){
+            echo json_encode(array('code'=>'1','msg'=>'删除成功'));
+        }else{
+            echo json_encode(array('code'=>'0','msg'=>'删除失败'));
+        }
     }
 }

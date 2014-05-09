@@ -11,7 +11,7 @@ class GalleryAction extends HomeAction
      */
     public function uploadImage()
     {
-		if(!empty($_FILES['pic']['name'])){
+		if(isset($_FILES['pic'])){
 			$picList = uploadPic();
 			if($picList['code'] != 'error'){
 				$id = D('GalleryMeta')->addImg($picList['pic']['savename']);
@@ -19,7 +19,8 @@ class GalleryAction extends HomeAction
             if(!empty($id)){
                 echo $id;
             }else{
-                echo 'upload image field';
+                //echo 'upload image field';
+                print_r($_POST);
             }
 		}else{
             echo 'img is null';
