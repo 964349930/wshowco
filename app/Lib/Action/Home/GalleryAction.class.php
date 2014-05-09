@@ -11,7 +11,10 @@ class GalleryAction extends HomeAction
      */
     public function uploadImage()
     {
-		if(isset($_FILES['pic'])){
+        
+        print_r($_FILES);
+        /*
+		//if(isset($_FILES['pic'])){
 			$picList = uploadPic();
 			if($picList['code'] != 'error'){
 				$id = D('GalleryMeta')->addImg($picList['pic']['savename']);
@@ -20,11 +23,13 @@ class GalleryAction extends HomeAction
                 echo $id;
             }else{
                 //echo 'upload image field';
-                print_r($_POST);
+                print_r($picList);
             }
+            /*
 		}else{
             echo 'img is null';
         }
+             */
     }
 
 

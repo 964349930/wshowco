@@ -1,12 +1,13 @@
 <?php
 if (isset($_FILES['myFile'])) {
-       move_uploaded_file($_FILES['myFile']['tmp_name'], "uploads/" . $_FILES['myFile']['name']);
+    print_r($_FILES);exit;
+       move_uploaded_file($_FILES['myFile']['tmp_name'], "./data/" . $_FILES['myFile']['name']);
     exit;}?><!DOCTYPE html><html><head>
     <title>dnd binary upload</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <script type="text/javascript">
         function sendFile(file) {
-            var uri = "/index.php";
+            var uri = "./uploadFiled.php";
             var xhr = new XMLHttpRequest();
             var fd = new FormData();
             
