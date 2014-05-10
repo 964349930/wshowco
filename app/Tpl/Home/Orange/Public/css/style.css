@@ -38,7 +38,6 @@ body {
     overflow-x: hidden;
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
     background-color: #363B3F;
- 
   }
 }
 
@@ -53,10 +52,9 @@ body {
   padding-left: 20px;
   color: #aaa;
   border-top:1px solid #5C5C5C;
-  background: none ;
+  background: none;
   outline:none;
   position:relative;
- 
 }
 .nav-sidebar > li.active > a span.selected{
    background-image: url("../img/sidebar-menu-arrow.png");
@@ -72,7 +70,6 @@ body {
       color:#fff;
       background-color: #E02222 ;
 }
- 
 .nav-sidebar > .active > a {
   color: #fff;
   background-color: #428bca;
@@ -141,26 +138,17 @@ body {
 .nav-sidebar > li  ul{  padding:0;}
 .nav-sidebar > li  ul > li {
     background: #303030;
-    margin-bottom: 0;
-    margin-left: 0;
-    margin-right: 0;
     margin-top: 1px !important;
-    padding: 0;
-}
-.nav-sidebar > li  ul > li  a{
-background: none;
-    display: block;
     font-size: 14px;
     font-weight: 300;
-    margin: 0; 
-   padding-left: 44px !important;
+    padding-left: 44px !important;
     padding-bottom: 8px;
     padding-right: 0;
     padding-top: 8px;
     text-decoration: none;
-	color:#AEB2B7;
-	}
-.nav-sidebar > li  ul > li  a:hover,.nav-sidebar > li  ul > li.active  a{ background: #666; color:#fff;}	
+    color:#AEB2B7;
+}
+.nav-sidebar > li  ul > li:hover,.nav-sidebar > li  ul > li.active  { background: #666; color:#fff;}
 .fl{ float:left; display:inline;}
 .clearfix:after{content:"."; display:block; height:0; clear:both; visibility:hidden}
 .clearfix{display:inline-block}

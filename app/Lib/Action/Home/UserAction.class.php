@@ -6,14 +6,6 @@
 */
 class UserAction extends HomeAction{
 
-    /**
-     * initialize
-     */
-    public function _initialize()
-    {
-        parent::_initialize();
-    }
-
 	/**
 	 * 会员列表
 	 */
@@ -76,9 +68,7 @@ class UserAction extends HomeAction{
 		    $id = $_SESSION['uid'];
 		    $userInfo = $userObj->getInfoById($id);
 		    $userInfo = $userObj->format($userInfo, array('url', 'avatar_name'));
-		    $this->assign('editUrl', U('Home/User/basic'));
             $this->assign('userInfo', $userInfo);
-            $this->assign('current', 'user_basic');
 		    $this->display();
             exit;
         }
@@ -90,9 +80,9 @@ class UserAction extends HomeAction{
 		}
         $result = $userObj->save($data);
         if(empty($result)){
-            echo json_encode(array('status'=>'0','msg'=>'更新错误'));
+            echo json_encode(array('code'=>'0','msg'=>'更新错误'));
         }else{
-            echo json_encode(array('status'=>'1','msg'=>'更新成功'));
+            echo json_encode(array('code'=>'1','msg'=>'更新成功'));
         }
 	}
 
@@ -191,4 +181,4 @@ class UserAction extends HomeAction{
         $this->success('操作成功');
     }
 
-} 
+}

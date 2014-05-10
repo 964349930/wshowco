@@ -1,7 +1,5 @@
-<include file="Public:header" />
-<include file="Public:nav" />
 <h2 class="page-header">微网设置</h2>
-<form role="main" id="form" onsubmit="return edit()">
+<form role="main" id="form" onsubmit="return editInfo('form')" data-href="{:U('Item/setting')}">
     <input type="hidden" name="id" value="{$siteInfo.id}">
     <div class="form-group">
         <label for="site_name">网站名称</label>
@@ -49,17 +47,4 @@
     </div>
     <button role="submit" class="btn btn-primary">更新</button>
 </form>
-<include file="Public:footer" />
 <include file="Public:gallery" />
-<script>
-function edit(){
-    $.post('{:U("Home/Item/setting")}',
-            $("#form").serialize(),
-            function(data){
-            calert(data.msg, data.status);
-            },
-            'json'
-            );
-        return false;
-}
-</script>

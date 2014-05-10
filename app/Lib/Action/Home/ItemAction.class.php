@@ -6,11 +6,6 @@
  */
 class ItemAction extends HomeAction
 {
-    public function _initialize()
-    {
-        parent::_initialize();
-    }
-
     /**
      * 微网设置
      */
@@ -76,13 +71,8 @@ class ItemAction extends HomeAction
         $this->setBCrumbs($parent_id);
         $data = array(
             'breadcrumbs' => $this->breadcrumbs,
-            'addUrl'   => U('Home/Item/itemInfo', array('parent_id'=>$parent_id)),
-            'editUrl'  => U('Home/Item/itemInfo'),
-            'delUrl'   => U('Home/Item/del'),
-            'subUrl'   => U('Home/Item/itemList'),
             'itemList' => $itemList,
             'pageHtml' => $pageHtml,
-            'current'  => 'site_item',
             'parent_id' => $parent_id,
         );
         $this->assign($data);
@@ -142,7 +132,6 @@ class ItemAction extends HomeAction
             $this->assign('getExtValueList', U('Home/Ext/getExtValueList'));
             $this->assign('parent_id', $parent_id);
             $this->assign('tplList', D('ThemeTpl')->getTplList());
-            $this->assign('infoUrl', U('Home/Item/itemInfo'));
             $this->assign('extUrl', U('Home/Ext/extList'));
             $this->assign('current', 'site_item');
             $this->assign('breadcrumbs', $this->breadcrumbs);
@@ -163,16 +152,16 @@ class ItemAction extends HomeAction
             $data['user_id'] = $_SESSION['uid'];
             $data['date_add'] = time();
             if($item_id = $itemObj->add($data)){
-                echo json_encode(array('status'=>1,'msg'=>'添加成功'));
+                echo json_encode(array('code'=>1,'msg'=>'添加成功'));
             }else{
-                echo json_encode(array('status'=>0,'msg'=>'添加失败'));
+                echo json_encode(array('code'=>0,'msg'=>'添加失败'));
             }
         }else{
             //更新操作
             if($itemObj->save($data)){
-                echo json_encode(array('status'=>1,'msg'=>'添加成功'));
+                echo json_encode(array('code'=>1,'msg'=>'添加成功'));
             }else{
-                echo json_encode(array('status'=>0,'msg'=>'添加失败'));
+                echo json_encode(array('code'=>0,'msg'=>'添加失败'));
             }
         }
         /*

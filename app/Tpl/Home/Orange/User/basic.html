@@ -1,7 +1,5 @@
-<include file="Public:header" />
-<include file="Public:nav" />
 <h2 class="page-header">基本信息</h2>
-  <form role="form" id="form" onsubmit="return edit()">
+  <form role="form" id="form" onsubmit="return editInfo('form')" data-href="{:U('User/basic')}">
     <input type="hidden" name="id" value="{$userInfo.id}">
     <div class="form-group">
         <label for="avatar">头像</label>
@@ -38,18 +36,4 @@
     </div>
     <button type="submit" class="btn btn-primary">更新</button>
   </form>
-<include file="Public:footer" />
 <include file="Public:gallery" />
-<script>
-function edit(){
-    $.post(
-            '{$editUrl}',
-            $("#form").serialize(),
-            function(data){
-                calert(data.msg, data.status);
-            },
-            'json'
-            );
-        return false;
-    }
-</script>

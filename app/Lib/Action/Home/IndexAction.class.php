@@ -7,7 +7,8 @@
 class IndexAction extends HomeAction {
 
     public function index() {
-        $this->redirect('User/basic');
+        //$this->redirect('User/basic');
+        $this->display();
     }
 
 

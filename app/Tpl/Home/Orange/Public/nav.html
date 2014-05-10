@@ -27,55 +27,51 @@
 </div>
 <div class="container-fluid">
   <div class="row">
-  <!-- Left Menu -->
+    <!-- Left Menu -->
     <div class="col-sm-3 col-md-2 sidebar">
-	<div class="user-data clearfix">
+      <div class="user-data clearfix">
         <img class="img-circle img-responsive fl" src="{$_SESSION[userInfo][avatar_name]}" style="height:68px;width:68px;">
         <h4 style="color:#fff;">{$_SESSION[userInfo][name]}</h4>
-		<p>
-		  <a href="##"><i class="fa fa-user"></i></a>
-		  <a href="##"><i class="fa fa-envelope-o"></i></a>
-		  <a href="##"><i class="fa fa fa-sign-out"></i></a>
-		</p>
-	</div>	
+	<p>
+	  <a href="##"><i class="fa fa-user"></i></a>
+	  <a href="##"><i class="fa fa-envelope-o"></i></a>
+	  <a href="##"><i class="fa fa fa-sign-out"></i></a>
+	</p>
+      </div>
       <ul class="nav nav-sidebar" id="index">
         <volist name="menu[0][menu]" id="vo">
-        <li>
+          <li>
             <a data-toggle="collapse" data-parent="#index" href="#{$vo.id}" class="sidebar-nav">
               <i class="fa fa-user"></i>
               <span style="margin-left:20px;">{$vo.title}</span>
               <i class="fa fa-angle-right pull-right"></i>
-			  <span class="selected"> </span>
+	      <span class="selected"> </span>
             </a>
             <ul id="{$vo.id}" class="collapse sub-menu">
               <volist name="vo[meta]" id="voo">
-                <li <eq name="current" value="$voo[tag]">class="active"</eq>>
-                  <a href="{$voo.url}">
-                    <i class="fa fa-book"></i>
-                    {$voo.title}
-                  </a>
+                <li data-href="{$voo.url}" style="color:#fff;" class="link" data-parent="#{$vo.id}">
+                  <i class="fa fa-book"></i>
+                  {$voo.title}
                 </li>
               </volist>
             </ul>
-           </li>
-          </volist>
-        </ul>
+          </li>
+        </volist>
+      </ul>
       <ul class="nav nav-sidebar hidden" id="setting">
         <volist name="menu[1][menu]" id="vo">
-        <li>
+          <li>
             <a data-toggle="collapse" data-parent="#setting" href="#{$vo.id}" class="sidebar-nav">
               <i class="fa fa-user"></i>
               <span style="margin-left:20px;">{$vo.title}</span>
               <i class="fa fa-angle-right pull-right"></i>
-			  <span class="selected"> </span>
+	      <span class="selected"> </span>
             </a>
             <ul id="{$vo.id}" class="collapse sub-menu">
               <volist name="vo[meta]" id="voo">
-                <li <eq name="current" value="$voo[tag]">class="active"</eq>>
-                  <a href="{$voo.url}">
-                    <i class="fa fa-book"></i>
-                    {$voo.title}
-                  </a>
+                <li data-href="{$voo.url}" style="color:#fff;" class="link">
+                  <i class="fa fa-book"></i>
+                  {$voo.title}
                 </li>
               </volist>
             </ul>

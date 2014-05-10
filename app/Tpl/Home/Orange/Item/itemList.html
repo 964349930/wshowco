@@ -1,8 +1,6 @@
-<include file="Public:header" />
-<include file="Public:nav" />
 <h2 class="page-header">文章列表</h2>
 <include file="Public:breadcrumbs" />
-<a class="btn btn-primary" href="{$addUrl}">添加文章</a>
+<button class="btn btn-primary" onclick="loadMain('{:U('Item/itemInfo',array('parent_id'=>$parent_id))}')">添加文章</button>
 <div class="table-responsive">
 <table class="table table-striped">
     <thead>
@@ -20,8 +18,8 @@
         <td>{$vo.intro}</td>
         <td>{$vo.date_modify|date='Y-m-d H:i', ###}</td>
         <td>
-            <a href="{$subUrl}&parent_id={$vo.id}" style="margin-right:10px;"><i class="fa fa-sitemap"></i></a>
-            <a href="{$editUrl}&id={$vo.id}"><i class="fa fa-edit" style="margin-right:10px;"></i></a>
+            <i class="fa fa-sitemap" onclick="loadMain('{:U('Item/itemList',array('parent_id'=>$vo[id]))}')" style="margin-right:10px;color:blue;"></i>
+            <i class="fa fa-edit" onclick="loadMain('{:U('Item/itemInfo',array('id'=>$vo[id]))}')" style="margin-right:10px;color:pink"></i>
             <a href="#" style="color:red;" data-toggle="modal" data-target="#isdelete"><i class="fa fa-trash-o"></i></a>
         </td>
     </tr>
@@ -29,5 +27,3 @@
     </tbody>
 </table>
 <include file="Public:modal_delete" />
-<include file="Public:footer" />
-
