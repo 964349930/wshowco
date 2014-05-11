@@ -24,9 +24,6 @@ function del(url){
             '',
             function(data){
                 calert(data.msg, data.code);
-                if(data.code == 1){
-                    window.location.reload();
-                }
                 },
             'json'
         );

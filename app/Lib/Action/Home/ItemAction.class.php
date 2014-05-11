@@ -33,12 +33,16 @@ class ItemAction extends HomeAction
 		}
         if(empty($data['id'])){
             $data['user_id'] = $_SESSION['uid'];
-            $siteObj->add($data);
+            if($siteObj->add($data)){
+                echo json_encode(array('code'=>'1','msg'=>'更新成功'));
+            }else{
+                echo json_encode(array('code'=>'0','msg'=>'更新失败'));
+            }
         }else{
             if($siteObj->save($data)){
-                echo json_encode(array('status'=>'1','msg'=>'更新成功'));
+                echo json_encode(array('code'=>'1','msg'=>'更新成功'));
             }else{
-                echo json_encode(array('status'=>'0','msg'=>'更新失败'));
+                echo json_encode(array('code'=>'0','msg'=>'更新失败'));
             }
         }
     }
@@ -152,16 +156,16 @@ class ItemAction extends HomeAction
             $data['user_id'] = $_SESSION['uid'];
             $data['date_add'] = time();
             if($item_id = $itemObj->add($data)){
-                echo json_encode(array('code'=>1,'msg'=>'添加成功'));
+                echo json_encode(array('code'=>'1','msg'=>'添加成功'));
             }else{
-                echo json_encode(array('code'=>0,'msg'=>'添加失败'));
+                echo json_encode(array('code'=>'0','msg'=>'添加失败'));
             }
         }else{
             //更新操作
             if($itemObj->save($data)){
-                echo json_encode(array('code'=>1,'msg'=>'添加成功'));
+                echo json_encode(array('code'=>'1','msg'=>'添加成功'));
             }else{
-                echo json_encode(array('code'=>0,'msg'=>'添加失败'));
+                echo json_encode(array('code'=>'0','msg'=>'添加失败'));
             }
         }
         /*
@@ -187,13 +191,17 @@ class ItemAction extends HomeAction
 			$delIds[] = $getId;
 		}
 		if (empty($delIds)) {
-			$this->error('请选择您要删除的数据');
+			echo json_encode(array('code'=>'0','msg'=>'请选择您要删除的数据'));
+            exit;
 		}
 		$where['id'] = array('in', $delIds);
         $where['parent_id'] = array('in', $delIds);
         $where['_logic'] = 'or';
         $map['_complex'] = $where;
-		D('Item')->where($map)->delete();
-		$this->success('删除成功');
+		if(D('Item')->where($map)->delete()){
+            echo json_encode(array('code'=>'1','msg'=>'删除成功'));
+        }else{
+            echo json_encode(array('code'=>'0','msg'=>'error'));
+        }
     }
 }

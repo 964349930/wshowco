@@ -33,17 +33,6 @@
 <script src="__PUBLIC__/jquery/jquery.hotkeys.js"></script>
 <script src="__PUBLIC__/bootstrap/bootstrap-wysiwyg.js"></script>
 <script>
-function edit(){
-    $.post('{$editUrl}',
-        $("#form").serialize(),
-        function(data){
-            alert(data);
-        },
-        'json'
-        );
-    return false;
-}
-
 $(function(){
     $("#editor").wysiwyg();
 })

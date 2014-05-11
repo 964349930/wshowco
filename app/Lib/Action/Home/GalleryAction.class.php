@@ -11,7 +11,7 @@ class GalleryAction extends HomeAction
      */
     public function uploadImage()
     {
-        
+
         print_r($_FILES);
         /*
 		//if(isset($_FILES['pic'])){
@@ -136,7 +136,6 @@ class GalleryAction extends HomeAction
         }
         $data = array(
             'galleryList' => $galleryList,
-            'current' => 'gallery_list',
         );
         $this->assign($data);
         $this->display();
@@ -171,13 +170,13 @@ class GalleryAction extends HomeAction
             if($galleryObj->add($data)){
                 echo json_encode(array('code'=>'1','msg'=>'创建成功'));
             }else{
-                echo json_encode(array('code'=>'2','msg'=>'创建失败'));
+                echo json_encode(array('code'=>'0','msg'=>'创建失败'));
             }
         }else{
             if($galleryObj->save($data)){
                 echo json_encode(array('code'=>'1','msg'=>'创建成功'));
             }else{
-                echo json_encode(array('code'=>'2','msg'=>'创建失败'));
+                echo json_encode(array('code'=>'0','msg'=>'创建失败'));
             }
         }
     }
@@ -197,7 +196,8 @@ class GalleryAction extends HomeAction
 			$delIds[] = $getId;
 		}
 		if (empty($delIds)) {
-			$this->error('请选择您要删除的数据');
+            echo json_encode(array('code'=>'0','msg'=>'请选择您要删除的数据'));
+            exit;
 		}
 		$map['id'] = $metaMap['gallery_id'] = array('in', $delIds);
         $paths = D('GalleryMeta')->where($metaMap)->getField('path', true);
@@ -242,7 +242,6 @@ class GalleryAction extends HomeAction
             'gallery_id' => $gallery_id,
             'metaList' => $metaList,
             'pageHtml' => $page->show(),
-            'current' => 'gallery_list',
         );
         $this->assign($data);
         $this->display();
@@ -265,7 +264,6 @@ class GalleryAction extends HomeAction
                 $gallery_id = $this->_get('gallery_id', 'intval');
             }
             $this->assign('gallery_id', $gallery_id);
-            $this->assign('current', 'gallery_list');
             $this->display();
             exit;
         }
@@ -282,13 +280,13 @@ class GalleryAction extends HomeAction
             if($metaObj->add($data)){
                 echo json_encode(array('code'=>'1','msg'=>'更新成功'));
             }else{
-                echo json_encode(array('code'=>'2','msg'=>'更新失败'));
+                echo json_encode(array('code'=>'0','msg'=>'更新失败'));
             }
         }else{
             if($metaObj->save($data)){
                 echo json_encode(array('code'=>'1','msg'=>'更新成功'));
             }else{
-                echo json_encode(array('code'=>'2','msg'=>'更新失败'));
+                echo json_encode(array('code'=>'0','msg'=>'更新失败'));
             }
         }
     }
@@ -308,7 +306,8 @@ class GalleryAction extends HomeAction
 			$delIds[] = $getId;
 		}
 		if (empty($delIds)) {
-			$this->error('请选择您要删除的数据');
+            echo json_encode(array('code'=>'0','msg'=>'请选择您要删除的数据'));
+            exit;
 		}
 		$map['id'] = array('in', $delIds);
         $paths = D('GalleryMeta')->where($map)->getField('path', true);

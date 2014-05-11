@@ -1,5 +1,5 @@
 <h2 class="page-header">相册</h2>
-<a class="btn btn-default" role="button" href="{:U('Home/Gallery/galleryInfo')}">创建相册</a>
+<button class="btn btn-primary" onclick="loadMain('{:U('Gallery/galleryInfo')}')">创建相册</button>
 <div class="table-responsive">
     <table class="table table-striped">
         <thead>
@@ -17,9 +17,9 @@
                 <td>{$vo.intro}</td>
                 <td>{$vo.date_modify|date='Y-m-d H:i', ###}</td>
                 <td>
-                    <a href="{:U('Gallery/metaList')}&gallery_id={$vo.id}" style="margin-right:10px;"><i class="fa fa-picture-o"></i></a>
-                    <a href="{:U('Gallery/galleryInfo')}&id={$vo.id}"><i class="fa fa-edit" style="margin-right:10px;"></i></a>
-                    <a href="#" style="color:red;" data-toggle="modal" data-target="#isdelete" data-href="{:U('Gallery/galleryDel',array('id'=>$vo[id]))}"><i class="fa fa-trash-o"></i></a>
+                    <i class="fa fa-picture-o" onclick="loadMain('{:U('Gallery/metaList', array('gallery_id'=>$vo[id]))}')" style="margin-right:10px;color:bule;x"></i>
+                    <i class="fa fa-edit" onclick="loadMain('{:U('Gallery/galleryInfo', array('id'=>$vo[id]))}')" style="margin-right:10px;"></i>
+                    <i class="fa fa-trash-o" data-toggle="modal" data-target="#isdelete" data-href="{:U('Gallery/galleryDel',array('id'=>$vo[id]))}"></i>
                 </td>
             </tr>
         </volist>

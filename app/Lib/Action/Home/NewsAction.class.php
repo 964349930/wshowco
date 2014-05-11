@@ -98,7 +98,6 @@ class NewsAction extends HomeAction{
         $news_id = D('WechatNews')->updateNews($news);
         D('WechatRoute')->updateRoute('news', $news_id, $route);
         D('WechatNewsMeta')->updateMeta($meta, $news_id);
-        $this->success('操作成功');
     }
 
 	/**

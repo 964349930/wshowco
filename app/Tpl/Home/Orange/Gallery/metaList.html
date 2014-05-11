@@ -1,7 +1,7 @@
 <!--link href="__PUBLIC__/fancybox/jquery.fancybox.css" rel="stylesheet"-->
 <h2 class="page-header">相册</h2>
 <include file="Public:breadcrumbs" />
-<a class="btn btn-default" role="button" href="{:U('Gallery/metaInfo', array('gallery_id'=>$gallery_id))}">上传照片</a>
+<button class="btn btn-primary" onclick="loadMain('{:U('Gallery/metaInfo',array('gallery_id'=>$gallery_id))}')">上传照片</button>
 <div class="table-responsive">
     <table class="table table-striped">
         <thead>
@@ -19,8 +19,8 @@
                 <td>{$vo.title}</td>
                 <td>{$vo.date_add|date='Y-m-d H:i', ###}</td>
                 <td>
-                    <a href="{:U('Gallery/metaInfo', array('id'=>$vo[id]))}"><i class="fa fa-edit" style="margin-right:10px;"></i></a>
-                    <a href="#" style="color:red;" data-toggle="modal" data-target="#isdelete" data-href="{:U('Gallery/metaDel', array('id'=>$vo[id]))}"><i class="fa fa-trash-o"></i></a>
+                    <i class="fa fa-edit" onclick="loadMain('{:U('Gallery/metaInfo',array('id'=>$vo[id]))}')" style="margin-right:10px;"></i>
+                    <i class="fa fa-trash-o" data-toggle="modal" data-target="#isdelete" data-href="{:U('Gallery/metaDel',array('id'=>$vo[id]))}"></i>
                 </td>
             </tr>
         </volist>

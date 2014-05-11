@@ -20,7 +20,7 @@
         <td>
             <i class="fa fa-sitemap" onclick="loadMain('{:U('Item/itemList',array('parent_id'=>$vo[id]))}')" style="margin-right:10px;color:blue;"></i>
             <i class="fa fa-edit" onclick="loadMain('{:U('Item/itemInfo',array('id'=>$vo[id]))}')" style="margin-right:10px;color:pink"></i>
-            <a href="#" style="color:red;" data-toggle="modal" data-target="#isdelete"><i class="fa fa-trash-o"></i></a>
+            <i class="fa fa-trash-o" data-toggle="modal" data-target="#isdelete" data-href="{:U('Item/del',array('id'=>$vo[id]))}"></i>
         </td>
     </tr>
     </volist>
