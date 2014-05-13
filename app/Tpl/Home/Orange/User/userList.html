@@ -1,0 +1,46 @@
+<h2 class="page-header">{$title}</h2>
+
+<!-- 按钮 -->
+<volist name="btn_list" id="vo">
+<button class="btn btn-primary" onclick="loadMain('{$vo.url}')">{$vo.title}</button>
+</volist>
+
+<div class="table-responsive">
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <volist name="tr_list" id="vo">
+            <th>{$vo}</th>
+            </volist>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+    <volist name="user_list" id="vo">
+    <tr>
+        <volist name="tr_list" id="voo">
+        <td>{$vo[$voo]}</td>
+        </volist>
+        <td>
+            <volist name="action_list" id="vo">
+            <eq name="vo[type]" value="edit">
+            <i class="fa fa-edit" onclick="loadMain('{$vo.url}')" style="margin-right:10px;"></i>
+            <else />
+            <i class="fa fa-trash-o" style="color:red;" data-toggle="modal" data-target="#isdelete" data-href="{:U('Rss/rssDel', array('id'=>$vo[id]))}"></i>
+            </eq>
+            </volist>
+        </td>
+    </tr>
+    </volist>
+    </tbody>
+</table>
+
+<!-- 分页 -->
+<notempty name="pages">
+    {$pages}
+</notempty>
+
+<!-- 插件列表 -->
+<volist name="plugin_list" id="vo">
+<include file="{$vo}" />
+</volist>

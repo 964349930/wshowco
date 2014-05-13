@@ -27,12 +27,23 @@ class UserAction extends HomeAction{
 			$userList[$k] = $userObj->format($v, $arrFormatField);
 		}
 		$tplData = array(
-			'userList' => $userList,
-            'userInfoUrl' => U('Home/User/basic'),
-            'siteInfoUrl' => U('Home/Item/setting'),
-			'addUrl' => U('Home/User/add'),
-            'delUrl' => U('Home/User/del'),
-		    'pageHtml' => $pageHtml,
+            'title' => '用户列表',
+            'btn_list' => array(
+                array(
+                    'title' => '添加用户',
+                    'url' => U('User/add'),
+                ),
+            ),
+            'tr_list' => array('用户名','类型','手机号码','注册时间','访问时间'),
+            'action_list' => array(
+                array(
+                    'type' => 'edit',
+                    'url' => U('User/info'),
+                ),
+            ),
+            'plugin_list' => array('modal_delete'),
+			'user_list' => $userList,
+		    'pages' => $pageHtml,
 		);
 		$this->assign($tplData);
 		$this->display();
