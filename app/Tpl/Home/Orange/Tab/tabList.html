@@ -1,14 +1,12 @@
-<include file="Public:header" />
-<include file="Public:nav" />
 <h2 class="page-header">系统菜单列表</h2>
 <include file="Public:breadcrumbs" />
-<a class="btn btn-primary" href="{:U('Tab/tabInfo', array('parent_id'=>$parent_id))}">添加菜单</a>
+<button class="btn btn-primary" onclick="loadMain('{:U('Tab/tabInfo', array('parent_id'=>$parent_id))}')">添加菜单</button>
 <div class="table-responsive">
 <table class="table table-striped">
     <thead>
         <tr>
             <th>标题</th>
-            <th>标志</th>
+            <th>图标</th>
             <th>排序</th>
             <th>修改时间</th>
             <th>操作</th>
@@ -18,17 +16,16 @@
     <volist name="tabList" id="vo">
     <tr>
         <td>{$vo.title}</td>
-        <td>{$vo.tag}</td>
+        <td><i class="fa fa-{$vo.ico}"></i></td>
         <td>{$vo.sort_order}</td>
         <td>{$vo.date_modify|date='Y-m-d H:i', ###}</td>
         <td>
-            <a href="{:U('Tab/tabList', array('parent_id'=>$vo[id]))}"><i class="fa fa-sitemap" style="margin-right:10px;"></i></a>
-            <a href="{:U('Tab/tabInfo', array('id'=>$vo[id]))}"><i class="fa fa-edit" style="margin-right:10px;"></i></a>
-            <a href="#" style="color:red;" data-toggle="modal" data-target="#isdelete" data-href="{:U('Tab/tabDel', array('id'=>$vo[id]))}"><i class="fa fa-trash-o"></i></a>
+            <i class="fa fa-sitemap" onclick="loadMain('{:U('Tab/tabList', array('parent_id'=>$vo[id]))}')" style="margin-right:10px;"></i>
+            <i class="fa fa-edit" onclick="loadMain('{:U('Tab/tabInfo', array('id'=>$vo[id]))}')" style="margin-right:10px;"></i>
+            <i class="fa fa-trash-o" data-toggle="modal" data-target="#isdelete" data-href="{:U('Tab/tabDel', array('id'=>$vo[id]))}"></i>
         </td>
     </tr>
     </volist>
     </tbody>
 </table>
-<include file="Public:footer" />
 <include file="Public:modal_delete" />

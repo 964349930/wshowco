@@ -42,7 +42,7 @@
         <volist name="menu[0][menu]" id="vo">
           <li>
             <a data-toggle="collapse" data-parent="#index" href="#{$vo.id}" class="sidebar-nav">
-              <i class="fa fa-user"></i>
+              <i class="fa fa-{$vo.ico}"></i>
               <span style="margin-left:20px;">{$vo.title}</span>
               <i class="fa fa-angle-right pull-right"></i>
 	      <span class="selected"> </span>
@@ -50,7 +50,7 @@
             <ul id="{$vo.id}" class="collapse sub-menu">
               <volist name="vo[meta]" id="voo">
                 <li data-href="{$voo.url}" style="color:#fff;" class="link" data-parent="#{$vo.id}">
-                  <i class="fa fa-book"></i>
+                <i class="fa fa-{$voo.ico}"></i>
                   {$voo.title}
                 </li>
               </volist>

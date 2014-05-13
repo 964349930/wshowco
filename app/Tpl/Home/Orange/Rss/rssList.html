@@ -1,5 +1,5 @@
 <h2 class="page-header">RSS订阅源回复</h2>
-<a class="btn btn-primary" href="{:U('Rss/rssInfo')}">添加RSS</a>
+<button class="btn btn-primary" onclick="loadMain('{:U('Rss/rssInfo')}')">添加RSS</button>
 <div class="table-responsive">
 <table class="table table-striped">
     <thead>
@@ -19,8 +19,8 @@
         <td>{$vo.url}</td>
         <td>{$vo.date_modify|date='Y-m-d H:i', ###}</td>
         <td>
-            <a href="{:U('Rss/rssInfo', array('id'=>$vo[id]))}"><i class="fa fa-edit" style="margin-right:10px;"></i></a>
-            <a href="#" style="color:red;" data-toggle="modal" data-target="#isdelete" data-href="{:U('Rss/rssDel', array('id'=>$vo[id]))}"><i class="fa fa-trash-o"></i></a>
+            <i class="fa fa-edit" onclick="loadMain('{:U('Rss/rssInfo', array('id'=>$vo[id]))}')" style="margin-right:10px;"></i>
+            <i class="fa fa-trash-o" style="color:red;" data-toggle="modal" data-target="#isdelete" data-href="{:U('Rss/rssDel', array('id'=>$vo[id]))}"></i>
         </td>
     </tr>
     </volist>

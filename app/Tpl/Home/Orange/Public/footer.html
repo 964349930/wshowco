@@ -19,23 +19,38 @@
     });
 
     /** set the defalut nav**/
-    $("nav-sidebar").collapse();
+    //$("nav-sidebar").collapse();
     /** default show the first nav **/
     $("li.link:first").parents("li").addClass("active");
+    $("li.link:first").parents("li").find("i.fa-angle-right").removeClass("fa-angle-right").addClass("fa-angle-down");
     $("li.link:first").parents("ul").collapse("show");
     var url = $("li.link:first").data("href");
     $(".main").load(url);
 
+    /** 右侧箭头效果 **/
+    $(".nav-sidebar li").click(function(){
+        $(this).find("i.fa-angle-right").removeClass("fa-angle-right").addClass("fa-angle-down");
+        if(!$(this).siblings("li").hasClass("active")){
+          $(this).siblings("li").find("i.fa-angle-down").removeClass("fa-angle-down").addClass("fa-angle-right");
+        }
+    });
+
     /** ajax load the main content **/
     $(".link").click(function(){
-      $(this).parents("li").addClass("active");
-      $(this).parent("ul").collapse("show");
-      $(this).parents("li").siblings("li").removeClass("active");
-      $(this).parents("li").siblings("li").find("ul").collapse("hide");
+      if(!$(this).parents("li").hasClass("active")){
+        /** 如果不是当前状态 **/
+        $(this).parents("li").addClass("active");
+
+        /** 定义激活状态的对象 **/
+        var active = $(this).parents("li").siblings("li").filter(".active");
+        active.removeClass("active");
+        active.children("ul").collapse("hide");
+      }
       var url = $(this).data('href');
       $(".main").load(url);
       });
   })
+  
 
 /** load main content **/
 function loadMain(url){

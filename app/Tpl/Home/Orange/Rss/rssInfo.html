@@ -1,6 +1,6 @@
 <h2 class="page-header">RSS信息</h2>
 <include file="Public:breadcrumbs" />
-  <form role="form" id="form" onsubmit="return edit()">
+<form role="form" id="form" onsubmit="return editInfo('form')" data-href="{:U('Rss/rssInfo')}">
     <input type="hidden" name="rss[id]" value="{$rssInfo.id}">
     <input type="hidden" name="route[id]" value="{$routeInfo.id}">
     <div class="form-group">
@@ -21,16 +21,3 @@
     </div>
     <button type="submit" class="btn btn-primary">更新</button>
   </form>
-<script>
-function edit(){
-    $.post(
-            '{:U(\'Rss/rssInfo\')}',
-            $("#form").serialize(),
-            function(data){
-                calert(data.msg, data.code);
-            },
-            'json'
-            );
-        return false;
-    }
-</script>

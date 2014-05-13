@@ -1,13 +1,18 @@
-<include file="Public:header" />
-<include file="Public:nav" />
 <h2 class="page-header">系统菜单信息</h2>
 <include file="Public:breadcrumbs" />
-  <form role="form" id="form" onsubmit="return edit()">
+<form role="form" id="form" onsubmit="return editInfo('form')" data-href="{:U('Tab/tabInfo')}">
     <input type="hidden" name="id" value="{$tabInfo.id}">
     <input type="hidden" name="parent_id" value="{$parent_id}">
     <div class="form-group">
       <label for="title">标题</label>
       <input type="text" class="form-control" id="title" name="title" value="{$tabInfo.title}">
+    </div>
+    <div class="form-group">
+      <label for="ico">图标</label>
+      <notempty name="tabInfo[ico]">
+      <i class="fa fa-{$tabInfo.ico}"></i>
+      </notempty>
+      <input class="form-control" id="ico" name="ico" type="text" value="{$tabInfo.ico}">
     </div>
     <div class="form-group">
       <label for="tag">标志</label>
@@ -23,17 +28,3 @@
     </div>
     <button type="submit" class="btn btn-primary">更新</button>
   </form>
-<include file="Public:footer" />
-<script>
-function edit(){
-    $.post(
-            '{:U(\'Tab/tabInfo\')}',
-            $("#form").serialize(),
-            function(data){
-                calert(data.msg, data.code);
-            },
-            'json'
-            );
-        return false;
-    }
-</script>
