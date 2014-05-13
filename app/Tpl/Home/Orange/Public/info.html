@@ -1,0 +1,24 @@
+<h2 class="page-header">{$title}</h2>
+  <form role="form" id="form" onsubmit="return editInfo('form')" data-href="{$url}">
+    <volist name="list" id="vo">
+    <div class="form-group">
+        <label for="{$vo.flag}">{$vo.title}</label>
+        <if condition="$vo[type] eq image">
+          <notempty name="userInfo[$vo[name]]">
+            <img src="{$userInfo[$vo[name]]}" class="img-responsive" id="changeImg" height="60" data-toggle="tooltip" title="点击更换图片">
+          </notempty>
+          <input class="form-control" id="{$vo.flag}" name="{$vo.name}" type="hidden" value="{$userInfo[$vo[name]]}">
+        <elseif condition="$vo[type] eq textarea">
+          <textarea class="form-control" id="{$vo.flag}" name="{$vo.name}" cols="80" rows="4">{$userInfo[$vo[name]]}</textarea>
+        <else />
+          <input class="form-control" id="{$vo.flag}" name="{$vo.name}" type="{$vo.type_name}" value="{$userInfo[$vo[name]]}">
+        </if>
+    </div>
+    </volist>
+
+    <button type="submit" class="btn btn-primary">更新</button>
+  </form>
+
+<volist name="plugin_list" id="vo">
+<include file="{$vo}" />
+</volist>

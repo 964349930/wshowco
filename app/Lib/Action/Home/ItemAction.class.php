@@ -17,11 +17,27 @@ class ItemAction extends HomeAction
             $siteInfo = $siteObj->where('user_id='.$user_id)->find();
             $siteInfo = $siteObj->format($siteInfo, array('logo_name', 'url', 'theme_name'));
             $galleryList = D('Gallery')->where('user_id='.$user_id)->select();
+            $tpl_data = array(
+                'title' => 'Setting',
+                'url' => U('Item/setting'),
+                'list'=>array(
+                    array('name'=>'id','type'=>'hidden'),
+                    array('title'=>'Site_name','flag'=>'name','name'=>'site_name','type'=>'text'),
+                    array('title'=>'Logo','flag'=>'logo','name'=>'logo','type'=>'image'),
+                    array('title'=>'Tel','flag'=>'tel','name'=>'tel','type'=>'tel'),
+                    array('title'=>'address','flag'=>'address','name'=>'address','type'=>'text'),
+                    array('title'=>'email','flag'=>'email','name'=>'email','type'=>'email'),
+                    array('title'=>'Latitude','flag'=>'latitude','name'=>'latitude','type'=>'text'),
+                    array('title'=>'longitude','flag'=>'longitude','name'=>'longitude','type'=>'text'),
+                    array('title'=>'Banner','flag'=>'banner','name'=>'banner_list','type'=>'select'),
+                ),
+            );
             $this->assign('galleryList', $galleryList);
             $this->assign('siteInfo', $siteInfo);
             $this->assign('settingUrl', U('Home/Item/setting'));
             $this->assign('current', 'site_setting');
-            $this->display();
+            $this->assign($tpl_data);
+            $this->display('Public:info');
             exit;
         }
         $data = $this->_post();

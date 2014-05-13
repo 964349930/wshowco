@@ -10,7 +10,7 @@
     <thead>
         <tr>
             <volist name="tr_list" id="vo">
-            <th>{$vo}</th>
+            <th>{$vo.title}</th>
             </volist>
             <th>操作</th>
         </tr>
@@ -19,7 +19,7 @@
     <volist name="user_list" id="vo">
     <tr>
         <volist name="tr_list" id="voo">
-        <td>{$vo[$voo]}</td>
+        <td>{$vo[$voo[flat]]}</td>
         </volist>
         <td>
             <volist name="action_list" id="vo">

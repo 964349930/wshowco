@@ -34,7 +34,13 @@ class UserAction extends HomeAction{
                     'url' => U('User/add'),
                 ),
             ),
-            'tr_list' => array('用户名','类型','手机号码','注册时间','访问时间'),
+            'tr_list' => array(
+                array('title'=>'用户名','flag'=>'name'),
+                array('title'=>'类型','flag'=>'group'),
+                array('title'=>'手机号码','flag'=>'mobile'),
+                array('title'=>'注册时间','flag'=>'date_reg'),
+                array('title'=>'访问时间','flag'=>'date_login')
+            ),
             'action_list' => array(
                 array(
                     'type' => 'edit',
@@ -79,8 +85,23 @@ class UserAction extends HomeAction{
 		    $id = $_SESSION['uid'];
 		    $userInfo = $userObj->getInfoById($id);
 		    $userInfo = $userObj->format($userInfo, array('url', 'avatar_name'));
-            $this->assign('userInfo', $userInfo);
-		    $this->display();
+            $tpl_data = array(
+                'title'=>'User basic',
+                'url'=>U('User/basic'),
+                'list'=>array(
+                    array('name'=>'id','type'=>'hidden'),
+                    array('title'=>'Name','flag'=>'name','name'=>'name','type'=>'text'),
+                    array('title'=>'Avatar','flag'=>'avatar','name'=>'avatar','type'=>'image'),
+                    array('title'=>'Phone','flag'=>'mobile','name'=>'mobile','type'=>'tel'),
+                    array('title'=>'Url','flag'=>'url','name'=>'url','type'=>'url'),
+                    array('title'=>'Token','flag'=>'token','name'=>'flag','type'=>'text'),
+                    array('title'=>'APPID','flag'=>'appid','name'=>'appid','type'=>'text'),
+                    array('title'=>'APPSECRECT','flag'=>'appsecrect','name'=>'appsecrect','type'=>'text'),
+                ),
+                'userInfo'=>$userInfo,
+            );
+            $this->assign($tpl_data);
+		    $this->display('Public:info');
             exit;
         }
 		if(!empty($_FILES['pic']['name'])){
