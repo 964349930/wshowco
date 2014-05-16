@@ -11,48 +11,16 @@ class UserAction extends HomeAction{
 	 */
 	public function userList(){
 		$userObj = D('User');
-		$arrField = array('*');
-		$arrMap = array();
-		$keyword = $this->_post('keyword');
-		if(!empty($keyword)){
-			$arrMap['name'] = array('like', '%'.$keyword.'%');
-		}
-		$arrOrder = array();
-		$count = $userObj->getCount($arrMap);
-		$page = page($count);
-		$pageHtml = $page->show();
-		$userList = $userObj->getList($arrField, $arrMap, $arrOrder, $page->firstRow, $page->listRows);
-		$arrFormatField = array('group_name', 'avatar_name', 'date_log_text');
+		$count = $userObj->getCount();
+        $page = page($count);
+        $fileList = array(
+
+		$userList = $userObj->limit($page->firstRow, $page->listRows)->select();
 		foreach($userList as $k => $v){
 			$userList[$k] = $userObj->format($v, $arrFormatField);
 		}
-		$tplData = array(
-            'title' => '用户列表',
-            'btn_list' => array(
-                array(
-                    'title' => '添加用户',
-                    'url' => U('User/add'),
-                ),
-            ),
-            'tr_list' => array(
-                array('title'=>'用户名','flag'=>'name'),
-                array('title'=>'类型','flag'=>'group'),
-                array('title'=>'手机号码','flag'=>'mobile'),
-                array('title'=>'注册时间','flag'=>'date_reg'),
-                array('title'=>'访问时间','flag'=>'date_login')
-            ),
-            'action_list' => array(
-                array(
-                    'type' => 'edit',
-                    'url' => U('User/info'),
-                ),
-            ),
-            'plugin_list' => array('modal_delete'),
-			'user_list' => $userList,
-		    'pages' => $pageHtml,
-		);
 		$this->assign($tplData);
-		$this->display();
+		$this->display("Public:list");
 	}
 
 	/**
@@ -89,14 +57,6 @@ class UserAction extends HomeAction{
                 'title'=>'User basic',
                 'url'=>U('User/basic'),
                 'list'=>array(
-                    array('name'=>'id','type'=>'hidden'),
-                    array('title'=>'Name','flag'=>'name','name'=>'name','type'=>'text'),
-                    array('title'=>'Avatar','flag'=>'avatar','name'=>'avatar','type'=>'image'),
-                    array('title'=>'Phone','flag'=>'mobile','name'=>'mobile','type'=>'tel'),
-                    array('title'=>'Url','flag'=>'url','name'=>'url','type'=>'url'),
-                    array('title'=>'Token','flag'=>'token','name'=>'flag','type'=>'text'),
-                    array('title'=>'APPID','flag'=>'appid','name'=>'appid','type'=>'text'),
-                    array('title'=>'APPSECRECT','flag'=>'appsecrect','name'=>'appsecrect','type'=>'text'),
                 ),
                 'userInfo'=>$userInfo,
             );

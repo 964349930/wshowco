@@ -5,6 +5,34 @@
  * Created Time: 2013-11-15 9:02:37
 */
 class UserModel extends CommonModel{
+    /**
+     * action list
+     */
+    public function get_action_list()
+    {
+        return array(
+            array('title'=>'添加用户','url'=>U('User/add')),
+            array('title'=>'','type'=>'','url'=>U('User/info')),
+        );
+    }
+
+    /**
+     * file list
+     */
+    public function get_file_list()
+    {
+        return array(
+            array('name'=>'id','type'=>'hidden'),
+            array('title'=>'用户名','flag'=>'name','name'=>'name','type'=>'text'),
+            array('title'=>'头像','flag'=>'avatar','name'=>'avatar','type'=>'image'),
+            array('title'=>'手机号码','flag'=>'mobile','name'=>'mobile','type'=>'tel'),
+            array('title'=>'接口地址','flag'=>'url','name'=>'url','type'=>'url'),
+            array('title'=>'借口凭证','flag'=>'token','name'=>'flag','type'=>'text'),
+            array('title'=>'APPID','flag'=>'appid','name'=>'appid','type'=>'text'),
+            array('title'=>'APPSECRECT','flag'=>'appsecrect','name'=>'appsecrect','type'=>'text'),
+        );
+    }
+
 	/**
 	 * 输出格式化
 	 */
