@@ -1,7 +1,6 @@
-<include file="Public:header" />
-<include file="Public:nav" />
 <h2 class="page-header">主题信息</h2>
-<form role="form" id="form" onsubmit="return edit()">
+<form role="form" id="form" onsubmit="return editInfo('form')" data-href="{:U('Theme/themeInfo')}">
+    <input type="hidden" name="id" value="{$themeInfo.id}">
     <div class="form-group">
         <label for="name">主题名称</label>
         <input type="text" class="form-control" id="name" name="name" value="{$themeInfo.name}">
@@ -16,16 +15,3 @@
     </div>
     <button type="submit" class="btn btn-primary">更新</button>
 </form>
-<include file="Public:footer" />
-<script>
-function edit(){
-    $.post('{$themeInfoUrl}',
-            $("#form").serialize(),
-            function(data){
-            alert(data.status, data.msg);
-            },
-            'json'
-            );
-    return false;
-}
-</script>

@@ -28,10 +28,6 @@ class ThemeAction extends HomeAction{
 			$themeList[$k] = $themeObj->format($v, $arrFormatField);
 		}
 		$tplData = array(
-			'useUrl' => U('Home/Theme/toUse'),
-            'tplListUrl' => U('Home/Theme/tplList'),
-            'themeInfoUrl' => U('Home/Theme/themeInfo'),
-			'delUrl' => U('Home/Theme/del'),
 			'pageHtml' => $pageHtml,
 			'themeList' => $themeList,
 		);
@@ -47,10 +43,7 @@ class ThemeAction extends HomeAction{
 		$id = intval($this->_get('id'));
         $arrMap['user_id'] = array('eq', $_SESSION['uid']);
 		if($siteObj->where($arrMap)->setField('theme_id', $id)){
-			$url = U('Home/Item/setting');
-			$this->success('使用主题成功', $url);
 		}else{
-			$this->error('使用主题失败');
 		}
 	}
 
@@ -61,7 +54,7 @@ class ThemeAction extends HomeAction{
     {
         $themeObj = D('Theme');
         if(empty($_POST)){
-            $theme_id = $this->_get('theme_id', 'intval');
+            $theme_id = $this->_get('id', 'intval');
             if(!empty($theme_id)){
                 $themeInfo = $themeObj->getInfoById($theme_id);
                 $themeInfo = $themeObj->format($themeInfo, array('cover_name'));
@@ -84,15 +77,15 @@ class ThemeAction extends HomeAction{
         if(empty($data['id'])){
             $data['date_add'] = time();
             if($themeObj->add($data)){
-                echo json_encode(array('status'=>'alert-success','msg'=>'Success'));
+                echo json_encode(array('code'=>'1','msg'=>'主题添加成功'));
             }else{
-                echo json_encode(array('status'=>'alert-danger','msg'=>'Error'));
+                echo json_encode(array('code'=>'0','msg'=>'主题添加失败'));
             }
         }else{
             if($themeObj->save($data)){
-                echo json_encode(array('status'=>'alert-success','msg'=>'Success'));
+                echo json_encode(array('code'=>'1','msg'=>'主题添加成功'));
             }else{
-                echo json_encode(array('status'=>'alert-danger','msg'=>'Error'));
+                echo json_encode(array('code'=>'0','msg'=>'主题添加失败'));
             }
         }
     }
