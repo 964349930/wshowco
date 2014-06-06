@@ -26,6 +26,20 @@ class WechatNewsModel extends CommonModel{
     }
 
     /**
+     * field_list
+     */
+    public function field_list()
+    {
+        return array(
+            array('title'=>'ID','name'=>'id','type'=>'hidden'),
+            array('title'=>'Route_id','name'=>'route_id','type'=>'hidden'),
+            array('title'=>'关键字','name'=>'keyword','type'=>'text'),
+            array('title'=>'更新时间','name'=>'date_modify'),
+            array('title'=>'操作','name'=>'action_list','type'=>'action_list'),
+        );
+    }
+
+    /**
      * update the news action
      */
     public function updateNews($news)

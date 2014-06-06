@@ -13,13 +13,17 @@ class UserAction extends HomeAction{
 		$userObj = D('User');
 		$count = $userObj->getCount();
         $page = page($count);
-        $fileList = array(
 
-		$userList = $userObj->limit($page->firstRow, $page->listRows)->select();
-		foreach($userList as $k => $v){
-			$userList[$k] = $userObj->format($v, $arrFormatField);
-		}
-		$this->assign($tplData);
+        $fields = array('id','name','mobile');
+		$userList = $userObj->field($fields)->limit($page->firstRow, $page->listRows)->select();
+        $fields_all = $userObj->field_list();
+        $tpl_data = array(
+            'title'=>'用户列表',
+            'field_info'=>$userList,
+            'field_list' => $this->get_field_list($fields_all, $fields),
+            'btn_list'=>array(array('title'=>'添加用户','url'=>U('User/add'))),
+        );
+		$this->assign($tpl_data);
 		$this->display("Public:list");
 	}
 
@@ -51,14 +55,15 @@ class UserAction extends HomeAction{
 		$userObj = D('User');
         if(empty($data)){
 		    $id = $_SESSION['uid'];
-		    $userInfo = $userObj->getInfoById($id);
+            $fields = array('id','name','mobile','url','token','appid','appsecrect');
+		    $userInfo = $userObj->field($fields)->where('id='.$id)->find();
 		    $userInfo = $userObj->format($userInfo, array('url', 'avatar_name'));
+            $fields_all = $userObj->field_list();
             $tpl_data = array(
-                'title'=>'User basic',
-                'url'=>U('User/basic'),
-                'list'=>array(
-                ),
-                'userInfo'=>$userInfo,
+                'title'=>'基本信息',
+                'form_url'=>U('User/basic'),
+                'field_info'=>$userInfo,
+                'field_list' => $this->get_field_list($fields_all, $fields),
             );
             $this->assign($tpl_data);
 		    $this->display('Public:info');
@@ -83,21 +88,34 @@ class UserAction extends HomeAction{
      */
 	public function password() {
         if(empty($_POST)){
-            $this->assign('current', 'user_pwd');
-            $this->display();
+            $tpl_data = array(
+                'title'=>'修改密码',
+                'form_url'=>U('User/password'),
+                'field_list' => array(
+                    array('title'=>'原始密码','name'=>'oldpwd','type'=>'password'),
+                    array('title'=>'新密码','name'=>'newpwd','type'=>'password'),
+                    array('title'=>'确认密码','name'=>'repwd','type'=>'password'),
+                ),
+            );
+            $this->assign($tpl_data);
+            $this->display('Public:info');
             exit;
         }
 		$userObj = D('User');
 		$map['id'] = $_SESSION['uid'];
-		$map['password'] = md5($_POST['oldpassword']);
-        if(!$userObj->where($map)->find()){
-            echo json_encode(array('status'=>'0', 'msg'=>'原始密码输入错误'));
+		$map['password'] = md5($_POST['oldpwd']);
+        if(empty($_POST['newpwd'])){
+            echo json_encode(array('msg'=>'新密码不能为空'));
+        }elseif($_POST['newpwd'] != $_POST['repwd']){
+            echo json_encode(array('msg'=>'两次输入的密码不一致'));
+        }elseif(!$userObj->where($map)->find()){
+            echo json_encode(array('msg'=>'原始密码输入错误'));
 		}else{
-            $password = md5($_POST['newpassword']);
+            $password = md5($_POST['newpwd']);
             if($userObj->where('id='.$_SESSION['uid'])->setField('password', $password)){
-                echo json_encode(array('status'=>'1', 'msg'=>'密码修改成功'));
+                echo json_encode(array('code'=>'1', 'msg'=>'密码修改成功'));
             }else{
-                echo json_encode(array('status'=>'0', 'msg'=>'密码修改失败'));
+                echo json_encode(array('msg'=>'密码修改失败'));
             }
          }
     }

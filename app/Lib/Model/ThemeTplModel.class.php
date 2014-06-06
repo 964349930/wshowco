@@ -12,10 +12,14 @@ class ThemeTplModel extends CommonModel
      */
     public function getTplList()
     {
-        $theme_id = D('Setting')->where('user_id='.$_SESSION['uid'])->getField('theme_id');
+        $theme_id = D('Setting')->field('id,name')->where('user_id='.$_SESSION['uid'])->getField('theme_id');
         $map['theme_id'] = array('in', array($theme_id, '1'));
         $tplList = D('ThemeTpl')->where($map)->select();
-        return $tplList;
+        foreach($tplList as $k=>$v){
+            $list[$k]['title'] = $v['name'];
+            $list[$k]['value'] = $v['id'];
+        }
+        return $list;
     }
 
     /**

@@ -1,0 +1,9 @@
+<h2 class="page-header">基本信息</h2>
+<form role="form" id="form" onsubmit="return editInfo('form')" data-href="{:U('User/basic')}">
+    <div class="form-group">
+        <label for="name">用户名</label>
+        <input class="form-control" id="name" name="name" type="text" value="{$userInfo.name}">
+    </div>
+    <button class="btn btn-primary" type="submit">更新</button>
+</form>
+

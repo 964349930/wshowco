@@ -65,5 +65,22 @@ class SettingModel extends CommonModel {
         }
         return $info;
     }
+
+    /**
+     * 字段属性
+     */
+    public function field_list()
+    {
+        return array(
+            array('title'=>'ID','name'=>'id','type'=>'hidden'),
+            array('title'=>'网站名称','name'=>'site_name','type'=>'text'),
+            array('title'=>'联系号码','name'=>'tel','type'=>'tel'),
+            array('title'=>'联系地址','name'=>'address','type'=>'text'),
+            array('title'=>'电子邮箱','name'=>'email','type'=>'email'),
+            array('title'=>'纬度','name'=>'latitude','type'=>'number'),
+            array('title'=>'经度','name'=>'longitude','type'=>'number'),
+            array('title'=>'幻灯片','name'=>'banner_list','type'=>'select'),
+        );
+    }
 }
 ?>

@@ -1,5 +1,11 @@
 <h2 class="page-header">{$title}</h2>
 
+<!-- 面包屑导航 -->
+<notempty name="bread_list">
+<include file="Public:breadcrumbs" />
+</notempty>
+
+
 <!-- 按钮 -->
 <volist name="btn_list" id="vo">
 <button class="btn btn-primary" onclick="loadMain('{$vo.url}')">{$vo.title}</button>
@@ -9,38 +15,44 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <volist name="tr_list" id="vo">
+            <volist name="field_list" id="vo">
             <th>{$vo.title}</th>
             </volist>
-            <th>操作</th>
         </tr>
     </thead>
     <tbody>
-    <volist name="user_list" id="vo">
+    <volist name="field_info" id="vo">
     <tr>
-        <volist name="tr_list" id="voo">
-        <td>{$vo[$voo[flat]]}</td>
-        </volist>
-        <td>
-            <volist name="action_list" id="vo">
-            <eq name="vo[type]" value="edit">
-            <i class="fa fa-edit" onclick="loadMain('{$vo.url}')" style="margin-right:10px;"></i>
+        <volist name="field_list" id="voo">
+        <eq name="voo[type]" value="action_list">
+            <td>
+            <volist name="vo[action_list]" id="vooo">
+            <if condition="$vooo[type] eq 'edit'">
+            <i class="fa fa-edit" onclick="loadMain('{$vooo.url}')" style="margin-right:10px;"></i>
+            <elseif condition="$vooo[type] eq 'ls'" />
+            <i class="fa fa-sitemap" onclick="loadMain('{$vooo.url}')" style="margin-right:10px;"></i>
             <else />
-            <i class="fa fa-trash-o" style="color:red;" data-toggle="modal" data-target="#isdelete" data-href="{:U('Rss/rssDel', array('id'=>$vo[id]))}"></i>
-            </eq>
+            <i class="fa fa-trash-o" style="color:red;" data-toggle="modal" data-target="#isdelete" data-href="{$vooo.url}"></i>
+            </if>
             </volist>
         </td>
+        <else />
+        <td>{$vo[$voo[name]]}</td>
+        </eq>
+        </volist>
     </tr>
     </volist>
     </tbody>
 </table>
+</div>
 
 <!-- 分页 -->
-<notempty name="pages">
-    {$pages}
+<notempty name="page_list">
+    {$page_list}
 </notempty>
 
 <!-- 插件列表 -->
+<include file="Public:modal_delete" />
 <volist name="plugin_list" id="vo">
-<include file="{$vo}" />
+<include file="$vo" />
 </volist>

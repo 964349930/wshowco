@@ -24,4 +24,28 @@ class ItemModel extends CommonModel
         }
         return $arrInfo;
     }
+
+    /**
+     * file list
+     */
+    public function field_list()
+    {
+        return array(
+            array('title'=>'ID','name'=>'id','type'=>'hidden'),
+            array('title'=>'组名','name'=>'parent_id','type'=>'hidden'),
+            array('title'=>'标题','name'=>'title','type'=>'text'),
+            array('title'=>'封面','name'=>'cover','type'=>'sel_img'),
+            array('title'=>'描述','name'=>'intro','type'=>'textarea'),
+            array('title'=>'内容','name'=>'info','type'=>'content'),
+            array('title'=>'显示模板','name'=>'template_id','type'=>'select','data'=>D('ThemeTpl')->getTplList()),
+            array('title'=>'使用状态','name'=>'status','type'=>'radio','data'=>array(
+                array('title'=>'使用','value'=>'1'),
+                array('title'=>'不使用','value'=>'0'),
+            ),),
+            array('title'=>'更新时间','name'=>'date_modify','type'=>'text'),
+            array('title'=>'操作','name'=>'action_list','type'=>'action_list'),
+            array('title'=>'子文章属性','name'=>'ext_list','type'=>'ext_list'),
+        );
+    }
+
 }

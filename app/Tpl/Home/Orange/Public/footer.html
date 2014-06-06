@@ -62,6 +62,7 @@ function editInfo(form){
   var selForm = $("#"+form);
   var url = selForm.data('href');
   $.post(url, selForm.serialize(), function(data){
+    if("undefined" == typeof data.code){data.code='0';}
     calert(data.msg, data.code);}, 'json');
   return false;
 }

@@ -10,7 +10,6 @@ class NewsAction extends HomeAction{
 	 */
 	public function newsList(){
 		$newsObj = D('WechatNews');
-		$arrField = array('*');
 
         /********筛选出特殊的图文列表********/
         $keywordList = D('WechatRoute')->where("obj_type='common'")->getField('keyword' ,true);
@@ -20,24 +19,38 @@ class NewsAction extends HomeAction{
         $idList = D('WechatRoute')->where($routeMap)->getField('obj_id', true);
         /********结束************************/
 
-		$arrMap['user_id'] = array('eq', $_SESSION['uid']);
-        $arrMap['id'] = array('in', $idList);
-		$arrOrder = array('date_modify desc');
-		$count = $newsObj->getCount($arrMap);
-		$page = page($count, 10);
-		$pageHtml = $page->show();
-		$newsList = $newsObj->getList($arrField, $arrMap, $arrOrder, $page->firstRow, $page->listRows);
-		$arrFormatField = array('keyword');
-		foreach ($newsList as $k=>$v){
-			$newsList[$k] = $newsObj->format($v, $arrFormatField);
+		$map['user_id'] = array('eq', $_SESSION['uid']);
+        $map['id'] = array('in', $idList);
+
+        //分页类
+		$page = page($newsObj->getCount($map), 10);
+
+        //获取图文列表
+        $fields = array('id','date_modify');
+        $fields_all = $newsObj->field_list();
+		$news_list = $newsObj->field($fields)->where($map)->order('date_modify desc')->limit($page->firstRow, $page->listRows)->select();
+
+		foreach ($news_list as $k=>$v){
+			$news_list[$k] = $newsObj->format($v, array('keyword'));
+            $news_list[$k]['action_list'] = array(
+                array('title'=>'管理子图文','type'=>'ls','url'=>U('News/metaList',array('id'=>$v['id']))),
+                array('title'=>'编辑','type'=>'edit','url'=>U('News/newsInfo',array('id'=>$v['id']))),
+                array('title'=>'删除','type'=>'del','url'=>U('News/delNews',array('id'=>$v['id']))),
+            );
+
 		}
-		$tplData = array( 
-            'newsList' => $newsList,
-			'pageHtml' => $pageHtml,
-            'current' => 'news_news',
+
+        //模板赋值
+        $fields = array_merge($fields, array('keyword','action_list'));
+		$data = array( 
+            'title'=>'图文消息列表',
+            'field_list'=>$this->get_field_list($fields_all, $fields),
+            'field_info'=>$news_list,
+            //'page_list' => $page->show(),
+            'btn_list'=>array(array('title'=>'添加图文消息','url'=>U('News/newsInfo'))),
 		);
-		$this->assign($tplData);
-		$this->display();
+		$this->assign($data);
+		$this->display('Public:list');
 	}
 
 	/**
@@ -46,23 +59,42 @@ class NewsAction extends HomeAction{
 	public function newsInfo(){
         if(empty($_POST)){
             $id = $this->_get('id', 'intval');
+            $fields = array('id');
             if(!empty($id)){
-                $routeInfo = D('WechatRoute')->getRoute('news', $id);
-                $this->assign('newsInfo', D('WechatNews')->getInfoById($id));
-                $this->assign('routeInfo', $routeInfo);
+
+                //编辑图文
+                $news_info = D('WechatNews')->field($fields)->where('id='.$id)->find();
+                $route_info = D('WechatRoute')->getRoute('news', $id);
+                $news_info['route_id'] = $route_info['id'];
+                $news_info['keyword'] = $route_info['keyword'];
             }
-            $this->assign('current', 'news_news');
-            $this->display();
+            $fields = array_merge($fields, array('route_id','keyword'));
+            $fields_all = D('WechatNews')->field_list();
+            $data = array(
+                'title' => '图文编辑',
+                'form_url'=>U('News/newsInfo'),
+                'field_list'=>$this->get_field_list($fields_all, $fields),
+                'field_info'=>$news_info,
+            );
+            $this->assign($data);
+            $this->display('Public:info');
             exit;
         }
-        $news = $this->_post('news');
-        $route = $this->_post('route');
-        if(!D('WechatRoute')->checkKeyword($route['keyword'], $news['id'])){
-            $this->error('关键字不可用');
+
+        //内容更新
+        if(!D('WechatRoute')->checkKeyword($_POST['keyword'], $_POST['id'])){
+            echo json_encode(array('msg'=>'关键字不可用'));
+            exit;
         }
-        $news_id = D('WechatNews')->updateNews($news);
-        D('WechatRoute')->updateRoute('news', $news_id, $route);
-	    $this->success('操作成功');	
+
+        //整理数据
+        $news_info = array('id'=>$_POST['id']);
+        $route_info = array('id'=>$_POST['route_id'],'keyword'=>$_POST['keyword']);
+
+        //更新
+        $news_id = D('WechatNews')->updateNews($news_info);
+        D('WechatRoute')->updateRoute('news', $news_id, $route_info);
+        echo json_encode(array('code'=>'1','msg'=>'操作成功'));
 	}
 
     /**
@@ -70,34 +102,52 @@ class NewsAction extends HomeAction{
      */
     public function special(){
         if(empty($_POST)){
+
+            //获取关键字
             $keyword = $this->_get('keyword', 'trim');
-            $routeInfo = D('WechatRoute')->where("user_id=".$_SESSION['uid']." AND obj_type='news' AND keyword='".$keyword."'")->find();
-            if(!empty($routeInfo)){
-                $metaInfo = D('WechatNewsMeta')->where('news_id='.$routeInfo['obj_id'])->find();
-                $metaInfo = D('WechatNewsMeta')->format($metaInfo, array('cover_name'));
-                $this->assign('routeInfo', $routeInfo);
-                $this->assign('newsInfo', D('WechatNews')->getInfoById($routeInfo['obj_id']));
-                $this->assign('metaInfo', $metaInfo);
+
+            //获取路由信息
+            $route_info = D('WechatRoute')->where("user_id=".$_SESSION['uid']." AND obj_type='news' AND keyword='".$keyword."'")->find();
+
+            $fields = array('id','news_id','title','description','cover','url');
+            if(!empty($route_info)){
+                //子图文信息
+                $meta_info = D('WechatNewsMeta')->field($fields)->where('news_id='.$route_info['obj_id'])->find();
+                $meta_info = D('WechatNewsMeta')->format($meta_info, array('cover_name'));
+                $meta_info['route_id'] = D('WechatRoute')->where('obj_id='.$meta_info['news_id'].' AND obj_type=\'news\'')->getField('id');
+                $meta_info['keyword'] = $keyword;
             }
-            $this->assign('keyword', $keyword);
-            $this->assign('current', 'news_sub');
-            $this->display();
+
+            //模板赋值
+            $fields = array_merge($fields, array('route_id','keyword'));
+            $fields_all = D('WechatNewsMeta')->field_list();
+            $data = array(
+                'title' => $keyword.'自动回复',
+                'form_url' => U('News/special',array('keyword'=>$keyword)),
+                'field_list'=>$this->get_field_list($fields_all, $fields),
+                'field_info'=>$meta_info,
+            );
+            $this->assign($data);
+            $this->display('Public:info');
             exit;
         }
-        $news = $this->_post('news');
-        $meta = $this->_post('meta');
-        $meta['url'] = htmlspecialchars_decode($meta['url']);
-        $route = $this->_post('route');
-		if(!empty($_FILES['pic']['name'])){
-			$picList = uploadPic();
-			if($picList['code'] != 'error'){
-				$meta['cover'] = D('GalleryMeta')->addImg($picList['pic']['savename']);
-			}
-		}
-        print_r($meta);exit;
-        $news_id = D('WechatNews')->updateNews($news);
-        D('WechatRoute')->updateRoute('news', $news_id, $route);
-        D('WechatNewsMeta')->updateMeta($meta, $news_id);
+        //$meta['url'] = htmlspecialchars_decode($meta['url']);
+        
+        //整理数据
+        $news_info = array('id'=>$_POST['news_id']); 
+        $meta_info = array(
+            'id'=>$_POST['id'],
+            'title'=>$_POST['title'],
+            'description'=>$_POST['description'],
+            'url'=>$_POST['url'],
+        );
+        $route_info = array('id'=>$_POST['route_id'],'keyword'=>$_POST['keyword']);
+
+
+        $news_id = D('WechatNews')->updateNews($news_info);
+        D('WechatRoute')->updateRoute('news', $news_id, $route_info);
+        D('WechatNewsMeta')->updateMeta($meta_info, $news_id);
+        echo json_encode(array('code'=>'1','msg'=>'操作成功'));
     }
 
 	/**
@@ -115,15 +165,16 @@ class NewsAction extends HomeAction{
             $delIds[] = $getId;
         }
         if (empty($delIds)) {
-            $this->error('请选择您要删除的数据');
+            echo json_encode(array('msg'=>'请选择您要删除的数据'));
+            exit;
         }
 		$arrMap['id'] = $arrRouteMap['obj_id'] = $arrMetaMap['news_id'] = array('in', $delIds);
 		if($newsObj->where($arrMap)->delete()){
             D('WechatRoute')->delRoute('news', $arrRouteMap);
             D('WechatNewsMeta')->where($arrMetaMap)->delete();
-			$this->success('删除成功');
+            echo json_encode(array('code'=>'1','msg'=>'删除成功'));
 		}else{
-			$this->error('删除失败');
+            echo json_encode(array('msg'=>'删除失败'));
 		}
 	}
 
@@ -134,23 +185,28 @@ class NewsAction extends HomeAction{
     public function metaList()
     {
         $id = $this->_get('id', 'intval');
-        $metaObj = D('WechatNewsMeta');
-        $arrField = array('*');
-        $arrMap['news_id'] = array('eq', $id);
-        $arrOrder = array('sort_order');
-        $metaList = $metaObj->getList($arrField, $arrMap, $arrOrder);
-        $arrFormatField = array('cover_name');
-        foreach($metaList as $k=>$v){
-            $metaList[$k] = $metaObj->format($v, $arrFormatField);
+        $fields = array('id','title','description','date_modify');
+
+        $meta_list = D('WechatNewsMeta')->field($fields)->where('news_id='.$id)->order('sort_order')->select();
+
+        foreach($meta_list as $k=>$v){
+            $meta_list[$k] = D('WechatNewsMeta')->format($v, array('cover_name'));
+            $meta_list[$k]['action_list'] = array(
+                array('title'=>'编辑','type'=>'edit','url'=>U('News/metaInfo',array('id'=>$v['id']))),
+                array('title'=>'删除','type'=>'del','url'=>U('News/delMeta',array('id'=>$v['id']))),
+            );
         }
+
+        $fields[] = 'action_list';
+        $fields_all = D('WechatNewsMeta')->field_list();
         $data = array(
-            'addUrl' => U('Home/News/metaInfo', array('news_id'=>$id)),
-            'editUrl' => U('Home/News/metaInfo'),
-            'delUrl' => U('Home/News/delMeta'),
-            'metaList' => $metaList,
+            'title'=>'子图文列表',
+            'btn_list'=>array(array('title'=>'添加子图文','url'=>U('News/metaInfo',array('news_id'=>$id)))),
+            'field_list'=>$this->get_field_list($fields_all, $fields),
+            'field_info'=>$meta_list,
         );
         $this->assign($data);
-        $this->display();
+        $this->display('Public:list');
     }
 
     /**
@@ -158,31 +214,34 @@ class NewsAction extends HomeAction{
      */
     public function metaInfo()
     {
-        $metaObj = D('WechatNewsMeta');
         if(empty($_POST)){
             $id = $this->_get('id', 'intval');
             $news_id = $this->_get('news_id', 'intval');
+            $fields = array('id','news_id','title','description','cover','url');
+
+            //编辑
             if(!empty($id)){
-                $metaInfo = $metaObj->getInfoById($id);
-                $metaInfo = $metaObj->format($metaInfo, array('cover_name'));
-                $news_id = $metaInfo['news_id'];
-                $this->assign('metaInfo', $metaInfo);
+                //子图文信息
+                $meta_info = D('WechatNewsMeta')->field($fields)->where('id='.$id)->find();
+            }else{
+                $meta_info['news_id'] = $news_id;
             }
-            $this->assign('news_id', $news_id);
-            $this->assign('editUrl', U('Home/News/metaInfo'));
-            $this->display();
+
+            //模板赋值
+            $fields_all = D('WechatNewsMeta')->field_list();
+            $data = array(
+                'title' => '子图文编辑',
+                'form_url' => U('News/metaInfo'),
+                'field_list'=>$this->get_field_list($fields_all, $fields),
+                'field_info'=>$meta_info,
+            );
+            $this->assign($data);
+            $this->display('Public:info');
             exit;
         }
-        $meta = $this->_post('meta');
-        $meta['url'] = htmlspecialchars_decode($meta['url']);
-		if(!empty($_FILES['pic']['name'])){
-			$picList = uploadPic();
-			if($picList['code'] != 'error'){
-				$meta['cover'] = D('GalleryMeta')->addImg($picList['pic']['savename']);
-			}
-		}
-        D('WechatNewsMeta')->updateMeta($meta, $meta['news_id']);
-        $this->success('操作成功');
+        $meta_info = $this->_post();
+        D('WechatNewsMeta')->updateMeta($meta_info, $meta_info['news_id']);
+        echo json_encode(array('code'=>'1','msg'=>'操作成功'));
     }
 
 	/**
@@ -200,13 +259,14 @@ class NewsAction extends HomeAction{
             $delIds[] = $getId;
         }
         if (empty($delIds)) {
-            $this->error('请选择您要删除的数据');
+            echo json_encode(array('msg'=>'请选择您要删除的数据'));
+            exit;
         }
 		$arrMap['id'] = $arrRouteMap['obj_id'] = $arrMetaMap['news_id'] = array('in', $delIds);
 		if($metaObj->where($arrMap)->delete()){
-			$this->success('删除成功');
+            echo json_encode(array('code'=>'1','msg'=>'删除成功'));
 		}else{
-			$this->error('删除失败');
+            echo json_encode(array('msg'=>'删除失败'));
 		}
 	}
     /*********************文字内容管理***********************/
@@ -214,51 +274,68 @@ class NewsAction extends HomeAction{
 	 * 文字素材列表
 	 */
 	public function textList(){
-		$textObj = D('WechatText');
-		$arrField = array('*');
-		$arrMap['user_id'] = array('eq', $_SESSION['uid']);
-        $arrOrder = array('date_modify desc');
-		$count = $textObj->getCount($arrMap);
-		$page = page($count);
-		$pageHtml = $page->show();
-		$textList = $textObj->getList($arrField, $arrMap, $arrOrder, $page->firstRow, $page->listRows);
-        $arrFormatField = array('keyword');
-        foreach($textList as $k=>$v){
-            $textList[$k] = D('WechatText')->format($v, $arrFormatField);
+		$map['user_id'] = array('eq', $_SESSION['uid']);
+		$page = page(D('WechatText')->getCount($map));
+        $fields = array('id','content','date_modify');
+
+		$text_list = D('WechatText')->field($fields)->where($map)->order('date_modify desc')->limit($page->firstRow, $page->listRows)->select();
+
+        foreach($text_list as $k=>$v){
+            $text_list[$k] = D('WechatText')->format($v, array('keyword'));
+            $text_list[$k]['action_list'] = array(
+                array('type'=>'edit','url'=>U('News/textInfo',array('id'=>$v['id']))),
+                array('type'=>'del','url'=>U('News/delText',array('id'=>$v['id']))),
+            );
         }
-		$textTpl = array(
-			'pageHtml' => $pageHtml,
-			'textList' => $textList,
-            'current' => 'news_text',
+
+        $fields = array_merge($fields, array('keyword','action_list'));
+        $fields_all = D('WechatText')->field_list();
+
+		$data = array(
+            'title'=>'文本回复列表',
+            'btn_list'=>array(array('title'=>'添加文本回复','url'=>U('News/textInfo'))),
+            'field_list'=>$this->get_field_list($fields_all, $fields),
+            'field_info'=>$text_list,
 		);
-		$this->assign($textTpl);
-		$this->display();
+		$this->assign($data);
+		$this->display('Public:list');
 	}
 
 	/**
 	 * 文字素材添加页面
 	 */
 	public function textInfo(){
-        $textObj = D('WechatText');
         if(empty($_POST)){
             $id = $this->_get('id', 'intval');
+            $fields = array('id','content');
             if(!empty($id)){
-                $this->assign('textInfo', $textObj->getInfoById($id));
-                $this->assign('routeInfo', D('WechatRoute')->getRoute('text', $id));
+                $text_info = D('WechatText')->field($fields)->where('id='.$id)->find();
+                $route_info = D('WechatRoute')->getRoute('text', $id);
+                $text_info['route_id'] = $route_info['id'];
+                $text_info['keyword'] = $route_info['keyword'];
             }
-            $this->assign('addUrl', U('Home/News/textInfo'));
-            $this->display();
+            $fields = array_merge($fields, array('route_id','keyword'));
+            $fields_all = D('WechatText')->field_list();
+            $data = array(
+                'title' => '文本回复编辑',
+                'form_url' => U('News/textInfo'),
+                'field_list'=>$this->get_field_list($fields_all, $fields),
+                'field_info'=>$text_info,
+            );
+            $this->assign($data);
+            $this->display('Public:info');
             exit;
         }
-        $text = $this->_post('text');
-        $route = $this->_post('route');
-        if(!D('WechatRoute')->checkKeyword($route['keyword'], $text['id'])){
-            $this->error('关键字不可用');
-        }
-        $obj_id = D('WechatText')->updateText($text);
-        D('WechatRoute')->updateRoute('text', $obj_id, $route);
-        $this->success('提交成功');
+        $text_info = array('id'=>$_POST['id'],'content'=>$_POST['content']);
+        $route_info = array('id'=>$_POST['route_id'],'keyword'=>$_POST['keyword']);
 
+        if(!D('WechatRoute')->checkKeyword($route_info['keyword'], $text_info['id'])){
+            echo json_encode(array('msg'=>'关键字不可用'));
+            exit;
+        }
+        $obj_id = D('WechatText')->updateText($text_info);
+        D('WechatRoute')->updateRoute('text', $obj_id, $route_info);
+        echo json_encode(array('code'=>'1','msg'=>'操作成功'));
 	}
 
 	/**
@@ -278,14 +355,15 @@ class NewsAction extends HomeAction{
         }
         //删除数据
         if (empty($delIds)) {
-            $this->error('请选择您要删除的数据');
+            echo json_encode(array('msg'=>'请选择您要删除的数据'));
+            exit;
         }
 		$arrMap['id'] = $arrRouteMap['obj_id'] = array('in', $delIds);
 		if($textObj->where($arrMap)->delete()){
             D('WechatRoute')->delRoute('text', $arrRouteMap);
-			$this->success('删除成功');
+            echo json_encode(array('code'=>'1','msg'=>'删除成功'));
 		}else{
-			$this->error('删除失败');
+            echo json_encode(array('code'=>'1','msg'=>'删除失败'));
 		}
 	}
 }

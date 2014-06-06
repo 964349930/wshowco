@@ -88,4 +88,22 @@ class HomeAction extends BaseAction
         return $menu;
         */
     }
+
+    /**
+     * 获取字段属性列表 
+     * @param array field_list 全部属性列表
+     * @param array list 选定属性列表
+     */
+    public function get_field_list($field_list, $list)
+    {
+        $result = array();
+        foreach($field_list as $k=>$v){
+            if(in_array($v['name'], $list)){
+                $result[] = $v;
+            }
+        }
+        return $result;
+    }
+
+
 }

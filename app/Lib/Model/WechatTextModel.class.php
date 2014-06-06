@@ -17,6 +17,22 @@ class WechatTextModel extends CommonModel{
 	}
 
     /**
+     * field_list
+     */
+    public function field_list()
+    {
+        return array(
+            array('title'=>'ID','name'=>'id','type'=>'hidden'),
+            array('title'=>'user_id','name'=>'user_id','type'=>'hidden'),
+            array('title'=>'route_id','name'=>'route_id','type'=>'hidden'),
+            array('title'=>'关键字','name'=>'keyword','type'=>'text'),
+            array('title'=>'内容','name'=>'content','type'=>'content'),
+            array('title'=>'更新时间','name'=>'date_modify'),
+            array('title'=>'操作','name'=>'action_list','type'=>'action_list'),
+        );
+    }
+
+    /**
      * update the text info
      */
     public function updateText($text)

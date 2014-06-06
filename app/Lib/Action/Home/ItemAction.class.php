@@ -14,23 +14,16 @@ class ItemAction extends HomeAction
         $siteObj = D('Setting');
         if(empty($_POST)){
             $user_id = $_SESSION['uid'];
-            $siteInfo = $siteObj->where('user_id='.$user_id)->find();
+            $fields = array('id','site_name','tel','address','email','latitude','longitude');
+            $siteInfo = $siteObj->field($fields)->where('user_id='.$user_id)->find();
             $siteInfo = $siteObj->format($siteInfo, array('logo_name', 'url', 'theme_name'));
             $galleryList = D('Gallery')->where('user_id='.$user_id)->select();
+            $fields_all = $siteObj->field_list();
             $tpl_data = array(
-                'title' => 'Setting',
-                'url' => U('Item/setting'),
-                'list'=>array(
-                    array('name'=>'id','type'=>'hidden'),
-                    array('title'=>'Site_name','flag'=>'name','name'=>'site_name','type'=>'text'),
-                    array('title'=>'Logo','flag'=>'logo','name'=>'logo','type'=>'image'),
-                    array('title'=>'Tel','flag'=>'tel','name'=>'tel','type'=>'tel'),
-                    array('title'=>'address','flag'=>'address','name'=>'address','type'=>'text'),
-                    array('title'=>'email','flag'=>'email','name'=>'email','type'=>'email'),
-                    array('title'=>'Latitude','flag'=>'latitude','name'=>'latitude','type'=>'text'),
-                    array('title'=>'longitude','flag'=>'longitude','name'=>'longitude','type'=>'text'),
-                    array('title'=>'Banner','flag'=>'banner','name'=>'banner_list','type'=>'select'),
-                ),
+                'title' => '网站设置',
+                'form_url' => U('Item/setting'),
+                'field_list'=>$this->get_field_list($fields_all, $fields),
+                'field_info'=>$siteInfo,
             );
             $this->assign('galleryList', $galleryList);
             $this->assign('siteInfo', $siteInfo);
@@ -70,33 +63,41 @@ class ItemAction extends HomeAction
     {
         $itemObj = D('Item');
         $parent_id = $this->_get('parent_id', 'intval');
-        $arrField = array();
-
-        //search
-        $search = $this->_post('search');
-        if(!empty($search)){
-            $arrMap['title'] = array('like', '%'.$search.'%');
-        }
 
         //For the Parent item
         if(empty($parent_id)){$parent_id = 0;}
-        $arrMap['user_id'] = array('eq', $_SESSION['uid']);
-        $arrMap['parent_id'] = array('eq', $parent_id);
         $page = page($itemObj->getCount($arrMap));
-        $arrOrder = array('sort_order');
-        $itemList = $itemObj->getList($arrField, $arrMap, $arrOrder, $page->firstRow, $page->listRows);
+
+        //获取文章列表
+        $fields = array('id','title','intro','date_modify');
+        $itemList = $itemObj->field()->where('user_id='.$_SESSION['uid'].' AND parent_id='.$parent_id)
+            ->order('sort_order')->limit($page->firstRow, $page->listRows)->select();
         foreach($itemList as $k=>$v){
-            $itemList[$k] = $itemObj->format($v, array('cover_name'));
+            $itemList[$k]['date_modify'] = date('Y-m-d H:i', $v['date_modify']);
+            $itemList[$k]['action_list'] = array(
+                array('title'=>'管理子文章','type'=>'ls','url'=>U('Item/itemList',array('parent_id'=>$v['id']))),
+                array('title'=>'编辑','type'=>'edit','url'=>U('Item/itemInfo',array('id'=>$v['id']))),
+                array('title'=>'删除','type'=>'del','url'=>U('Item/del',array('id'=>$v['id']))),
+            );
         }
+        
+        //设置面包屑导航
         $this->setBCrumbs($parent_id);
+
+        //模板赋值
+        $fields[] = 'action_list';
+        $fields_all = $itemObj->field_list();
         $data = array(
-            'breadcrumbs' => $this->breadcrumbs,
-            'itemList' => $itemList,
-            'pageHtml' => $pageHtml,
-            'parent_id' => $parent_id,
+            'title'=>'文章列表',
+            'btn_list'=>array(array('title'=>'添加文章','url'=>U('Item/itemInfo',array('parent_id'=>$parent_id)))),
+            'bread_list' => $this->breadcrumbs,
+            'field_list' => $this->get_field_list($fields_all, $fields),
+            'field_info' => $itemList,
+            'plugin_list' => array('Public:modal_delete',),
+            //'page_list' => $page->show(),
         );
         $this->assign($data);
-        $this->display();
+        $this->display('Public:list');
     }
 
     /**
@@ -137,28 +138,37 @@ class ItemAction extends HomeAction
         $itemObj = D('Item');
         if(empty($_POST)){
             $id = $this->_get('id', 'intval');
+            $fields = array('id','parent_id','title','cover','intro','info','template_id','status');
             if(!empty($id)){
+
                 //更新显示
-                $itemInfo = $itemObj->getInfoById($id);
-                $itemInfo = $itemObj->format($itemInfo, array('cover_name'));
-                $parent_id = $itemInfo['parent_id'];
-                $this->assign('itemInfo', $itemInfo);
+                $field_info = $itemObj->field()->where('id='.$id)->find();
+                $field_info = $itemObj->format($field_info, array('cover_name'));
                 $this->assign('extList', D('Ext')->getExtList('item', $itemInfo['id']));
             }else{
+
                 //添加显示
-                $parent_id = $this->_get('parent_id', 'intval');
+                $field_info['parent_id'] = $this->_get('parent_id', 'intval');
             }
+
+            //面包屑导航
             $this->setBCrumbs($parent_id);
             $this->assign('getExtValueList', U('Home/Ext/getExtValueList'));
-            $this->assign('parent_id', $parent_id);
-            $this->assign('tplList', D('ThemeTpl')->getTplList());
-            $this->assign('extUrl', U('Home/Ext/extList'));
-            $this->assign('current', 'site_item');
-            $this->assign('breadcrumbs', $this->breadcrumbs);
-            $this->display();
+            $fields_all = $itemObj->field_list();
+            $data = array(
+                'title'=>'文章详情',
+                'bread_list'=>$this->breadcrumbs,
+                'form_url'=>U('Item/itemInfo'),
+                'field_info'=>$field_info,
+                'field_list'=>$this->get_field_list($fields_all, $fields),
+                'plugin_list' => array('Public:imgUpload',),
+            );
+            $this->assign($data);
+            //$this->assign('extUrl', U('Home/Ext/extList'));
+            $this->display('Public:info');
             exit;
         }
-        $data = $this->_post('item');
+        $data = $this->_post();
         $data['date_modify'] = time();
 		if(!empty($_FILES['pic']['name'])){
 			$picList = uploadPic();
