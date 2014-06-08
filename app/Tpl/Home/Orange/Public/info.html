@@ -17,18 +17,8 @@
   <form role="form" id="form" onsubmit="return editInfo('form')" data-href="{$form_url}">
     <volist name="field_list" id="vo">
 
-    <!-- 图片字段 -->
-    <if condition="$vo[type] eq image">
-    <div class="form-group">
-        <label for="{$vo.name}">{$vo.title}</label>
-        <notempty name="field_info[$vo[name]]">
-          <img src="{$field_info[$vo[name]]}" class="img-responsive" id="changeImg" height="60" data-toggle="tooltip" title="点击更换图片">
-        </notempty>
-        <input class="form-control" id="{$vo.name}" name="{$vo.name}" type="hidden" value="{$field_info[$vo[name]]}">
-    </div>
-
     <!-- 内容字段 -->
-    <elseif condition="$vo[type] eq textarea"/>
+    <if condition="$vo.type eq 'textarea'">
     <div class="form-group">
         <label for="{$vo.name}">{$vo.title}</label>
         <textarea class="form-control" id="{$vo.name}" name="{$vo.name}" cols="80" rows="4">{$field_info[$vo[name]]}</textarea>
@@ -64,7 +54,8 @@
     </div>
 
     <!-- 多选 -->
-    <!-- 图片 -->
+
+    <!-- 图片字段 -->
     <elseif condition="$vo.type eq 'sel_img'" />
     <div class="form-group">
         <label for="{$vo.name}">{$vo.title}</label>

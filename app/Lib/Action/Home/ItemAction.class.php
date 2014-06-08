@@ -189,9 +189,9 @@ class ItemAction extends HomeAction
         }else{
             //更新操作
             if($itemObj->save($data)){
-                echo json_encode(array('code'=>'1','msg'=>'添加成功'));
+                echo json_encode(array('code'=>'1','msg'=>'更新成功'));
             }else{
-                echo json_encode(array('code'=>'0','msg'=>'添加失败'));
+                echo json_encode(array('code'=>'0','msg'=>'更新失败'));
             }
         }
         /*
