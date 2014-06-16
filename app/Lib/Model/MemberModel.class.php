@@ -51,4 +51,20 @@ class MemberModel extends CommonModel
         return $arrInfo;
     }
 
+    /**
+     * file list
+     */
+    public function field_list()
+    {
+        return array(
+            array('title'=>'ID','name'=>'id','type'=>'hidden'),
+            array('title'=>'姓名','name'=>'name','type'=>'text'),
+            array('title'=>'手机号码','name'=>'mobile','type'=>'tel'),
+            array('title'=>'地址','name'=>'address','type'=>'text'),
+            array('title'=>'访问时间','name'=>'date_login','type'=>'date'),
+        );
+    }
+
+
+
 }

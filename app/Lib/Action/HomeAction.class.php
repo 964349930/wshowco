@@ -105,5 +105,4 @@ class HomeAction extends BaseAction
         return $result;
     }
 
-
 }

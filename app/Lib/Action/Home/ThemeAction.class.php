@@ -9,30 +9,19 @@ class ThemeAction extends HomeAction{
 	 * 首页方法
 	 */
 	public function themeList(){
-		$themeObj = D('Theme');
-		$arrField = array('*');
+        $fields = array('id','name','date_modify');
+        $page = page(D('Theme')->getCount());
+        $theme_list = D('Theme')->field($fields)->order('date_modify desc')->limit($page->firstRow,$page->listRows)->select();
 
-        //search
-        $search = $this->_post('search');
-        if(!empty($search)){
-            $arrMap['name'] = array('like', '%'.$search.'%');
-        }
-        $arrMap['status'] = array('eq', 1);
-		$arrOrder = array('date_modify desc');
-		$count = $themeObj->getCount($arrMap);
-		$page = page($count);
-		$pageHtml = $page->show();
-		$themeList = $themeObj->getList($arrField, $arrMap, $arrOrder, $page->firstRow, $page->listRows);
-		$arrFormatField = array('cover_name');
-		foreach($themeList as $k=>$v){
-			$themeList[$k] = $themeObj->format($v, $arrFormatField);
-		}
-		$tplData = array(
-			'pageHtml' => $pageHtml,
-			'themeList' => $themeList,
-		);
-		$this->assign($tplData);
-		$this->display();
+        $fields_all = D('Theme')->field_list();
+        $data = array(
+            'title' => '主题列表',
+            'field_list' => $this->get_field_list($fields_all,$fields),
+            'field_info' => $theme_list,
+            'page_list' => $page->show(),
+        );
+		$this->assign($data);
+		$this->display('Public:list');
 	}
 
 	/**

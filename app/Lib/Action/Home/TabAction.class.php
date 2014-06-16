@@ -41,20 +41,15 @@ class TabAction extends HomeAction
      */
     public function tabList()
     {
-        $parent_id = $this->_get('parent_id', 'intval');
-        $tabObj = D('Tab');
-        $arrField = array();
-        if(empty($parent_id)){
-            $parent_id = 0;
-        }
-        $arrMap['parent_id'] = array('eq', $parent_id);
-        $arrOrder = array('sort_order');
-        $tabList = $tabObj->getList($arrField, $arrMap, $arrOrder);
-        $this->setBCrumbs($parent_id);
+        $parent_id = intval($_GET['parent_id']);
+        if(empty($parent_id)){$parent_id = 0;}
+        $map = array('parent_id'=>$parent_id);
+
+        $tab_list = D('Tab')->where($map)->order('sort_order')->select();
         $data = array(
-            'breadcrumbs' => $this->breadcrumbs,
+            'breadcrumbs' => D('Tab')->get_bcrumbs($parent_id),
             'parent_id' => $parent_id,
-            'tabList' => $tabList,
+            'tabList' => $tab_list,
             'current' => 'tab_list',
         );
         $this->assign($data);
@@ -90,13 +85,13 @@ class TabAction extends HomeAction
             if($tabObj->add($data)){
                 echo json_encode(array('code'=>'1','msg'=>'操作成功'));
             }else{
-                echo json_encode(array('code'=>'2','msg'=>'操作失败'));
+                echo json_encode(array('msg'=>'操作失败'));
             }
         }else{
             if($tabObj->save($data)){
                 echo json_encode(array('code'=>'1','msg'=>'操作成功'));
             }else{
-                echo json_encode(array('code'=>'2','msg'=>'操作失败'));
+                echo json_encode(array('msg'=>'操作失败'));
             }
         }
     }
@@ -122,7 +117,10 @@ class TabAction extends HomeAction
         $where['parent_id'] = array('in', $delIds);
         $where['_logic'] = 'or';
         $map['_complex'] = $where;
-		D('Tab')->where($map)->delete();
-		$this->success('删除成功');
+        if(D('Tab')->where($map)->delete()){
+            echo json_encode(array('code'=>'1','msg'=>'删除成功'));
+        }else{
+            echo json_encode(array('msg'=>'删除失败'));
+        }
     }
 }

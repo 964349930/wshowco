@@ -38,7 +38,7 @@ class SettingModel extends CommonModel {
         //url
         if(in_array('url', $arrFormatField)){
             $user_name = D('User')->where('id='.$info['user_id'])->getField('name');
-            $info['url'] = 'http://'.$_SERVER['HTTP_HOST'].U('Mobile/Index/index', array('user'=>$user_name));
+            $info['url'] = 'http://'.$_SERVER['HTTP_HOST'].'/index.php?g=Mobile&user='.$user_name;
         }
 
         //logo
@@ -74,6 +74,7 @@ class SettingModel extends CommonModel {
         return array(
             array('title'=>'ID','name'=>'id','type'=>'hidden'),
             array('title'=>'网站名称','name'=>'site_name','type'=>'text'),
+            array('title'=>'网站链接','name'=>'url','type'=>'disabled'),
             array('title'=>'联系号码','name'=>'tel','type'=>'tel'),
             array('title'=>'联系地址','name'=>'address','type'=>'text'),
             array('title'=>'电子邮箱','name'=>'email','type'=>'email'),

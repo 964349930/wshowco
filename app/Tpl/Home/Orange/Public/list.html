@@ -24,21 +24,40 @@
     <volist name="field_info" id="vo">
     <tr>
         <volist name="field_list" id="voo">
-        <eq name="voo[type]" value="action_list">
+
+        <!-- 如果字段值为空 -->
+        <empty name="vo[$voo[name]]">
+        <td>无</td>
+        <else />
+
+        <!-- 如果是时间 -->
+        <if condition="$voo[type] eq 'date'">
+        <td>{$vo[$voo[name]]|date="Y-m-d H:i",###}</td>
+    
+        <!-- 如果是操作列表 -->
+        <elseif condition="$voo[type] eq 'action_list'" />
             <td>
             <volist name="vo[action_list]" id="vooo">
+
+            <!-- 如果是编辑操作 -->
             <if condition="$vooo[type] eq 'edit'">
             <i class="fa fa-edit" onclick="loadMain('{$vooo.url}')" style="margin-right:10px;"></i>
+
+            <!-- 如果是列表操作 -->
             <elseif condition="$vooo[type] eq 'ls'" />
             <i class="fa fa-sitemap" onclick="loadMain('{$vooo.url}')" style="margin-right:10px;"></i>
+
+            <!-- 如果是删除操作 -->
             <else />
             <i class="fa fa-trash-o" style="color:red;" data-toggle="modal" data-target="#isdelete" data-href="{$vooo.url}"></i>
             </if>
             </volist>
-        </td>
+            </td>
         <else />
         <td>{$vo[$voo[name]]}</td>
-        </eq>
+        </if>
+
+        </empty>
         </volist>
     </tr>
     </volist>
