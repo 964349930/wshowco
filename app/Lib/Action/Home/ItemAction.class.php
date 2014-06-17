@@ -57,8 +57,9 @@ class ItemAction extends HomeAction
         $parent_id = intval($_GET['parent_id']);
         if(empty($parent_id)){$parent_id = 0;}
 
-        $map = array('user_id'=>$_SESSION['uid'], 'parent_id'=>$parent_id);
+        $fields_all = D('Item')->field_list();
         $fields = array('id','title','intro','date_modify');
+        $map = array('user_id'=>$_SESSION['uid'], 'parent_id'=>$parent_id);
         $page = page(D('Item')->getCount($map));
 
         //获取文章列表
@@ -75,16 +76,19 @@ class ItemAction extends HomeAction
         
         //模板赋值
         $fields[] = 'action_list';
-        $fields_all = D('Item')->field_list();
+        $btn_list = array(
+            array('title'=>'添加文章','url'=>U('Item/itemInfo',array('parent_id'=>$parent_id)),'class'=>'primary'),
+            array('title'=>'批量删除','url'=>U('Item/itemDel'),'class'=>'danger','type'=>'form'),
+        );
 
         $data = array(
             'title'=>'文章列表',
-            'btn_list'=>array(array('title'=>'添加文章','url'=>U('Item/itemInfo',array('parent_id'=>$parent_id)))),
+            'btn_list'=> $btn_list,
             'bread_list' => D('Item')->get_bcrumbs($parent_id),
             'field_list' => $this->get_field_list($fields_all, $fields),
             'field_info' => $item_list,
             'plugin_list' => array('Public:modal_delete',),
-            //'page_list' => $page->show(),
+            'page_list' => $page->show(),
         );
         $this->assign($data);
         $this->display('Public:list');

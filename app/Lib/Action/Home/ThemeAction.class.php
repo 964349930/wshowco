@@ -9,16 +9,46 @@ class ThemeAction extends HomeAction{
 	 * 首页方法
 	 */
 	public function themeList(){
+        $fields_all = D('Theme')->field_list();
         $fields = array('id','name','date_modify');
         $page = page(D('Theme')->getCount());
-        $theme_list = D('Theme')->field($fields)->order('date_modify desc')->limit($page->firstRow,$page->listRows)->select();
+        $list = D('Theme')->field($fields)->order('date_modify desc')->limit($page->firstRow,$page->listRows)->select();
 
-        $fields_all = D('Theme')->field_list();
+        foreach($list as $k=>$v){
+            $list[$k]['action_list'] = array(
+                array(
+                    'url'  => U('Theme/themeInfo',array('id'=>$v['id'])),
+                    'type' => 'edit',
+                ),
+                array(
+                    'url'  => U('Theme/themeDel',array('id'=>$v['id'])),
+                    'type' => 'del',
+                )
+            );
+
+        }
+
+        $btn_list = array(
+            array(
+                'title' =>'添加主题',
+                'url'   =>U('Theme/themeInfo'),
+                'class' =>'primary',
+            ),
+            array(
+                'title' => '批量删除',
+                'url'   => U('Theme/themeDel'),
+                'class' => 'danger',
+                'type'  => 'form',
+            ),
+        );
+        $fields[] = 'action_list';
+
         $data = array(
-            'title' => '主题列表',
+            'title'      => '主题列表',
+            'btn_list'   => $btn_list,
             'field_list' => $this->get_field_list($fields_all,$fields),
-            'field_info' => $theme_list,
-            'page_list' => $page->show(),
+            'field_info' => $list,
+            'page_list'  => $page->show(),
         );
 		$this->assign($data);
 		$this->display('Public:list');

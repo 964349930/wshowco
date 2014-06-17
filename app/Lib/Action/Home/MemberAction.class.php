@@ -22,7 +22,7 @@ class MemberAction extends HomeAction
             'title' => '会员列表',
             'field_list' => $this->get_field_list($fields_all,$fields),
             'field_info' => $member_list,
-            //'page_list' => $page->show(),
+            'page_list' => $page->show(),
         );
         $this->assign($data);
         $this->display('Public:list');
@@ -59,6 +59,7 @@ class MemberAction extends HomeAction
             'title' => '用户行为表',
             'field_list' => $this->get_field_list($fields_all, $fields),
             'field_info' => $action_list,
+            'page_list'  => $page->show(),
         );
         $this->assign($data);
         $this->display('Public:list');

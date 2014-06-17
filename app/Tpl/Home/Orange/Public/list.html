@@ -6,23 +6,25 @@
 </notempty>
 
 
-<!-- 按钮 -->
-<volist name="btn_list" id="vo">
-<button class="btn btn-primary" onclick="loadMain('{$vo.url}')">{$vo.title}</button>
-</volist>
-
 <div class="table-responsive">
 <table class="table table-striped">
     <thead>
         <tr>
+            <th><input type="checkbox" id="check_all"></th>
             <volist name="field_list" id="vo">
+
+            <if condition="$vo[type] eq 'hidden'">
+            <else />
             <th>{$vo.title}</th>
+            </if>
+
             </volist>
         </tr>
     </thead>
     <tbody>
     <volist name="field_info" id="vo">
     <tr>
+        <td><input type="checkbox" name="id[]" value="{$vo.id}"></td>
         <volist name="field_list" id="voo">
 
         <!-- 如果字段值为空 -->
@@ -33,6 +35,9 @@
         <!-- 如果是时间 -->
         <if condition="$voo[type] eq 'date'">
         <td>{$vo[$voo[name]]|date="Y-m-d H:i",###}</td>
+
+        <!-- 如果是隐藏字段 -->
+        <elseif condition="$voo[type] eq 'hidden'" />
     
         <!-- 如果是操作列表 -->
         <elseif condition="$voo[type] eq 'action_list'" />
@@ -65,9 +70,23 @@
 </table>
 </div>
 
+<!-- 按钮 -->
+<volist name="btn_list" id="vo">
+<button class="btn btn-{$vo.class}" 
+<eq name="vo[type]" value="form">
+    onclick="sendForm('{$vo.url}')"
+<else />
+    onclick="loadMain('{$vo.url}')"
+</eq>
+ style="margin-right:5px">{$vo.title}</button>
+</volist>
+
+
 <!-- 分页 -->
 <notempty name="page_list">
+<ul class="pagination" style="float:right;">
     {$page_list}
+</ul>
 </notempty>
 
 <!-- 插件列表 -->
@@ -75,3 +94,25 @@
 <volist name="plugin_list" id="vo">
 <include file="$vo" />
 </volist>
+
+<script>
+    /** 列表全选 **/
+	$("#check_all").click(function(){
+		var checked = this.checked;
+		if (checked == true) {
+			 $('input[name="id[]"]').attr('checked','true');
+		} else {
+			 $('input[name="id[]"]').removeAttr('checked');
+		}
+	})
+
+
+    /** 分页链接修复 **/
+    var pages = $(".pagination li a");
+    for(var i = 0; i< pages.length; i ++){
+		pages.click(function(){
+			loadMain('http://www.baidu.com');
+		});
+    }
+
+</script>

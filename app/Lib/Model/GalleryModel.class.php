@@ -32,4 +32,16 @@ class GalleryModel extends CommonModel
         }
         return $galleryId;
     }
+
+    public function field_list()
+    {
+        return array(
+            array('title'=>'ID','name'=>'id','type'=>'hidden'),
+            array('title'=>'名称','name'=>'title','type'=>'text'),
+            array('title'=>'描述','name'=>'intro','type'=>'textarea'),
+            array('title'=>'更新时间','name'=>'date_modify','type'=>'date'),
+            array('title'=>'操作','name'=>'action_list','type'=>'action_list'),
+        );
+    }
+
 }

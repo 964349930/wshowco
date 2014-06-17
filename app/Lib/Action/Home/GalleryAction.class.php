@@ -123,22 +123,40 @@ class GalleryAction extends HomeAction
      */
     public function galleryList()
     {
-        $parent_id = $this->_get('parent_id', 'intval');
-        if(empty($parent_id)){$parent_id = 0;}
-        $galleryObj = D('Gallery');
-        $arrField = array();
-        $arrMap['user_id'] = array('eq', $_SESSION['uid']);
-        $arrMap['parent_id'] = array('eq', $parent_id);
-        $arrOrder = array('date_add desc');
-        $galleryList = $galleryObj->getList($arrField, $arrMap, $arrOrder);
-        foreach($galleryList as $k=>$v){
-            $galleryList[$k] = $galleryObj->format($v, array('cover_name'));
+        $fields_all = D('Gallery')->field_list();
+        $fields = array('id','title', 'intro', 'date_modify');
+        $map = array('user_id'=>$_SESSION['uid']);
+        $page = page(D('Gallery')->getCount($map),10);
+
+        $list = D('Gallery')
+            ->field($fields)
+            ->where($map)
+            ->order('date_modify desc')
+            ->limit($page->firstRow,$page->listRows)
+            ->select();
+
+        foreach($list as $k=>$v){
+            $list[$k]['action_list'] = array(
+                array('url'=>U('Gallery/metaList',array('gallery_id'=>$v['id'])),'type'=>'ls'),
+                array('url'=>U('Gallery/galleryInfo',array('id'=>$v['id'])),'type'=>'edit'),
+                array('url'=>U('Gallery/galleryDel',array('id'=>$v['id'])),'type'=>'del'),
+            );
         }
+
+        $fields[] = 'action_list';
+        $btn_list = array(
+            array('title'=>'添加相册','class'=>'primary','url'=>U('Gallery/galleryInfo')),
+            array('title'=>'批量删除','class'=>'danger','url'=>U('Gallery/galleryDel'),'type'=>'form'),
+        ); 
         $data = array(
-            'galleryList' => $galleryList,
+            'title'      => '相册列表',
+            'btn_list'   => $btn_list,
+            'field_list' => $this->get_field_list($fields_all,$fields),
+            'field_info' => $list,
+            'page_list'  => $page->show(),
         );
         $this->assign($data);
-        $this->display();
+        $this->display('Public:list');
     }
 
     /**
@@ -146,37 +164,46 @@ class GalleryAction extends HomeAction
      */
     public function galleryInfo()
     {
-        $galleryObj = D('Gallery');
         $this->breadcrumbs['1'] = array(
             'title' => '相册管理',
             'url' => U('Gallery/galleryList'),
         );
+        $fields_all = D('Gallery')->field_list();
+        $fields = array('id','title','intro');
         if(empty($_POST)){
-            $id = $this->_get('id', 'intval');
+            $id = intval($_GET['id']);
             if(!empty($id)){
-                $galleryInfo = $galleryObj->getInfoById($id);
-                $galleryInfo = $galleryObj->format($galleryInfo, array('cover_name'));
-                $this->assign('galleryInfo', $galleryInfo);
+                $info = D('Gallery')
+                    ->field($fields)
+                    ->where('id='.$id)
+                    ->find();
             }
-            $this->assign('breadcrumbs', $this->breadcrumbs);
-            $this->display();
+            $data = array(
+                'title' => '相册设置',
+                'form_url'=>U('Gallery/galleryInfo'),
+                'return_url' => U('Gallery/galleryList'),
+                'field_list' => $this->get_field_list($fields_all,$fields),
+                'field_info' => $info,
+            );
+            $this->assign($data);
+            $this->display('Public:info');
             exit;
         }
-        $data = $this->_post();
-        $data['user_id'] = $_SESSION['uid'];
+        $data = $_POST;
         $data['date_modify'] = time();
         if(empty($data['id'])){
             $data['date_add'] = time();
-            if($galleryObj->add($data)){
+            $data['user_id'] = $_SESSION['uid'];
+            if(D('Gallery')->add($data)){
                 echo json_encode(array('code'=>'1','msg'=>'创建成功'));
             }else{
-                echo json_encode(array('code'=>'0','msg'=>'创建失败'));
+                echo json_encode(array('msg'=>'创建失败'));
             }
         }else{
-            if($galleryObj->save($data)){
-                echo json_encode(array('code'=>'1','msg'=>'创建成功'));
+            if(D('Gallery')->save($data)){
+                echo json_encode(array('code'=>'1','msg'=>'更新成功'));
             }else{
-                echo json_encode(array('code'=>'0','msg'=>'创建失败'));
+                echo json_encode(array('code'=>'0','msg'=>'更新失败'));
             }
         }
     }
@@ -223,28 +250,41 @@ class GalleryAction extends HomeAction
      */
     public function metaList()
     {
-        $gallery_id = $this->_request('gallery_id', 'intval');
-        $metaObj = D('GalleryMeta');
-        $arrField = array();
-        $arrMap['gallery_id'] = array('eq', $gallery_id);
-        $arrOrder = array('date_modify desc');
-        $page = page($metaObj->getCount($arrMap), 10);
-        $metaList = $metaObj->getList($arrField ,$arrMap, $arrOrder, $page->firstRow, $page->listRows);
-        foreach($metaList as $k=>$v){
-            $metaList[$k] = $metaObj->format($v, array('path_name'));
+        $fields_all = D('GalleryMeta')->field_list();
+        $fields = array('id','path','title','date_modify');
+        $map = array('gallery_id'=>intval($_GET['gallery_id']));
+        $page = page(D('GalleryMeta')->getCount($map));
+
+        $list = D('GalleryMeta')
+            ->field($fields)
+            ->where($map)
+            ->order('date_modify desc')
+            ->limit($page->firstRow,$page->listRows)
+            ->select();
+
+        foreach($list as $k=>$v){
+            $list[$k]['path'] = getPicPath($v['path'], 's');
+            $list[$k]['action_list'] = array(
+                array('url'=>U('Gallery/metaInfo',array('id'=>$v['id'])),'type'=>'edit'),
+                array('url'=>U('Gallery/metaDel',array('id'=>$v['id'])),'type'=>'del'),
+            );
         }
-        $this->breadcrumbs['1'] = array(
-            'title' => D('Gallery')->where('id='.$gallery_id)->getField('title'),
+
+        $breadcrumbs = array(array(
+            'title' => '相册列表',
             'url' => U('Gallery/galleryList'),
-        );
+        ));
+        $fields[] = 'action_list';
         $data = array(
-            'breadcrumbs' => $this->breadcrumbs,
-            'gallery_id' => $gallery_id,
-            'metaList' => $metaList,
-            'pageHtml' => $page->show(),
+            'title' => '图片列表',
+            'btn_list' => array(array('title'=>'添加图片','url'=>U('Gallery/metaInfo'))),
+            'field_list' => $this->get_field_list($fields_all,$fields),
+            'field_info' => $list,
+            'page_list'  => $page->show(),
+            'bread_list' => $breadcrumbs,
         );
         $this->assign($data);
-        $this->display();
+        $this->display('Public:list');
     }
 
     /**
@@ -252,9 +292,10 @@ class GalleryAction extends HomeAction
      */
     public function metaInfo()
     {
-        $metaObj = D('GalleryMeta');
+        $fields_all = D('GalleryMeta')->field_list();
+        $fields = array('id','gallery_id','title','path');
         if(empty($_POST)){
-            $id = $this->_get('id', 'intval');
+            $id = intval($_GET['id']);
             if(!empty($id)){
                 $metaInfo = $metaObj->getInfoById($id);
                 $metaInfo = $metaObj->format($metaInfo, array('path_name'));

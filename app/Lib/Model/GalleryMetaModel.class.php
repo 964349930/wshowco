@@ -46,4 +46,15 @@ class GalleryMetaModel extends CommonModel
         return $path; 
     }
 
+    public function field_list()
+    {
+        return array(
+            array('title'=>'ID','name'=>'id','type'=>'hidden'),
+            array('title'=>'名称','name'=>'title','type'=>'text'),
+            array('title'=>'地址','name'=>'path','type'=>'sel_img'),
+            array('title'=>'更新时间','name'=>'date_modify','type'=>'date'),
+            array('title'=>'操作','name'=>'action_list','type'=>'action_list'),
+        );
+    }
+
 }
