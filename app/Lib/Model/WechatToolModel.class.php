@@ -21,6 +21,27 @@ class WechatToolModel extends CommonModel {
         return $info;
     }
 
+    /**
+     * 字段信息
+     */
+    public function field_list()
+    {
+        return array(
+            array('title'=>'ID','name'=>'id','type'=>'hidden'),
+            array('title'=>'名称','name'=>'name','type'=>'text'),
+            array('title'=>'描述','name'=>'intro','type'=>'textarea'),
+            array('title'=>'函数','name'=>'function','type'=>'text'),
+            array('title'=>'排序','name'=>'sort_order','type'=>'number'),
+            array('title'=>'使用状态','name'=>'status','type'=>'radio','data'=>array(
+                array('title'=>'使用','value'=>'1'),
+                array('title'=>'不使用','value'=>'0'),
+            ),),
+            array('title'=>'更新时间','name'=>'date_modify','type'=>'date'),
+            array('title'=>'操作','name'=>'action_list','type'=>'action_list'),
+
+        );
+    }
+
     ///////////////////////功能类函数///////////////////////////////////
     /**
      * 百度API：根据经纬度获取城市名称

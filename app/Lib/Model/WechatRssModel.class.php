@@ -43,4 +43,27 @@ class WechatRssModel extends CommonModel
         }
         return $newsList;
     }
+
+    /**
+     * 字段信息
+     */
+    public function field_list()
+    {
+        return array(
+            array('title'=>'ID','name'=>'id','type'=>'hidden'),
+            array('title'=>'标题','name'=>'title','type'=>'text'),
+            array('title'=>'关键字','name'=>'keyword','type'=>'text'),
+            array('title'=>'链接','name'=>'url','type'=>'url'),
+            array('title'=>'数量','name'=>'count','type'=>'number'),
+            array('title'=>'使用状态','name'=>'status','type'=>'radio','data'=>array(
+                array('title'=>'使用','value'=>'1'),
+                array('title'=>'不使用','value'=>'0'),
+            ),),
+            array('title'=>'更新时间','name'=>'date_modify','type'=>'date'),
+            array('title'=>'操作','name'=>'action_list','type'=>'action_list'),
+
+        );
+    }
+
+
 }

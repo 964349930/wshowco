@@ -19,6 +19,7 @@ class UserModel extends CommonModel{
             array('title'=>'借口凭证','name'=>'token','type'=>'text'),
             array('title'=>'APPID','name'=>'appid','type'=>'text'),
             array('title'=>'APPSECRECT','name'=>'appsecrect','type'=>'text'),
+            array('title'=>'注册日期','name'=>'date_reg','type'=>'date'),
         );
     }
 

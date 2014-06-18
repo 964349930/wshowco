@@ -10,20 +10,26 @@ class UserAction extends HomeAction{
 	 * 会员列表
 	 */
 	public function userList(){
-		$userObj = D('User');
-		$count = $userObj->getCount();
-        $page = page($count);
+        $fields_all = D('User')->field_list();
+        $fields = array('id','name','mobile','date_reg');
+        $page = page(D('User')->getCount());
 
-        $fields = array('id','name','mobile');
-		$userList = $userObj->field($fields)->limit($page->firstRow, $page->listRows)->select();
-        $fields_all = $userObj->field_list();
-        $tpl_data = array(
-            'title'=>'用户列表',
-            'field_info'=>$userList,
-            'field_list' => $this->get_field_list($fields_all, $fields),
-            'btn_list'=>array(array('title'=>'添加用户','url'=>U('User/add'))),
+        $list = D('User')->field($fields)->order('date_reg desc')->limit($page->firstRow,$page->listRows)->select();
+        $btn_list = array(
+            array(
+                'title' => '添加用户',
+                'url'   => U('User/add'),
+                'class' => 'primary',
+            ),
         );
-		$this->assign($tpl_data);
+        $data = array(
+            'title'      => '用户列表',
+            'field_info' => $list,
+            'field_list' => $this->get_field_list($fields_all, $fields),
+            'btn_list'   => $btn_list,
+            'page_list'  => $page->show(),
+        );
+		$this->assign($data);
 		$this->display("Public:list");
 	}
 
@@ -148,10 +154,7 @@ class UserAction extends HomeAction{
      */
     public function groupList()
     {
-        $groupObj = D('UserGroup');
-        $arrField = array();
-        $arrMap = array();
-        $arrOrder = array();
+        $fields_all = D('UserGroup')->field_list();
         $groupList = $groupObj->getList($arrField, $arrMap, $arrOrder);
         foreach($groupList as $k=>$v){
             $groupList[$k]['count'] = D('User')->getCount(array('group_id'=>$v['id']));

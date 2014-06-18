@@ -274,10 +274,23 @@ class GalleryAction extends HomeAction
             'title' => '相册列表',
             'url' => U('Gallery/galleryList'),
         ));
+        $btn_list = array(
+            array(
+                'title' => '添加图片',
+                'url'   => U('Gallery/metaInfo',array('gallery_id'=>intval($_GET['gallery_id']))),
+                'class' => 'primary',
+            ),
+            array(
+                'title' => '批量删除',
+                'url'   => U('Gallery/metaDel'),
+                'class' => 'danger',
+                'type'  => 'form',
+            ),
+        );
         $fields[] = 'action_list';
         $data = array(
-            'title' => '图片列表',
-            'btn_list' => array(array('title'=>'添加图片','url'=>U('Gallery/metaInfo'))),
+            'title'      => '图片列表',
+            'btn_list'   => $btn_list,
             'field_list' => $this->get_field_list($fields_all,$fields),
             'field_info' => $list,
             'page_list'  => $page->show(),
@@ -297,34 +310,38 @@ class GalleryAction extends HomeAction
         if(empty($_POST)){
             $id = intval($_GET['id']);
             if(!empty($id)){
-                $metaInfo = $metaObj->getInfoById($id);
-                $metaInfo = $metaObj->format($metaInfo, array('path_name'));
-                $gallery_id = $metaInfo['gallery_id'];
-                $this->assign('metaInfo', $metaInfo);
+                $info = D('GalleryMeta')->field($fields)->where('id='.$id)->find();
             }else{
-                $gallery_id = $this->_get('gallery_id', 'intval');
+                $gallery_id = intval($_GET['gallery_id']);
+                $info['gallery_id'] = $gallery_id;
             }
-            $this->assign('gallery_id', $gallery_id);
-            $this->display();
+            $data = array(
+                'title' => '图片信息',
+                'field_list' => $this->get_field_list($fields_all,$fields),
+                'field_info' => $info,
+                'form_url'   => U('Gallery/metaInfo'),
+            );
+            $this->assign($data);
+            $this->display('Public:info');
             exit;
         }
-        $data = $this->_post();
+        $data = $_POST;
         $data['date_modify'] = time();
-		if(!empty($_FILES['pic']['name'])){
+		if(!empty($_FILES['path']['name'])){
 			$picList = uploadPic();
 			if($picList['code'] != 'error'){
-				$data['path'] = $picList['pic']['savename'];
+				$data['path'] = $picList['path']['savename'];
 			}
 		}
         if(empty($data['id'])){
             $data['date_add'] = time();
-            if($metaObj->add($data)){
+            if(D('GalleryMeta')->add($data)){
                 echo json_encode(array('code'=>'1','msg'=>'更新成功'));
             }else{
                 echo json_encode(array('code'=>'0','msg'=>'更新失败'));
             }
         }else{
-            if($metaObj->save($data)){
+            if(D('GalleryMeta')->save($data)){
                 echo json_encode(array('code'=>'1','msg'=>'更新成功'));
             }else{
                 echo json_encode(array('code'=>'0','msg'=>'更新失败'));

@@ -14,7 +14,7 @@
         {title, type, name}
     值列表：info
   -->
-  <form role="form" id="form" onsubmit="return editInfo('form')" data-href="{$form_url}">
+  <form role="form" id="form" onsubmit="return editInfo('form')" data-href="{$form_url}" enctype="multipart/form-data">
     <volist name="field_list" id="vo">
 
     <!-- 内容字段 -->
@@ -54,6 +54,15 @@
     </div>
 
     <!-- 多选 -->
+    <!-- 图片上传 -->
+    <elseif condition="$vo.type eq 'image'" />
+    <div class="form-group">
+      <label for="{$vo.name}">{$vo.title}</label>
+      <notempty name="field_info[$vo[name]]">
+        <img class="img_responsive" src="{$field_info[$vo[name]]|getPicPath=###,'s'}" height="50px" />
+      </notempty>
+      <input class="form-control" id="{$vo.name}" name="{$vo.name}" type="file" value="{$field_info[$vo[name]]}">
+    </div>
 
     <!-- 图片字段 -->
     <elseif condition="$vo.type eq 'sel_img'" />

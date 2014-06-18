@@ -98,4 +98,18 @@ class WechatRouteModel extends CommonModel{
         $map['obj_type'] = $obj_type;
         $routeObj->where($map)->delete();
     }
+
+    /**
+     * file list
+     */
+    public function field_list()
+    {
+        return array(
+            array('title'=>'ID','name'=>'id','type'=>'hidden'),
+            array('title'=>'关键字','name'=>'keyword','type'=>'text'),
+            array('title'=>'更新时间','name'=>'date_modify','type'=>'date'),
+            array('title'=>'操作','name'=>'action_list','type'=>'action_list'),
+        );
+    }
+
 }

@@ -64,12 +64,21 @@ function sendForm(url){
 
 /** post to the server **/
 function editInfo(form){
-    var selForm = $("#"+form);
-    var url = selForm.data('href');
-    $.post(url, selForm.serialize(), function(data){
-        if("undefined" == typeof data.code){data.code='0';}
-            calert(data.msg, data.code);}, 'json');
-    return false;
+  var selForm = $("#"+form);
+  var url = selForm.data('href');
+  $.ajax({
+    type: "POST",
+    enctype: "multipart/form-data",
+    url: url,
+    data: selForm.serialize(),
+    success: function( data )
+    {
+      data = JSON.parse(data);
+      if("undefined" == typeof data.code){data.code='0';}
+      calert(data.msg, data.code);
+    }
+  });
+  return false;
 }
 
 /** alert function **/
@@ -86,7 +95,3 @@ function calert(msg, status){
     $(".main").prepend(html);
     window.setTimeout(function(){$(".alert").alert('close');}, 1500);
 }
-
- 
-
-

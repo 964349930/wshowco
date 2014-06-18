@@ -25,36 +25,77 @@ class MenuAction extends HomeAction{
 	 * 菜单列表
 	 */
 	public function menuList(){
-        $menuObj = D('WechatMenu');
-        $menuList = $this->getMenuList();
-        foreach($menuList as $k=>$v){
-            $menuList[$k]['sub_button'] = $this->getMenuList($v['id']);
+        $fields_all = D('WechatMenu')->field_list();
+        $fields = array('id','name','type','value','sort_order','date_modify');
+        $parent_id = intval($_GET['parent_id']);
+        $map = array('user_id'=>$_SESSION['uid'],'parent_id'=>$parent_id);
+        $page = page(D('WechatMenu')->getCount($map));
+        $list = D('WechatMenu')
+            ->field($fields)
+            ->where($map)
+            ->order('sort_order desc')
+            ->limit($page->firstRow,$page->listRows)
+            ->select();
+        foreach($list as $k=>$v){
+            $list[$k]['action_list'] = array(
+                array('url'=>U('Menu/menuList',array('parent_id'=>$v['id'])),'type'=>'ls'),
+                array('url'=>U('Menu/menuInfo',array('id'=>$v['id'])),'type'=>'edit'),
+                array('url'=>U('Menu/del',array('id'=>$v['id'])),'type'=>'del'),
+            );
         }
-        $tplData = array(
-            'infoUrl' => U('Home/Menu/info'),
-            'updateUrl' => U('Home/Menu/createMenu'),
-            'delUrl' => U('Home/Menu/del'),
-            'menuList' => $menuList,
+        $fields[] = 'action_list';
+        $btn_list = array(
+            array(
+                'title' => '同步菜单',
+                'url'   => U('Menu/createMenu'),
+                'class' => 'default',
+            ),
+            array(
+                'title' => '添加菜单',
+                'url'   => U('Menu/menuInfo',array('parent_id'=>$parent_id)),
+                'class' => 'primary',
+            ),
+            array(
+                'title' => '批量删除',
+                'url'   => U('Menu/menuInfo'),
+                'class' => 'danger',
+                'type'  => 'form',
+            ),
         );
-		$this->assign($tplData);
-		$this->display();
+        $data = array(
+            'title'=>'菜单设置',
+            'btn_list' => $btn_list,
+            'field_list' => $this->get_field_list($fields_all,$fields),
+            'field_info' => $list,
+            'page_list'  => $page->show(),
+        );
+        $this->assign($data);
+        $this->display('Public:list');
 	}
 
 	/**
 	 * 页面：添加菜单
 	 */
-	public function info(){
-        $menuObj = D('WechatMenu');
+	public function menuInfo(){
         if(empty($_POST)){
-            $id = $this->_get('id', 'intval');
-            $menuList = $this->getMenuList();
+            $fields_all = D('WechatMenu')->field_list();
+            $fields = array('id','parent_id','name','type','value','sort_order');
+            $id = intval($_GET['id']);
             if(!empty($id)){
-                $info = $menuObj->getInfoById($id);
-                $this->assign('info', $info);
+                $info = D('WechatMenu')->field($fields)->where('id='.$id)->find();
+            }else{
+                $parent_id = intval($_GET['parent_id']);
+                $info['parent_id'] = $parent_id;
             }
-            $this->assign('menuList', $menuList);
-            $this->assign('infoUrl', U('Home/Menu/info'));
-            $this->display();
+
+            $data = array(
+                'title' => '菜单信息',
+                'field_list' => $this->get_field_list($fields_all,$fields),
+                'field_info' => $info,
+                'form_url'   => U('Menu/menuInfo'),
+            );
+            $this->assign($data);
+            $this->display('Public:info');
             exit;
         }
         $data = $this->_post();
@@ -62,11 +103,18 @@ class MenuAction extends HomeAction{
         if(empty($data['id'])){
             $data['user_id'] = $_SESSION['uid'];
             $data['date_add'] = time();
-            $menuObj->add($data);
+            if(D('WechatMenu')->add($data)){
+                echo json_encode(array('code'=>'1','msg'=>'添加成功'));
+            }else{
+                echo json_encode(array('msg'=>'添加失败'));
+            }
         }else{
-            $menuObj->save($data);
+            if(D('WechatMenu')->save($data)){
+                echo json_encode(array('code'=>'1','msg'=>'更新成功'));
+            }else{
+                echo json_encode(array('msg'=>'更新失败'));
+            }
         }
-        $this->success('操作成功');
 	}
 
 	/**
@@ -81,7 +129,7 @@ class MenuAction extends HomeAction{
             }
         }
         D('WechatMenu')->where('id='.$id)->delete();
-        $this->success('操作成功');
+        echo json_encode(array('code'=>'1','msg'=>'删除成功'));
 	}
 
     /**
@@ -132,7 +180,8 @@ class MenuAction extends HomeAction{
 	public function createMenu(){
 		$token = D('WechatMenu')->getToken();
         if(empty($token)){
-            $this->error('获取TOKEN失败');
+            echo json_encode(array('msg'=>'获取TOKEN失败'));
+            exit;
         }
 		//以post方式发送菜单内容给微信服务器
 		//$json = $this->array_utf8_encode_recursive($_SESSION['menuInfo']);
@@ -189,9 +238,9 @@ class MenuAction extends HomeAction{
 		curl_close($ch);
         $result = json_decode($result, true);
 		if($result['errcode'] === 0){
-		    $this->success('菜单更新成功');
+            echo json_encode(array('code'=>'1','msg'=>'菜单更新成功'));
         }else{
-            $this->error('菜单更新失败');
+            echo json_encode(array('msg'=>'菜单更新失败'));
         }
  	}
 }

@@ -41,19 +41,52 @@ class TabAction extends HomeAction
      */
     public function tabList()
     {
+        $fields_all = D('Tab')->field_list();
+        $fields = array('id','title','ico','url','sort_order','date_modify');
         $parent_id = intval($_GET['parent_id']);
         if(empty($parent_id)){$parent_id = 0;}
         $map = array('parent_id'=>$parent_id);
+        $page = page(D('Tab')->getCount($map));
 
-        $tab_list = D('Tab')->where($map)->order('sort_order')->select();
+        $list = D('Tab')
+            ->field($fields)
+            ->where($map)
+            ->order('sort_order')
+            ->limit($page->firstRow,$page->listRows)
+            ->select();
+        
+        foreach($list as $k=>$v){
+            $list[$k]['action_list'] = array(
+                array('type'=>'ls','url'=>U('Tab/tabList',array('parent_id'=>$v['id']))),
+                array('type'=>'edit','url'=>U('Tab/tabInfo',array('id'=>$v['id']))),
+                array('type'=>'del','url'=>U('Tab/del',array('id'=>$v['id']))),
+            );
+        }
+        $btn_list = array(
+            array(
+                'title' => '添加菜单',
+                'url'   => U('Tab/tabInfo',array('parent_id'=>$parent_id)),
+                'class' => 'primary',
+            ),
+            array(
+                'title' => '批量删除',
+                'url'   => U('Tab/del'),
+                'class' => 'danger',
+                'type'  => 'form',
+            ),
+        );
+        $fields[] = 'action_list';
+        
         $data = array(
-            'breadcrumbs' => D('Tab')->get_bcrumbs($parent_id),
-            'parent_id' => $parent_id,
-            'tabList' => $tab_list,
-            'current' => 'tab_list',
+            'title' => '系统菜单列表',
+            'btn_list'   => $btn_list,
+            'field_list' => $this->get_field_list($fields_all,$fields),
+            'field_info' => $list,
+            'bread_list' => D('Tab')->get_bcrumbs($parent_id),
+            'page_list'  => $page->show(),
         );
         $this->assign($data);
-        $this->display();
+        $this->display('Public:list');
     }
 
     /**
@@ -61,34 +94,37 @@ class TabAction extends HomeAction
      */
     public function tabInfo()
     {
-        $tabObj = D('Tab');
         if(empty($_POST)){
-            $tab_id = $this->_get('id', 'intval');
-            if(!empty($tab_id)){
-                $tabInfo = $tabObj->getInfoById($tab_id);
-                $parent_id = $tabInfo['parent_id'];
-                $this->assign('tabInfo', $tabInfo);
+            $fields_all = D('Tab')->field_list();
+            $fields = array('id','parent_id','title','ico','url','sort_order','status');
+            $id = intval($_GET['id']);
+            if(!empty($id)){
+                $info = D('Tab')->field($fields)->where('id='.$id)->find();
             }else{
-                $parent_id = $this->_get('parent_id', 'intval');
+                $parent_id = intval($_GET['parent_id']);
+                $info['parent_id'] = $parent_id;
             }
-            $this->setBCrumbs($parent_id);
-            $this->assign('current', 'tab_list');
-            $this->assign('breadcrumbs', $this->breadcrumbs);
-            $this->assign('parent_id', $parent_id);
-            $this->display();
+            $data = array(
+                'field_list' => $this->get_field_list($fields_all,$fields),
+                'field_info' => $info,
+                'title'      => '菜单信息',
+                'form_url'   => U('Tab/tabInfo'),
+            );
+            $this->assign($data);
+            $this->display('Public:info');
             exit;
         }
-        $data = $this->_post();
+        $data = $_POST;
         $data['date_modify'] = time();
         if(empty($data['id'])){
             $data['date_add'] = time();
-            if($tabObj->add($data)){
+            if(D('Tab')->add($data)){
                 echo json_encode(array('code'=>'1','msg'=>'操作成功'));
             }else{
                 echo json_encode(array('msg'=>'操作失败'));
             }
         }else{
-            if($tabObj->save($data)){
+            if(D('Tab')->save($data)){
                 echo json_encode(array('code'=>'1','msg'=>'操作成功'));
             }else{
                 echo json_encode(array('msg'=>'操作失败'));
@@ -99,7 +135,7 @@ class TabAction extends HomeAction
     /**
      * tab del
      */
-    public function tabDel()
+    public function del()
     {
         $delIds = array();
 		$postIds = $this->_post('id');
@@ -111,7 +147,8 @@ class TabAction extends HomeAction
 			$delIds[] = $getId;
 		}
 		if (empty($delIds)) {
-			$this->error('请选择您要删除的数据');
+            echo json_encode(array('msg'=>'请选择您要删除的数据'));
+            exit;
 		}
 		$where['id'] = array('in', $delIds);
         $where['parent_id'] = array('in', $delIds);

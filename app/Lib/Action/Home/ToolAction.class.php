@@ -9,26 +9,41 @@ class ToolAction extends HomeAction {
      * 获取应用列表
      */
     public function toolList(){
-        $toolObj = D('WechatTool');
-        $arrField = array('*');
+        $fields_all = D('WechatTool')->field_list();
+        $fields = array('id','name','intro','date_modify');
+        $map = array();
         if($_SESSION['uid'] != 1){
-            $arrMap['status'] = array('eq', 1);
+            $map['status'] = array('eq', 1);
         }
-        $arrOrder = array('sort_order');
-        $page = page($toolObj->getCount($arrMap));
-        $toolList = $toolObj->getList($arrField, $arrMap, $arrOrder, $page->firstRow, $page->listRows);
-        foreach($toolList as $k=>$v){
-            $toolList[$k] = $toolObj->format($v, array('useStatus'));
+        $page = page(D('WechatTool')->getCount($map));
+
+        $list = D('WechatTool')
+            ->field($fields)
+            ->where($map)
+            ->order('sort_order desc')
+            ->limit($page->firstRow, $page->listRows)
+            ->select();
+        
+        foreach($list as $k=>$v){
+            $list[$k]['action_list'] = array(
+                array('url'=>U('Tool/toolInfo',array('id'=>$v['id'])),'type'=>'edit'),
+                array('url'=>U('Tool/del',array('id'=>$v['id'])),'type'=>'del'),
+            );
         }
-        $tplData = array(
-            'toolList' => $toolList,
-            'useUrl'   => U('Home/Tool/useTool'),
-            'toolInfoUrl' => U('Home/Tool/toolInfo'),
-            'delUrl'    => U('Home/Tool/del'),
-            'pageHtml' => $page->show(),
+        $btn_list = array(
+            array('title'=>'添加工具','class'=>'primary','url'=>U('Tool/toolInfo')),
+            array('title'=>'批量删除','class'=>'danger','url'=>U('Tool/del'),'type'=>'form'),
         );
-        $this->assign($tplData);
-        $this->display();
+        $fields[] = 'action_list';
+        $data = array(
+            'title'      => '工具列表',
+            'btn_list'   => $btn_list,
+            'field_list' => $this->get_field_list($fields_all,$fields),
+            'field_info' => $list,
+            'page_list'  => $page->show(),
+        );
+        $this->assign($data);
+        $this->display('Public:list');
     }
 
     /**
@@ -36,26 +51,39 @@ class ToolAction extends HomeAction {
      */
     public function toolInfo()
     {
-        $toolObj = D('WechatTool');
+        $fields = array('id','name','intro','function','status','sort_order');
         if(empty($_POST)){
-            $id = $this->_get('id', 'intval');
+            $fields_all = D('WechatTool')->field_list();
+            $id = intval($_GET['id']);
             if(!empty($id)){
-                $toolInfo = $toolObj->getInfoById($id);
-                $this->assign('toolInfo', $toolInfo);
+                $info = D('WechatTool')->field($fields)->where('id='.$id)->find();
             }
-            $this->assign('toolInfoUrl', U('Home/Tool/toolInfo'));
-            $this->display();
+            $data = array(
+                'title' => '工具信息',
+                'field_list' => $this->get_field_list($fields_all,$fields),
+                'field_info' => $info,
+                'form_url'   => U('Tool/toolInfo'),
+            );
+            $this->assign($data);
+            $this->display('Public:info');
             exit;
         }
-        $data = $this->_post();
+        $data = $_POST;
         $data['date_modify'] = time();
         if(empty($data['id'])){
             $data['date_add'] = time();
-            $toolObj->add($data);
+            if(D('WechatTool')->add($data)){
+                echo json_encode(array('code'=>'1','msg'=>'添加成功'));
+            }else{
+                echo json_encode(array('msg'=>'添加失败'));
+            }
         }else{
-            $toolObj->save($data);
+            if(D('WechatTool')->save($data)){
+                echo json_encode(array('code'=>'1','msg'=>'更新成功'));
+            }else{
+                echo json_encode(array('msg'=>'更新失败'));
+            }
         }
-        $this->success('操作成功');
     }
 
     /**
@@ -90,11 +118,12 @@ class ToolAction extends HomeAction {
 			$delIds[] = $getId;
 		}
 		if (empty($delIds)) {
-			$this->error('请选择您要删除的数据');
+            echo json_encode(array('msg'=>'请选择您要删除的数据'));
+            exit;
 		}
 		$map['id'] = array('in', $delIds);
 		D('WechatTool')->where($map)->delete();
-		$this->success('删除成功');
+        echo json_encode(array('code'=>'1','msg'=>'删除成功'));
     }
 
 }

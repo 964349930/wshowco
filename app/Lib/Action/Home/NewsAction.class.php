@@ -42,12 +42,25 @@ class NewsAction extends HomeAction{
 
         //模板赋值
         $fields = array_merge($fields, array('keyword','action_list'));
+        $btn_list = array(
+            array(
+                'title' => '添加图文消息',
+                'url'   => U('News/newsInfo'),
+                'class' => 'primary',
+            ),
+            array(
+                'title' => '批量删除',
+                'url'   => U('News/delNews'),
+                'class' => 'danger',
+                'type'  => 'form',
+            ),
+        );
 		$data = array( 
             'title'=>'图文消息列表',
             'field_list'=>$this->get_field_list($fields_all, $fields),
             'field_info'=>$news_list,
-            //'page_list' => $page->show(),
-            'btn_list'=>array(array('title'=>'添加图文消息','url'=>U('News/newsInfo'))),
+            'page_list' => $page->show(),
+            'btn_list'  => $btn_list,
 		);
 		$this->assign($data);
 		$this->display('Public:list');
@@ -97,59 +110,6 @@ class NewsAction extends HomeAction{
         echo json_encode(array('code'=>'1','msg'=>'操作成功'));
 	}
 
-    /**
-     * special push action
-     */
-    public function special(){
-        if(empty($_POST)){
-
-            //获取关键字
-            $keyword = $this->_get('keyword', 'trim');
-
-            //获取路由信息
-            $route_info = D('WechatRoute')->where("user_id=".$_SESSION['uid']." AND obj_type='news' AND keyword='".$keyword."'")->find();
-
-            $fields = array('id','news_id','title','description','cover','url');
-            if(!empty($route_info)){
-                //子图文信息
-                $meta_info = D('WechatNewsMeta')->field($fields)->where('news_id='.$route_info['obj_id'])->find();
-                $meta_info = D('WechatNewsMeta')->format($meta_info, array('cover_name'));
-                $meta_info['route_id'] = D('WechatRoute')->where('obj_id='.$meta_info['news_id'].' AND obj_type=\'news\'')->getField('id');
-                $meta_info['keyword'] = $keyword;
-            }
-
-            //模板赋值
-            $fields = array_merge($fields, array('route_id','keyword'));
-            $fields_all = D('WechatNewsMeta')->field_list();
-            $data = array(
-                'title' => $keyword.'自动回复',
-                'form_url' => U('News/special',array('keyword'=>$keyword)),
-                'field_list'=>$this->get_field_list($fields_all, $fields),
-                'field_info'=>$meta_info,
-            );
-            $this->assign($data);
-            $this->display('Public:info');
-            exit;
-        }
-        //$meta['url'] = htmlspecialchars_decode($meta['url']);
-        
-        //整理数据
-        $news_info = array('id'=>$_POST['news_id']); 
-        $meta_info = array(
-            'id'=>$_POST['id'],
-            'title'=>$_POST['title'],
-            'description'=>$_POST['description'],
-            'url'=>$_POST['url'],
-        );
-        $route_info = array('id'=>$_POST['route_id'],'keyword'=>$_POST['keyword']);
-
-
-        $news_id = D('WechatNews')->updateNews($news_info);
-        D('WechatRoute')->updateRoute('news', $news_id, $route_info);
-        D('WechatNewsMeta')->updateMeta($meta_info, $news_id);
-        echo json_encode(array('code'=>'1','msg'=>'操作成功'));
-    }
-
 	/**
 	 * 图文删除
 	 */
@@ -186,8 +146,15 @@ class NewsAction extends HomeAction{
     {
         $id = $this->_get('id', 'intval');
         $fields = array('id','title','description','date_modify');
+        $map = array('news_id'=>$id);
+        $page = page(D('WechatNewsMeta')->getCount($map));
 
-        $meta_list = D('WechatNewsMeta')->field($fields)->where('news_id='.$id)->order('sort_order')->select();
+        $meta_list = D('WechatNewsMeta')
+            ->field($fields)
+            ->where($map)
+            ->order('sort_order')
+            ->limit($page->firstRow, $page->listRows)
+            ->select();
 
         foreach($meta_list as $k=>$v){
             $meta_list[$k] = D('WechatNewsMeta')->format($v, array('cover_name'));
@@ -199,11 +166,25 @@ class NewsAction extends HomeAction{
 
         $fields[] = 'action_list';
         $fields_all = D('WechatNewsMeta')->field_list();
+        $btn_list = array(
+            array(
+                'title' => '添加子图文',
+                'url'   => U('News/metaInfo',array('news_id'=>$id)),
+                'class' => 'primary',
+            ),
+            array(
+                'title' => '批量删除',
+                'url'   => U('News/delMeta'),
+                'class' => 'danger',
+                'type'  => 'form',
+            ),
+        );
         $data = array(
             'title'=>'子图文列表',
-            'btn_list'=>array(array('title'=>'添加子图文','url'=>U('News/metaInfo',array('news_id'=>$id)))),
-            'field_list'=>$this->get_field_list($fields_all, $fields),
-            'field_info'=>$meta_list,
+            'btn_list'   => $btn_list,
+            'field_list' => $this->get_field_list($fields_all, $fields),
+            'field_info' => $meta_list,
+            'page_list'  => $page->show(),
         );
         $this->assign($data);
         $this->display('Public:list');
@@ -290,12 +271,25 @@ class NewsAction extends HomeAction{
 
         $fields = array_merge($fields, array('keyword','action_list'));
         $fields_all = D('WechatText')->field_list();
-
+        $btn_list = array(
+            array(
+                'title' =>'添加文本回复',
+                'url'   =>U('News/textInfo'),
+                'class' => 'primary',
+            ),
+            array(
+                'title' =>'批量删除',
+                'url'   =>U('News/delText'),
+                'class' => 'danger',
+                'type'  => 'form',
+            ),
+        );
 		$data = array(
-            'title'=>'文本回复列表',
-            'btn_list'=>array(array('title'=>'添加文本回复','url'=>U('News/textInfo'))),
-            'field_list'=>$this->get_field_list($fields_all, $fields),
-            'field_info'=>$text_list,
+            'title'      => '文本回复列表',
+            'btn_list'   => $btn_list,
+            'field_list' => $this->get_field_list($fields_all, $fields),
+            'field_info' => $text_list,
+            'page_list'  => $page->show(),
 		);
 		$this->assign($data);
 		$this->display('Public:list');
@@ -304,8 +298,8 @@ class NewsAction extends HomeAction{
 	/**
 	 * 文字素材添加页面
 	 */
-	public function textInfo(){
-        if(empty($_POST)){
+	public function textinfo(){
+        if(empty($_post)){
             $id = $this->_get('id', 'intval');
             $fields = array('id','content');
             if(!empty($id)){

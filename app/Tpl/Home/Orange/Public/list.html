@@ -38,7 +38,11 @@
 
         <!-- 如果是隐藏字段 -->
         <elseif condition="$voo[type] eq 'hidden'" />
-    
+
+        <!-- 如果是单选字段 -->
+        <elseif condition="$voo[type] eq 'radio'" />
+        <td>{$vo[$voo[name]]}</td>
+
         <!-- 如果是操作列表 -->
         <elseif condition="$voo[type] eq 'action_list'" />
             <td>
@@ -72,7 +76,7 @@
 
 <!-- 按钮 -->
 <volist name="btn_list" id="vo">
-<button class="btn btn-{$vo.class}" 
+<button class="btn btn-{$vo.class}"
 <eq name="vo[type]" value="form">
     onclick="sendForm('{$vo.url}')"
 <else />
@@ -108,11 +112,9 @@
 
 
     /** 分页链接修复 **/
-    var pages = $(".pagination li a");
-    for(var i = 0; i< pages.length; i ++){
-		pages.click(function(){
-			loadMain('http://www.baidu.com');
-		});
-    }
-
+    $('.pagination li a').click(function(e) {
+      e.preventDefault();
+      var url = $(this).attr('href');
+      loadMain(url);
+    });
 </script>

@@ -39,4 +39,25 @@ class WechatMenuModel extends CommonModel
         return $arrInfo;
     }
 
+    /**
+     * 字段信息
+     */
+    public function field_list()
+    {
+        return array(
+            array('title'=>'ID','name'=>'id','type'=>'hidden'),
+            array('title'=>'parent_id','name'=>'parent_id','type'=>'hidden'),
+            array('title'=>'名称','name'=>'name','type'=>'text'),
+            array('title'=>'类型','name'=>'type','type'=>'radio','data'=>array(
+                array('title'=>'关键字','value'=>'click'),
+                array('title'=>'链接','value'=>'view'),
+            )),
+            array('title'=>'菜单值','name'=>'value','type'=>'text'),
+            array('title'=>'排序','name'=>'sort_order','type'=>'number'),
+            array('title'=>'更新时间','name'=>'date_modify','type'=>'date'),
+            array('title'=>'操作','name'=>'action_list','type'=>'action_list'),
+
+        );
+    }
+
 }
