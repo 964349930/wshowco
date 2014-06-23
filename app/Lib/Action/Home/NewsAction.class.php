@@ -179,8 +179,14 @@ class NewsAction extends HomeAction{
                 'type'  => 'form',
             ),
         );
+        $route_info = D('WechatRoute')->getRoute('news', $id);        
+        $bread_list = array(
+            array('title'=>'图文回复列表','url'=>U('News/newsList')),
+            array('title'=>$route_info['keyword'],'url'=>'javascript:;','type'=>'current'),
+        );
         $data = array(
             'title'=>'子图文列表',
+            'bread_list' => $bread_list,
             'btn_list'   => $btn_list,
             'field_list' => $this->get_field_list($fields_all, $fields),
             'field_info' => $meta_list,
@@ -210,11 +216,18 @@ class NewsAction extends HomeAction{
 
             //模板赋值
             $fields_all = D('WechatNewsMeta')->field_list();
+            $route_info = D('WechatRoute')->getRoute('news',$meta_info['news_id']);
+            $bread_list = array(
+                array('title'=>'图文回复列表','url'=>U('News/newsList')),
+                array('title'=>$route_info['keyword'],'url'=>U('News/metaList',array('id'=>$meta_info['news_id']))),
+                array('title'=>$meta_info['title'],'url'=>'javascript:;','type'=>'current'),
+            );
             $data = array(
                 'title' => '子图文编辑',
-                'form_url' => U('News/metaInfo'),
-                'field_list'=>$this->get_field_list($fields_all, $fields),
-                'field_info'=>$meta_info,
+                'bread_list' => $bread_list,
+                'form_url'   => U('News/metaInfo'),
+                'field_list' => $this->get_field_list($fields_all, $fields),
+                'field_info' => $meta_info,
             );
             $this->assign($data);
             $this->display('Public:info');
@@ -310,11 +323,16 @@ class NewsAction extends HomeAction{
             }
             $fields = array_merge($fields, array('route_id','keyword'));
             $fields_all = D('WechatText')->field_list();
+            $bread_list = array(
+                array('title'=>'文本回复列表','url'=>U('News/textList')),
+                array('title'=>$text_info['keyword'],'url'=>'javascript:;','type'=>'current'),
+            );
             $data = array(
-                'title' => '文本回复编辑',
-                'form_url' => U('News/textInfo'),
-                'field_list'=>$this->get_field_list($fields_all, $fields),
-                'field_info'=>$text_info,
+                'title'      => '文本回复编辑',
+                'bread_list' => $bread_list,
+                'form_url'   => U('News/textInfo'),
+                'field_list' => $this->get_field_list($fields_all, $fields),
+                'field_info' => $text_info,
             );
             $this->assign($data);
             $this->display('Public:info');

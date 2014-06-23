@@ -1,18 +1,18 @@
 <div>
-    <div id="imgList" style="width=100%;height=100%;margin:10px;">
-        <ul class="gallery ui-helper-reset ui-helper-clearfix">
-            <volist name="imgList" id="vo">
-            <li class="ui-widget-content  " >
-            <label for="path{$key+1}" class="thumbnail"><img src="{$vo.path_name}" onclick="selImg({$vo[id]})" /></label>
-            </li>
-            </volist>
-        </ul>
-        <input type="hidden" id="selImgVal" value="" />
-    </div>
+  <div id="imgList" style="width=100%;height=100%;margin:10px;">
+    <ul class="gallery ui-helper-reset ui-helper-clearfix">
+    <volist name="imgList" id="vo">
+      <li class="ui-widget-content  " id="img_{$vo[id]}">
+        <label for="path{$key+1}" class="thumbnail"><img src="{$vo.path_name}" onclick="selImg({$vo[id]})" /></label>
+      </li>
+    </volist>
+    </ul>
+    <input type="hidden" id="selImgVal" value="">
+  </div>
 </div>
 
 <style>
-.gallery.custom-state-active { background: #eee; }
+.gallery li.active { border: 2px solid red; }
 .gallery li { float: left; width: 20%; height:20%; padding: 0.4em; margin: 0 0.8em 0.8em 0; text-align: center;  overflow:hidden; border:0;  position:relative;}
 .gallery li a { float: right; }
 .gallery li a.ui-icon-zoomin { float: left; }
@@ -21,37 +21,29 @@
 .gallery li input{ display:block; position:absolute; bottom:-50px; width:1px; height:1px;}
 </style>
 <script>
+$(function(){
+  var pwidth=$(".gallery li").width();
+  $(".gallery li").height(pwidth);
+  $(".gallery li label").height(pwidth);
+  var pimg=$(".gallery li .thumbnail > img");
+  for(var i=0;i<pimg.length;i++){
+    //var iwidth=pimg[i].width();
+    //var iheight=pimg[i].height();
+    pimg[i].style.position="absolute";
+    /*
+    if(iwidth > iheight){
+      pimg[i].width("100%");
+    }else{
+      pimg[i].width("100%");
+    }
+    */
+  }
+})
 function selImg(id){
-    $("#selImgVal").val(id);
+  $("#img_"+id).addClass('active');
+  $("#img_"+id).siblings().removeClass('active');
+  $("#selImgVal").val(id);
 }
-  $(function(){
-    var kuan=$(".gallery li").width();
-	$(".gallery li").height(kuan);
-	$(".gallery li label").height(kuan);
-	var tuk=$(".gallery li .thumbnail > img");
-	for(var i=0;i<tuk.length;i++){
-	  var ww=tuk[i].width;
-	  var oo=tuk[i].height;
-	  if(ww>kuan && oo>kuan){
-	    tuk[i].style.maxWidth="100%";
-	  }
-	  
-	  if(oo<kuan){
-	    tuk[i].style.maxWidth="none";
-		tuk[i].style.position="absolute";
-		var ww=tuk[i].width;
-	    var oo=tuk[i].height;
-		var wwto=(ww-kuan)/2;
-		var ooto=(oo-kuan)/2;
-		tuk[i].style.left="-"+wwto+"px";
-        tuk[i].style.bottom="-"+ooto+"px";
-      }
-	}
-	$(".gallery li").click(function(){
-	  $(this).aadClass("active");
-	});
-	
-  })
 </script>
 
 

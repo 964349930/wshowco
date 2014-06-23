@@ -36,4 +36,17 @@ class ThemeTplModel extends CommonModel
         return $arrInfo;
     }
 
+    public function field_list()
+    {
+        return array(
+            array('title'=>'ID','name'=>'id','type'=>'hidden'),
+            array('title'=>'theme_id','name'=>'theme_id','type'=>'hidden'),
+            array('title'=>'名称','name'=>'name','type'=>'text'),
+            array('title'=>'标记','name'=>'spell','type'=>'text'),
+            array('title'=>'排序','name'=>'sort_order','type'=>'number'),
+            array('title'=>'更新时间','name'=>'date_modify','type'=>'date'),
+            array('title'=>'操作','name'=>'action_list','type'=>'action_list'),
+        );
+    }
+
 }

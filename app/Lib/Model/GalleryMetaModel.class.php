@@ -52,7 +52,7 @@ class GalleryMetaModel extends CommonModel
             array('title'=>'ID','name'=>'id','type'=>'hidden'),
             array('title'=>'gallery_id','name'=>'gallery_id','type'=>'hidden'),
             array('title'=>'名称','name'=>'title','type'=>'text'),
-            array('title'=>'地址','name'=>'path','type'=>'image'),
+            array('title'=>'地址','name'=>'path','type'=>'path'),
             array('title'=>'更新时间','name'=>'date_modify','type'=>'date'),
             array('title'=>'操作','name'=>'action_list','type'=>'action_list'),
         );

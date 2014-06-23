@@ -32,6 +32,8 @@ class ThemeModel extends CommonModel{
         return array(
             array('title'=>'ID','name'=>'id','type'=>'hidden'),
             array('title'=>'名称','name'=>'name','type'=>'text'),
+            array('title'=>'标记','name'=>'spell','type'=>'text'),
+            array('title'=>'描述','name'=>'intro','type'=>'textarea'),
             array('title'=>'更新时间','name'=>'date_modify','type'=>'date'),
             array('title'=>'操作','name'=>'action_list','type'=>'action_list'),
         );

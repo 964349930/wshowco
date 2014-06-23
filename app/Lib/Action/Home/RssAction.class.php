@@ -71,8 +71,13 @@ class RssAction extends HomeAction
                 $info = array_merge($info,$route_info);
             }
             $fields[] = 'keyword';
+            $bread_list = array(
+                array('title'=>'订阅回复列表','url'=>U('Rss/rssList')),
+                array('title'=>$info['title'],'url'=>'javascript:;','type'=>'current'),
+            );
             $data = array(
                 'title' => '订阅回复信息',
+                'bread_list' => $bread_list,
                 'field_list' => $this->get_field_list($fields_all,$fields),
                 'field_info' => $info,
                 'form_url'   => U('Rss/rssInfo'),

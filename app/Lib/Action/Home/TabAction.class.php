@@ -76,15 +76,25 @@ class TabAction extends HomeAction
             ),
         );
         $fields[] = 'action_list';
-        
         $data = array(
             'title' => '系统菜单列表',
             'btn_list'   => $btn_list,
             'field_list' => $this->get_field_list($fields_all,$fields),
             'field_info' => $list,
-            'bread_list' => D('Tab')->get_bcrumbs($parent_id),
             'page_list'  => $page->show(),
         );
+        if(!empty($parent_id)){
+            $ids = D('Tab')->get_ids($parent_id);
+            $ids = array_reverse($ids);
+            foreach($ids as $k=>$v){
+                $title = D('Tab')->where('id='.$v)->getField('title');
+                $bread_list[$k]['title'] = ($title) ? $title : '菜单列表';
+                $bread_list[$k]['url'] = U('Tab/tabList',array('parent_id'=>$v));
+            }
+            $title = D('Tab')->where('id='.$parent_id)->getField('title');
+            $bread_list[] = array('title'=>$title,'url'=>'javascript:;','type'=>'current');
+            $data['bread_list'] = $bread_list;
+        }
         $this->assign($data);
         $this->display('Public:list');
     }
@@ -104,9 +114,22 @@ class TabAction extends HomeAction
                 $parent_id = intval($_GET['parent_id']);
                 $info['parent_id'] = $parent_id;
             }
+            $ids = D('Tab')->get_ids($info['parent_id']);
+            $ids = array_reverse($ids);
+            foreach($ids as $k=>$v){
+                $title = D('Tab')->where('id='.$v)->getField('title');
+                $bread_list[$k]['title'] = ($title) ? $title : '菜单列表';
+                $bread_list[$k]['url'] = U('Tab/tabList',array('parent_id'=>$v));
+            }
+            $title = D('Tab')->where('id='.$info['parent_id'])->getField('title');
+            if(!empty($title)){
+                $bread_list[] = array('title'=>$title,'url'=>U('Tab/tabList',array('parent_id'=>$info['parent_id'])));
+            }
+            $bread_list[] = array('title'=>$info['title'],'url'=>'javascript:;','type'=>'current');
             $data = array(
                 'field_list' => $this->get_field_list($fields_all,$fields),
                 'field_info' => $info,
+                'bread_list' => $bread_list,
                 'title'      => '菜单信息',
                 'form_url'   => U('Tab/tabInfo'),
             );

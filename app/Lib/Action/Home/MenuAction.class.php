@@ -38,30 +38,36 @@ class MenuAction extends HomeAction{
             ->select();
         foreach($list as $k=>$v){
             $list[$k]['action_list'] = array(
-                array('url'=>U('Menu/menuList',array('parent_id'=>$v['id'])),'type'=>'ls'),
                 array('url'=>U('Menu/menuInfo',array('id'=>$v['id'])),'type'=>'edit'),
                 array('url'=>U('Menu/del',array('id'=>$v['id'])),'type'=>'del'),
             );
+            if(empty($parent_id)){
+                $list[$k]['action_list'] = array_merge(array(array('url'=>U('Menu/menuList',array('parent_id'=>$v['id'])),'type'=>'ls')),$list[$k]['action_list']);
+            }
         }
         $fields[] = 'action_list';
         $btn_list = array(
-            array(
-                'title' => '同步菜单',
-                'url'   => U('Menu/createMenu'),
-                'class' => 'default',
-            ),
-            array(
-                'title' => '添加菜单',
-                'url'   => U('Menu/menuInfo',array('parent_id'=>$parent_id)),
-                'class' => 'primary',
-            ),
             array(
                 'title' => '批量删除',
                 'url'   => U('Menu/menuInfo'),
                 'class' => 'danger',
                 'type'  => 'form',
             ),
+            array(
+                'title' => '添加菜单',
+                'url'   => U('Menu/menuInfo',array('parent_id'=>$parent_id)),
+                'class' => 'primary',
+            ),            
         );
+        if(empty($parent_id)){
+            $btn_list = array_merge($btn_list,array(
+            array(
+                'title' => '同步菜单',
+                'url'   => U('Menu/createMenu'),
+                'class' => 'default',
+            ),
+            ));
+        }
         $data = array(
             'title'=>'菜单设置',
             'btn_list' => $btn_list,
@@ -69,6 +75,14 @@ class MenuAction extends HomeAction{
             'field_info' => $list,
             'page_list'  => $page->show(),
         );
+        if(!empty($parent_id)){
+            $title = D('WechatMenu')->where('id='.$parent_id)->getField('name');
+            $bread_list = array(
+                array('title'=>'菜单列表','url'=>U('MenuList')),
+                array('title'=>$title,'url'=>'javascript:;','type'=>'current'),
+            );            
+            $data['bread_list'] = $bread_list;
+        }
         $this->assign($data);
         $this->display('Public:list');
 	}
@@ -87,9 +101,15 @@ class MenuAction extends HomeAction{
                 $parent_id = intval($_GET['parent_id']);
                 $info['parent_id'] = $parent_id;
             }
-
+            $title = D('WechatMenu')->where('id='.$info['parent_id'])->getField('name');
+            $bread_list = array(
+                array('title'=>'菜单列表','url'=>U('Menu/menuList')),
+                array('title'=>$title,'url'=>U('Menu/menuList',array('parent_id'=>$info['parent_id']))),
+                array('title'=>$info['name'],'url'=>'javascript:;','type'=>'current'),
+            );
             $data = array(
                 'title' => '菜单信息',
+                'bread_list' => $bread_list,
                 'field_list' => $this->get_field_list($fields_all,$fields),
                 'field_info' => $info,
                 'form_url'   => U('Menu/menuInfo'),

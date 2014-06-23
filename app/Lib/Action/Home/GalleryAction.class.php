@@ -7,29 +7,44 @@
 class GalleryAction extends HomeAction
 {
     /**
+     * 获取图片地址
+     */
+    public function getImgSrc()
+    {
+        $id = intval($_GET['id']);
+        $size = trim($_GET['size']);
+        if(empty($id)){
+            echo './Public/img/empty.jpg';
+            exit;
+        }
+        if(empty($size)){
+            $size = 's';
+        }
+        $path = D('GalleryMeta')->where('id='.$id)->getField('path');
+        echo getPicPath($path, $size);
+    }
+    
+    /**
      * upload the image
      */
     public function uploadImage()
     {
 
-        print_r($_FILES);
-        /*
-		//if(isset($_FILES['pic'])){
+		if(isset($_FILES)){
 			$picList = uploadPic();
 			if($picList['code'] != 'error'){
-				$id = D('GalleryMeta')->addImg($picList['pic']['savename']);
+				$id = D('GalleryMeta')->addImg($picList['myFile']['savename']);
 			}
             if(!empty($id)){
                 echo $id;
             }else{
                 //echo 'upload image field';
-                print_r($picList);
+                echo '图片上传失败';
             }
-            /*
+
 		}else{
             echo 'img is null';
         }
-             */
     }
 
 
@@ -64,7 +79,7 @@ class GalleryAction extends HomeAction
             $imgList[$k] = $imgObj->format($v, array('path_name'));
         }
         $this->assign('imgList', $imgList);
-        $this->display();
+        $this->display('Public:showImgList');
     }
 
     /**
@@ -178,9 +193,14 @@ class GalleryAction extends HomeAction
                     ->where('id='.$id)
                     ->find();
             }
+            $bread_list = array(
+                array('title'=>'相册列表','url'=>U('Gallery/galleryList')),
+                array('title'=>$info['title'],'url'=>'javascript:;','type'=>'current'),
+            );
             $data = array(
-                'title' => '相册设置',
-                'form_url'=>U('Gallery/galleryInfo'),
+                'title'      => '相册设置',
+                'bread_list' => $bread_list,
+                'form_url'   => U('Gallery/galleryInfo'),
                 'return_url' => U('Gallery/galleryList'),
                 'field_list' => $this->get_field_list($fields_all,$fields),
                 'field_info' => $info,
@@ -270,10 +290,11 @@ class GalleryAction extends HomeAction
             );
         }
 
-        $breadcrumbs = array(array(
-            'title' => '相册列表',
-            'url' => U('Gallery/galleryList'),
-        ));
+        $title = D('Gallery')->where('id='.intval($_GET['gallery_id']))->getField('title');
+        $bread_list = array(
+            array('title' => '相册列表','url' => U('Gallery/galleryList')),
+            array('title'=>$title,'url'=>'javascript:;','type'=>'current'),
+        );
         $btn_list = array(
             array(
                 'title' => '添加图片',
@@ -294,7 +315,7 @@ class GalleryAction extends HomeAction
             'field_list' => $this->get_field_list($fields_all,$fields),
             'field_info' => $list,
             'page_list'  => $page->show(),
-            'bread_list' => $breadcrumbs,
+            'bread_list' => $bread_list,
         );
         $this->assign($data);
         $this->display('Public:list');
@@ -315,8 +336,16 @@ class GalleryAction extends HomeAction
                 $gallery_id = intval($_GET['gallery_id']);
                 $info['gallery_id'] = $gallery_id;
             }
+            
+            $title = D('Gallery')->where('id='.$info['gallery_id'])->getField('title');
+            $bread_list = array(
+                array('title'=>'相册列表','url'=>U('Gallery/galleryList')),
+                array('title'=>$title,'url'=>U('Gallery/metaList',array('gallery_id'=>$info['gallery_id']))),
+                array('title'=>$info['title'],'url'=>'javascript:;','type'=>'current'),
+            );
             $data = array(
                 'title' => '图片信息',
+                'bread_list' => $bread_list,
                 'field_list' => $this->get_field_list($fields_all,$fields),
                 'field_info' => $info,
                 'form_url'   => U('Gallery/metaInfo'),

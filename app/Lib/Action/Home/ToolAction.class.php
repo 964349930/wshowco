@@ -58,8 +58,13 @@ class ToolAction extends HomeAction {
             if(!empty($id)){
                 $info = D('WechatTool')->field($fields)->where('id='.$id)->find();
             }
+            $bread_list = array(
+                array('title'=>'工具列表','url'=>U('Tool/toolList')),
+                array('title'=>$info['name'],'url'=>'javascript:;','type'=>'current'),
+            );
             $data = array(
                 'title' => '工具信息',
+                'bread_list' => $bread_list,
                 'field_list' => $this->get_field_list($fields_all,$fields),
                 'field_info' => $info,
                 'form_url'   => U('Tool/toolInfo'),

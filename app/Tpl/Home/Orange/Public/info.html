@@ -54,25 +54,23 @@
     </div>
 
     <!-- 多选 -->
-    <!-- 图片上传 -->
-    <elseif condition="$vo.type eq 'image'" />
+    <!-- 图片路径 -->
+    <elseif condition="$vo.type eq 'path'" />
     <div class="form-group">
       <label for="{$vo.name}">{$vo.title}</label>
       <notempty name="field_info[$vo[name]]">
         <img class="img_responsive" src="{$field_info[$vo[name]]|getPicPath=###,'s'}" height="50px" />
       </notempty>
-      <input class="form-control" id="{$vo.name}" name="{$vo.name}" type="file" value="{$field_info[$vo[name]]}">
+      <input class="form-control" id="imgPath" name="{$vo.name}" type="file" value="{$field_info[$vo[name]]}" accept:"image/*">
     </div>
 
     <!-- 图片字段 -->
     <elseif condition="$vo.type eq 'sel_img'" />
     <div class="form-group">
         <label for="{$vo.name}">{$vo.title}</label>
-        <button class="btn btn-default" id="sel_img">点击选择图片</button>
-        <notempty name="field_info[$vo[name]]">
-        <img class="img_responsive" src="{$field_info[$vo[name]]}" height="50px" />
-        </notempty>
-        <input type="hidden" name="{$vo.name}" id="{$vo.name}" value="{$field_info[$vo[name]]}">
+        <a class="btn btn-default" id="sel_img">点击选择图片</a>
+        <img class="img_responsive " id="resultImg" <empty name="field_info[$vo[name]]"> class="hidden"</empty> src="<php>echo getPicPath(D('GalleryMeta')->getImg($field_info[$vo['name']]));</php>" height="50px" />
+        <input type="hidden" name="{$vo.name}" id="resultImgId"  value="{$field_info[$vo[name]]}">
     </div>
 
 
@@ -104,7 +102,6 @@
     </div>
 
 
-    
     <!-- 普通文本 -->
     <else />
     <div class="form-group">
@@ -123,6 +120,3 @@
   插件列表：plugin_list
 -->
 <include file="Public:gallery" />
-<volist name="plugin_list" id="vo">
-<include file="$vo" />
-</volist>

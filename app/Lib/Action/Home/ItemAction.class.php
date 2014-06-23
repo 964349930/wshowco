@@ -84,12 +84,23 @@ class ItemAction extends HomeAction
         $data = array(
             'title'=>'文章列表',
             'btn_list'=> $btn_list,
-            'bread_list' => D('Item')->get_bcrumbs($parent_id),
             'field_list' => $this->get_field_list($fields_all, $fields),
             'field_info' => $item_list,
-            'plugin_list' => array('Public:modal_delete',),
             'page_list' => $page->show(),
         );
+        
+        if(!empty($parent_id)){
+            $ids = D('Item')->get_ids($parent_id);
+            $ids = array_reverse($ids);
+            foreach($ids as $k=>$v){
+                $title = D('Item')->where('id='.$v)->getField('title');
+                $bread_list[$k]['title'] = ($title) ? $title : '文章列表';
+                $bread_list[$k]['url'] = U('Item/itemList',array('parent_id'=>$v));
+            }
+            $title = D('Item')->where('id='.$parent_id)->getField('title');
+            $bread_list[] = array('title'=>$title,'url'=>'javascript:;','type'=>'current');
+            $data['bread_list'] = $bread_list;
+        }
         $this->assign($data);
         $this->display('Public:list');
     }
@@ -106,24 +117,35 @@ class ItemAction extends HomeAction
             if(!empty($id)){
 
                 //更新显示
-                $field_info = $itemObj->field()->where('id='.$id)->find();
-                $field_info = $itemObj->format($field_info, array('cover_name'));
+                $info = $itemObj->field()->where('id='.$id)->find();
                 $this->assign('extList', D('Ext')->getExtList('item', $itemInfo['id']));
             }else{
 
                 //添加显示
-                $field_info['parent_id'] = $this->_get('parent_id', 'intval');
+                $info['parent_id'] = $this->_get('parent_id', 'intval');
+                
             }
 
             $this->assign('getExtValueList', U('Home/Ext/getExtValueList'));
             $fields_all = $itemObj->field_list();
+            $ids = D('Item')->get_ids($info['parent_id']);
+            $ids = array_reverse($ids);
+            foreach($ids as $k=>$v){
+                $title = D('Item')->where('id='.$v)->getField('title');
+                $bread_list[$k]['title'] = ($title) ? $title : '文章列表';
+                $bread_list[$k]['url'] = U('Item/itemList',array('parent_id'=>$v));
+            }
+            $title = D('Item')->where('id='.$info['parent_id'])->getField('title');
+            if(!empty($title)){
+                $bread_list[] = array('title'=>$title,'url'=>U('Item/itemList',array('parent_id'=>$info['parent_id'])));
+            }
+            $bread_list[] = array('title'=>$info['title'],'url'=>'javascript:;','type'=>'current');
             $data = array(
-                'title'=>'文章详情',
-                'bread_list'=>D('Item')->get_bcrumbs($id),
-                'form_url'=>U('Item/itemInfo'),
-                'field_info'=>$field_info,
-                'field_list'=>$this->get_field_list($fields_all, $fields),
-                'plugin_list' => array('Public:imgUpload',),
+                'title'      => '文章详情',
+                'bread_list' => $bread_list,
+                'form_url'   => U('Item/itemInfo'),
+                'field_info' => $info,
+                'field_list' => $this->get_field_list($fields_all, $fields),
             );
             $this->assign($data);
             //$this->assign('extUrl', U('Home/Ext/extList'));

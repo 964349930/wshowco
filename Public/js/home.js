@@ -41,7 +41,6 @@ $(function(){
       $(".main").load(url);
     });
 
-
 })
 
 /** load main content **/
@@ -65,12 +64,15 @@ function sendForm(url){
 /** post to the server **/
 function editInfo(form){
   var selForm = $("#"+form);
+  var data = selForm.serialize();
   var url = selForm.data('href');
+  //var file = $("#imgPath").files;
+
   $.ajax({
     type: "POST",
     enctype: "multipart/form-data",
     url: url,
-    data: selForm.serialize(),
+    data: data,
     success: function( data )
     {
       data = JSON.parse(data);

@@ -90,30 +90,6 @@ class CommonModel extends Model
         return $count;
     }
 
-
-    /**
-     * set the breadcrumbs
-     */
-    public function get_bcrumbs($id)
-    {
-        //获取正序排列的数据ID
-        $result = $this->get_ids($id);
-        $result = array_reverse($result);
-
-        if(!empty($id)){
-            $result = array_merge($result, array($id));
-        }
-
-        //数据赋值
-        foreach($result as $k=>$v){
-            $breadcrumbs[$k+1]['id'] = $v;
-            $title = $this->where('id='.$v)->getField('title');
-            $breadcrumbs[$k+1]['title'] = ($title) ? $title : '首页'; 
-            $breadcrumbs[$k+1]['url'] = U('Item/itemList', array('parent_id'=>$v));
-        }
-        return $breadcrumbs;
-    }
-
     /**
      * get parent_id for breadcrumbs
      * 获取所有层级关联数据ID

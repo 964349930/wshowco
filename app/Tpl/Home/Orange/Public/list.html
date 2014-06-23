@@ -39,6 +39,10 @@
         <!-- 如果是隐藏字段 -->
         <elseif condition="$voo[type] eq 'hidden'" />
 
+  <!-- 如果是图片 -->
+  <elseif condition="$voo[type] eq 'path'" />
+  <td><img src="{$vo[$voo[name]]}" height="50px" /></td>
+
         <!-- 如果是单选字段 -->
         <elseif condition="$voo[type] eq 'radio'" />
         <td>{$vo[$voo[name]]}</td>
@@ -93,12 +97,7 @@
 </ul>
 </notempty>
 
-<!-- 插件列表 -->
 <include file="Public:modal_delete" />
-<volist name="plugin_list" id="vo">
-<include file="$vo" />
-</volist>
-
 <script>
     /** 列表全选 **/
 	$("#check_all").click(function(){

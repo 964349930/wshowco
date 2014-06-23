@@ -10,22 +10,16 @@ class ThemeAction extends HomeAction{
 	 */
 	public function themeList(){
         $fields_all = D('Theme')->field_list();
-        $fields = array('id','name','date_modify');
+        $fields = array('id','name','intro','date_modify');
         $page = page(D('Theme')->getCount());
         $list = D('Theme')->field($fields)->order('date_modify desc')->limit($page->firstRow,$page->listRows)->select();
 
         foreach($list as $k=>$v){
             $list[$k]['action_list'] = array(
-                array(
-                    'url'  => U('Theme/themeInfo',array('id'=>$v['id'])),
-                    'type' => 'edit',
-                ),
-                array(
-                    'url'  => U('Theme/themeDel',array('id'=>$v['id'])),
-                    'type' => 'del',
-                )
+                array('type'=>'ls','url'=>U('Theme/tplList',array('theme_id'=>$v['id']))),
+                array('url'=>U('Theme/themeInfo',array('id'=>$v['id'])),'type' => 'edit'),
+                array('url'=>U('Theme/themeDel',array('id'=>$v['id'])),'type' => 'del'),
             );
-
         }
 
         $btn_list = array(
@@ -73,38 +67,38 @@ class ThemeAction extends HomeAction{
     {
         $themeObj = D('Theme');
         if(empty($_POST)){
-            $theme_id = $this->_get('id', 'intval');
-            if(!empty($theme_id)){
-                $themeInfo = $themeObj->getInfoById($theme_id);
-                $themeInfo = $themeObj->format($themeInfo, array('cover_name'));
-                $this->assign('themeInfo', $themeInfo);
-            }
-            $this->assign('themeInfoUrl', U('Home/Theme/themeInfo'));
-            $this->display();
+            $fields_all = $themeObj->field_list();
+            $fields = array('id','name','spell','intro');
+            $id = intval($_GET['id']);
+            $info = $themeObj->field($fields)->where('id='.$id)->find();
+            $bread_list = array(
+                array('title'=>'主题列表','url'=>U('Theme/themeList')),
+            );
+            $data = array(
+                'field_list' => $this->get_field_list($fields_all,$fields),
+                'field_info' => $info,
+                'bread_list' => $bread_list,
+                'title'      => '主题信息',
+                'form_url'   => U('Theme/themeInfo'),
+            );
+            $this->assign($data);
+            $this->display('Public:info');
             exit;
         }
         $data = $this->_post();
         $data['date_modify'] = time();
-        if(!empty($_FILES)){
-            $picList = uploadPic();
-            if($picList['code'] != 'error'){
-                if(!empty($picList['pic']['savename'])){
-                    $data['cover'] = D('GalleryMeta')->addImg($picList['pic']['savename']);
-                }
-            }
-        }
         if(empty($data['id'])){
             $data['date_add'] = time();
             if($themeObj->add($data)){
-                echo json_encode(array('code'=>'1','msg'=>'主题添加成功'));
+                echo json_encode(array('code'=>'1','msg'=>'添加成功'));
             }else{
-                echo json_encode(array('code'=>'0','msg'=>'主题添加失败'));
+                echo json_encode(array('code'=>'0','msg'=>'添加失败'));
             }
         }else{
             if($themeObj->save($data)){
-                echo json_encode(array('code'=>'1','msg'=>'主题添加成功'));
+                echo json_encode(array('code'=>'1','msg'=>'更新成功'));
             }else{
-                echo json_encode(array('code'=>'0','msg'=>'主题添加失败'));
+                echo json_encode(array('code'=>'0','msg'=>'更新失败'));
             }
         }
     }
@@ -112,7 +106,7 @@ class ThemeAction extends HomeAction{
     /**
      * 删除
      */
-    public function del()
+    public function themeDel()
     {
 		$delIds = array();
 		$postIds = $this->_post('id');
@@ -124,11 +118,12 @@ class ThemeAction extends HomeAction{
 			$delIds[] = $getId;
 		}
 		if (empty($delIds)) {
-			$this->error('请选择您要删除的数据');
+            echo json_encode(array('msg'=>'请选择您要删除的数据'));
+            exit;
 		}
 		$map['id'] = array('in', $delIds);
 		D('Theme')->where($map)->delete();
-		$this->success('删除成功');
+        echo json_encode(array('code'=>'1','msg'=>'删除成功'));
     }
 
     /*******************模版管理*******************/
@@ -137,31 +132,44 @@ class ThemeAction extends HomeAction{
      */
     public function tplList()
     {
-        $id = $this->_get('id', 'intval');
-        $theme_name = D('Theme')->where('id='.$id)->getField('name');
+        $id = intval($_GET['theme_id']);
+        $title = D('Theme')->where('id='.$id)->getField('name');
+        $fields_all = D('ThemeTpl')->field_list();
+        $fields = array('id','name','spell','sort_order','date_modify');
 
-        $tplObj = D('ThemeTpl');
-        $arrField = array();
-        $arrMap['theme_id'] = array('eq', $id);
-        $search = $this->_post('search');
-        if(!empty($search)){
-            $arrMap['name'] = array('like', '%'.$search.'%');
+        $map = array('theme_id'=>$id);
+        $page = page(D('ThemeTpl')->getCount($map));
+        $list = D('ThemeTpl')
+            ->field($fields)
+            ->where($map)
+            ->order('sort_order desc')
+            ->limit($page->firstRow,$page->listRows)
+            ->select();
+
+        foreach($list as $k=>$v){
+            $list[$k]['action_list'] = array(
+                array('type'=>'edit','url'=>U('Theme/tplInfo',array('id'=>$v['id']))),
+                array('type'=>'del','url'=>U('Theme/tplDel',array('id'=>$v['id']))),
+            );
         }
-        $arrOrder = array('sort_order');
-        $tplList = $tplObj->getList($arrField, $arrMap, $arrOrder);
-        $arrFormatField = array('status_name');
-        foreach($tplList as $k=>$v){
-            $tplList[$k] = $tplObj->format($v, $arrFormatField);
-        }
+        $fields[] = 'action_list';
+        $bread_list = array(
+            array('title'=>'主题列表','url'=>U('Theme/themeList')),
+            array('title'=>$title,'url'=>'javascript:;','type'=>'current'),
+        );
+        $btn_list = array(
+            array('title'=>'添加模板','url'=>U('Theme/tplInfo',array('theme_id'=>$id)),'class'=>'primary'),
+            array('title'=>'批量删除','url'=>U('Theme/tplDel'),'class'=>'danger','type'=>'form'),
+        );
         $data = array(
-            'theme_name' => $theme_name,
-            'tplList' => $tplList,
-            'addUrl' => U('Home/Theme/tplInfo', array('theme_id'=>$id)),
-            'editUrl' => U('Home/Theme/tplInfo'),
-            'delUrl' => U('Home/Theme/tplDel'),
+            'field_list' => $this->get_field_list($fields_all,$fields),
+            'field_info' => $list,
+            'bread_list' => $bread_list,
+            'btn_list'   => $btn_list,
+            'title'      => '模板列表',
         );
         $this->assign($data);
-        $this->display();
+        $this->display('Public:list');
     }
 
     /**
@@ -171,28 +179,48 @@ class ThemeAction extends HomeAction{
     {
         $tplObj = D('ThemeTpl');
         if(empty($_POST)){
-            $tpl_id = $this->_get('tpl_id', 'intval');
-            if(!empty($tpl_id)){
-                $tplInfo = $tplObj->getInfoById($tpl_id);
-                $theme_id = $tplInfo['theme_id'];
-                $this->assign('tplInfo', $tplInfo);
+            $fields_all = $tplObj->field_list();
+            $fields = array('id','theme_id','name','spell','sort_order');
+            $id = intval($_GET['id']);
+            if(!empty($id)){
+                $info = $tplObj->field($fields)->where('id='.$id)->find();
             }else{
-                $theme_id = $this->_get('theme_id', 'intval');
+                $theme_id = intval($_GET['theme_id']);
+                $info['theme_id'] = $theme_id;
             }
-            $this->assign('theme_id', $theme_id);
-            $this->assign('tplInfoUrl', U('Home/Theme/tplInfo'));
-            $this->display();
+            $title = D('Theme')->where('id='.$info['theme_id'])->getField('name');
+            $bread_list = array(
+                array('title'=>'主题列表','url'=>U('Theme/themeList')),
+                array('title'=>$title,'url'=>U('Theme/tplList',array('theme_id'=>$info['theme_id']))),
+                array('title'=>$info['name'],'url'=>'javascript:;','type'=>'current'),
+            );
+            $data = array(
+                'field_list' => $this->get_field_list($fields_all,$fields),
+                'field_info' => $info,
+                'bread_list' => $bread_list,
+                'title'      => '模板信息',
+                'form_url'   => U('Theme/tplInfo'),
+            );
+            $this->assign($data);
+            $this->display('Public:info');
             exit;
         }
         $data = $this->_post();
         $data['date_modify'] = time();
         if(empty($data['id'])){
             $data['date_add'] = time();
-            $tplObj->add($data);
+            if($tplObj->add($data)){
+                echo json_encode(array('code'=>'1','msg'=>'添加成功'));
+            }else{
+                echo json_encode(array('msg'=>'添加失败'));
+            }
         }else{
-            $tplObj->save($data);
+            if($tplObj->save($data)){
+                echo json_encode(array('code'=>'1','msg'=>'更新成功'));
+            }else{
+                echo json_encoe(array('msg'=>'更新失败'));
+            }
         }
-        $this->success('操作成功');
     }
 
     /**
@@ -210,11 +238,12 @@ class ThemeAction extends HomeAction{
 			$delIds[] = $getId;
 		}
 		if (empty($delIds)) {
-			$this->error('请选择您要删除的数据');
+            echo json_encode(array('msg'=>'请选择您要删除的数据'));
+            exit;
 		}
 		$map['id'] = array('in', $delIds);
 		D('ThemeTpl')->where($map)->delete();
-		$this->success('删除成功');
+        echo json_encode(array('code'=>'1','msg'=>'删除成功'));
     }
 }
  

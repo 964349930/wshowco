@@ -89,7 +89,12 @@ class WechatAction extends HomeAction
             if(!empty($id)){
                 $info = D('WechatRoute')->field($fields)->where('id='.$id)->find();
             }
+            $bread_list = array(
+                array('title'=>'关键字列表','url'=>U('Wechat/keywordList')),
+                array('title'=>$info['keyword'],'url'=>'javascript:;','type'=>'current'),
+            );
             $data = array(
+                'bread_list' => $bread_list,
                 'field_list' => $this->get_field_list($fields_all,$fields),
                 'field_info' => $info,
                 'title'      => '关键字信息',
