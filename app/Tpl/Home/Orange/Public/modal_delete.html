@@ -20,12 +20,14 @@ $('#isdelete').on('show.bs.modal', function(e) {
     $(this).find('.danger').attr('onclick', 'del("'+$(e.relatedTarget).data('href')+'")');
 })
 function del(url){
-    $.get(url,
-            '',
-            function(data){
-                calert(data.msg, data.code);
-                },
-            'json'
-        );
+  $.get(url,
+        '',
+        function(data){
+          window.setTimeout(function(){loadMain(0);},1500);
+          calert(data.msg, data.code);
+        },
+        'json'
+       );
+  return true;
 }
 </script>

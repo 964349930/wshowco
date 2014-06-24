@@ -13,6 +13,7 @@ class UserModel extends CommonModel{
     {
         return array(
             array('title'=>'ID','name'=>'id','type'=>'hidden'),
+            array('title'=>'头像','name'=>'avatar','type'=>'sel_img'),
             array('title'=>'用户名','name'=>'name','type'=>'text'),
             array('title'=>'手机号码','name'=>'mobile','type'=>'tel'),
             array('title'=>'接口地址','name'=>'url','type'=>'disabled'),

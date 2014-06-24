@@ -312,7 +312,7 @@ class NewsAction extends HomeAction{
 	 * 文字素材添加页面
 	 */
 	public function textinfo(){
-        if(empty($_post)){
+        if(empty($_POST)){
             $id = $this->_get('id', 'intval');
             $fields = array('id','content');
             if(!empty($id)){

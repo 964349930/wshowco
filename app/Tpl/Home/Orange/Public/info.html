@@ -27,8 +27,10 @@
     <!-- 富文本编辑器 -->
     <elseif condition="$vo.type eq 'content'" />
     <div class="form-group">
-        <label for="{$vo.name}">{$vo.title}</label>
-        <textarea class="form-control" id="{$vo.name}" name="{$vo.name}" cols="80" rows="4">{$field_info[$vo[name]]}</textarea>
+    <label for="{$vo.name}">{$vo.title}</label>
+    <include file="Public:editor" />
+        <div class="form-control" id="editor" style="overflow:scroll;height:300px;">{$field_info[$vo[name]]}</div>
+        <textarea class="hidden" id="resultInfo" name="{$vo.name}"></textarea>
     </div>
 
     <!-- 选择字段 -->
@@ -120,3 +122,4 @@
   插件列表：plugin_list
 -->
 <include file="Public:gallery" />
+<script src="__PUBLIC__/js/editor.js"></script>

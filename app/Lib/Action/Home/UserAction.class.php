@@ -61,7 +61,7 @@ class UserAction extends HomeAction{
 		$userObj = D('User');
         if(empty($data)){
 		    $id = $_SESSION['uid'];
-            $fields = array('id','name','mobile','url','token','appid','appsecrect');
+            $fields = array('id','avatar','name','mobile','url','token','appid','appsecrect');
 		    $userInfo = $userObj->field($fields)->where('id='.$id)->find();
 		    $userInfo = $userObj->format($userInfo, array('url', 'avatar_name'));
             $fields_all = $userObj->field_list();
@@ -85,6 +85,7 @@ class UserAction extends HomeAction{
         if(empty($result)){
             echo json_encode(array('code'=>'0','msg'=>'更新错误'));
         }else{
+            $_SESSION['userInfo'] = D('User')->where('id='.$_SESSION['uid'])->find();
             echo json_encode(array('code'=>'1','msg'=>'更新成功'));
         }
 	}

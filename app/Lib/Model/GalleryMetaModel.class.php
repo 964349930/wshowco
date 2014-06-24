@@ -42,7 +42,7 @@ class GalleryMetaModel extends CommonModel
             return 0;
             exit;
         }
-        $path = $this->where('id='.$img_id)->getField('path', 'm');
+        $path = $this->where('id='.$img_id)->getField('path');
         return $path; 
     }
 

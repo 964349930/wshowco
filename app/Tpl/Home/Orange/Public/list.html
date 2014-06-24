@@ -54,15 +54,15 @@
 
             <!-- 如果是编辑操作 -->
             <if condition="$vooo[type] eq 'edit'">
-            <i class="fa fa-edit" onclick="loadMain('{$vooo.url}')" style="margin-right:10px;"></i>
+            <a href="javascript:;" onclick="loadMain('{$vooo.url}')" title="编辑"><i class="fa fa-edit" style="margin-right:10px;"></i></a>
 
             <!-- 如果是列表操作 -->
             <elseif condition="$vooo[type] eq 'ls'" />
-            <i class="fa fa-sitemap" onclick="loadMain('{$vooo.url}')" style="margin-right:10px;"></i>
+            <a href="javascript:;" onclick="loadMain('{$vooo.url}')" title="展开"><i class="fa fa-sitemap" style="margin-right:10px;"></i></a>
 
             <!-- 如果是删除操作 -->
             <else />
-            <i class="fa fa-trash-o" style="color:red;" data-toggle="modal" data-target="#isdelete" data-href="{$vooo.url}"></i>
+            <a href="javascript:;" title="删除"><i class="fa fa-trash-o" style="color:red;" data-toggle="modal" data-target="#isdelete" data-href="{$vooo.url}"></i></a>
             </if>
             </volist>
             </td>

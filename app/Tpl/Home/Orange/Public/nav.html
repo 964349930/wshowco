@@ -17,10 +17,11 @@
         <volist name="menu" id="vo">
         <li><a href="#{$vo.tag}">{$vo.title}</a></li>
         </volist>
-        <li><a href="#">帮助</a></li>
+        <li><a href="javascript:;" onclick="loadMain('{:U(\'Public/wiki\')}')">帮助</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="{:U('Home/Public/logout')}">注销</a></li>
+        <li><a href="javascript:;" onclick="loadMain(0)" title="刷新界面"><i class="fa fa-refresh"></i></a></li>
+        <li><a href="{:U('Home/Public/logout')}" title="退出登陆"><i class="fa fa-sign-out"></i></a></li>
       </ul>
     </div><!--/.nav-collapse -->
   </div>
@@ -30,7 +31,7 @@
     <!-- Left Menu -->
     <div class="col-sm-3 col-md-2 sidebar">
       <div class="user-data clearfix">
-        <img class="img-circle img-responsive fl" src="./Public/images/user.jpeg" style="height:68px;width:68px;">
+        <img class="img-circle img-responsive fl" src="<php>echo getPicPath(D('GalleryMeta')->getImg($_SESSION['userInfo']['avatar']),'m');</php>" style="height:68px;width:68px;" title="头像">
         <h4 style="color:#fff;">{$_SESSION[userInfo][name]}</h4>
 	<p>
 	  <a href="##"><i class="fa fa-user"></i></a>

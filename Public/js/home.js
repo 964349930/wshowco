@@ -1,5 +1,5 @@
 $(function(){
-
+  current_url = "{:U('User/basic')}";
     /**头部导航切换**/
     $("#topMenu").find("li").click(function(){
       $(this).addClass("active")
@@ -16,7 +16,7 @@ $(function(){
     $("li.link:first").parents("li").find("i.fa-angle-right").removeClass("fa-angle-right").addClass("fa-angle-down");
     $("li.link:first").parents("ul").collapse("show");
     var url = $("li.link:first").data("href");
-    $(".main").load(url);
+  loadMain(url);
 
     /** 右侧箭头效果 **/
     $(".nav-sidebar li").click(function(){
@@ -38,32 +38,57 @@ $(function(){
         active.children("ul").collapse("hide");
       }
       var url = $(this).data('href');
-      $(".main").load(url);
+      loadMain(url);
     });
 
+  /** 绑定F5 **/
+  document.onkeydown=function(event){
+    var e = event || window.event || arguments.callee.caller.               arguments[0];
+    if(e && e.keyCode==116){ // F5
+      e.preventDefault();
+      loadMain(0);
+      }
+    }
+
+  /** 实时监听 **/
+  setInterval(function(){
+    var message = '<div style="position:absolute;right: -3px;background:#E02222;width:150px;height:100px;z-index:2;color:#fff;text-align:center;line-height:100px;">您有一个新的订单，请注意查看</div>';
+    $("#GMessage").append(message);
+    window.setTimeout('$("#GMessage").empty()',2000);
+    },10000)
 })
 
 /** load main content **/
 function loadMain(url){
-    $(".main").load(url);
+  if(url == ''){
+    url = current_url;
+  }
+
+  current_url = url;
+  $(".main").load(url);
+
 }
 
 /** 发送表单 **/
 function sendForm(url){
-    var ids = $('input[name="id[]"]:checked').val();
-    $.post(url,
-            {'id':ids},
-            function(data){
-                calert(data.msg,data.code);
-            },
-            'json'
-            );
-
+  var ids = $('input[name="id[]"]:checked').val();
+  $.post(url,
+         {'id':ids},
+         function(data){
+           calert(data.msg,data.code);
+         },
+         'json'
+        );
 }
 
 /** post to the server **/
 function editInfo(form){
   var selForm = $("#"+form);
+
+  /** 文本编译器赋值 **/
+  var resultInfo = $("#editor").html();
+  $("#resultInfo").val(resultInfo);
+
   var data = selForm.serialize();
   var url = selForm.data('href');
   //var file = $("#imgPath").files;
@@ -95,5 +120,12 @@ function calert(msg, status){
     }
     html = '<div class="alert '+status_name+'">'+msg+'<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button></div>'
     $(".main").prepend(html);
-    window.setTimeout(function(){$(".alert").alert('close');}, 1500);
+    window.setTimeout(function(){
+      $(".alert").alert('close');
+    }, 1500);
+}
+
+/** 调用图片选择 **/
+function showImgBox(){
+  $("#imgBox").dialog("open");
 }

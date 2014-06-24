@@ -27,7 +27,7 @@ class WechatTextModel extends CommonModel{
             array('title'=>'route_id','name'=>'route_id','type'=>'hidden'),
             array('title'=>'关键字','name'=>'keyword','type'=>'text'),
             array('title'=>'内容','name'=>'content','type'=>'content'),
-            array('title'=>'更新时间','name'=>'date_modify'),
+            array('title'=>'更新时间','name'=>'date_modify','type'=>'date'),
             array('title'=>'操作','name'=>'action_list','type'=>'action_list'),
         );
     }

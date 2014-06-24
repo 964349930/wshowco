@@ -15,6 +15,7 @@ class HomeAction extends BaseAction
         if(!isset($_SESSION['uid'])){
             $this->redirect('Public/login');
         }
+        //session_destroy();
         $this->breadcrumbs[] = array(
             'title' => '首页',
             'url' => U('Home/Index/index'),
@@ -105,4 +106,10 @@ class HomeAction extends BaseAction
         return $result;
     }
 
+    /**
+     * 推送消息
+     */
+    public function sendMessage($info){
+        echo $info;
+    }
 }
