@@ -17,7 +17,9 @@
         <volist name="menu" id="vo">
         <li><a href="#{$vo.tag}">{$vo.title}</a></li>
         </volist>
-        <li><a href="javascript:;" onclick="loadMain('{:U(\'Public/wiki\')}')">帮助</a></li>
+        <li><a href="javascript:;" onclick="loadMain('dd.html')">数据字典</a></li>
+        <li><a href="javascript:;" onclick="loadMain('dbDesign.html')">数据库设计</a></li>
+        <li><a href="javascript:;" onclick="loadMain('fwDesign.html')">架构设计</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="javascript:;" onclick="loadMain(0)" title="刷新界面"><i class="fa fa-refresh"></i></a></li>

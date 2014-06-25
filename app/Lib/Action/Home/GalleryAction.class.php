@@ -165,6 +165,7 @@ class GalleryAction extends HomeAction
         ); 
         $data = array(
             'title'      => '相册列表',
+            'form_url'   => U('Gallery/galleryInfo'),
             'btn_list'   => $btn_list,
             'field_list' => $this->get_field_list($fields_all,$fields),
             'field_info' => $list,
@@ -311,6 +312,7 @@ class GalleryAction extends HomeAction
         $fields[] = 'action_list';
         $data = array(
             'title'      => '图片列表',
+            'form_url'   => U('Gallery/metaInfo'),
             'btn_list'   => $btn_list,
             'field_list' => $this->get_field_list($fields_all,$fields),
             'field_info' => $list,

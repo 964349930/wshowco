@@ -546,5 +546,4 @@ function find_all_files($dir)
     } 
     return $result; 
 } 
-
 ?>

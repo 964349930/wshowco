@@ -86,6 +86,7 @@ class UserAction extends HomeAction{
             echo json_encode(array('code'=>'0','msg'=>'更新错误'));
         }else{
             $_SESSION['userInfo'] = D('User')->where('id='.$_SESSION['uid'])->find();
+            file_put_contents('message.log','您的信息已更新');
             echo json_encode(array('code'=>'1','msg'=>'更新成功'));
         }
 	}
@@ -194,5 +195,4 @@ class UserAction extends HomeAction{
         }
         $this->success('操作成功');
     }
-
 }

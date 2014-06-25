@@ -105,11 +105,4 @@ class HomeAction extends BaseAction
         }
         return $result;
     }
-
-    /**
-     * 推送消息
-     */
-    public function sendMessage($info){
-        echo $info;
-    }
 }

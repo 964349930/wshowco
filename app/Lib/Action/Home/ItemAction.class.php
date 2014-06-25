@@ -57,9 +57,14 @@ class ItemAction extends HomeAction
         $parent_id = intval($_GET['parent_id']);
         if(empty($parent_id)){$parent_id = 0;}
 
+        $search = trim($_GET['search']);
+        if(!empty($search)){
+            $map['title'] = array('like', '%'.$search.'%');
+        }
         $fields_all = D('Item')->field_list();
         $fields = array('id','title','intro','date_modify');
-        $map = array('user_id'=>$_SESSION['uid'], 'parent_id'=>$parent_id);
+        $map['user_id'] = array('eq', $_SESSION['uid']);
+        $map['parent_id'] = array('eq', $parent_id);
         $page = page(D('Item')->getCount($map));
 
         //获取文章列表
@@ -83,6 +88,7 @@ class ItemAction extends HomeAction
 
         $data = array(
             'title'=>'文章列表',
+            'form_url' => U('Item/itemInfo'),
             'btn_list'=> $btn_list,
             'field_list' => $this->get_field_list($fields_all, $fields),
             'field_info' => $item_list,
@@ -128,6 +134,7 @@ class ItemAction extends HomeAction
 
             $this->assign('getExtValueList', U('Home/Ext/getExtValueList'));
             $fields_all = $itemObj->field_list();
+            $fields[] = 'ext_list';
             $ids = D('Item')->get_ids($info['parent_id']);
             $ids = array_reverse($ids);
             foreach($ids as $k=>$v){

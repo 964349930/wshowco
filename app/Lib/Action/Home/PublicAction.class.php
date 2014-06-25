@@ -58,4 +58,11 @@ class PublicAction extends BaseAction
         $this->success('登出成功！', $url);
     }
 
+    /**
+     * 推送
+     */
+    public function sendMsg(){
+        echo $info;
+    }
+
 }

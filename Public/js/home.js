@@ -4,8 +4,10 @@ $(function(){
     $("#topMenu").find("li").click(function(){
       $(this).addClass("active")
       var menu = $(this).find("a").attr("href");
-      $(menu).removeClass("hidden").addClass("show");
-      $(menu).siblings("ul").removeClass("show").addClass("hidden");
+      if(menu != 'javascript:;'){
+        $(menu).removeClass("hidden").addClass("show");
+        $(menu).siblings("ul").removeClass("show").addClass("hidden");
+      }
       $(this).siblings("li").removeClass("active");
     });
 
@@ -51,11 +53,17 @@ $(function(){
     }
 
   /** 实时监听 **/
+  $("#GMessage").hide();
   setInterval(function(){
-    var message = '<div style="position:absolute;right: -3px;background:#E02222;width:150px;height:100px;z-index:2;color:#fff;text-align:center;line-height:100px;">您有一个新的订单，请注意查看</div>';
-    $("#GMessage").append(message);
-    window.setTimeout('$("#GMessage").empty()',2000);
-    },10000)
+    var msg = $("#GMessage");
+    msg.load('message.log',function(data){
+      if(data != ''){
+        msg.fadeIn();
+        window.setTimeout('$("#GMessage").fadeOut()',2000);
+        $.get('push.php');
+      }
+    });
+  },1000)
 })
 
 /** load main content **/
