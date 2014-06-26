@@ -6,6 +6,14 @@
  */
 class ExtModel extends CommonModel
 {
+
+    /**
+     * 获取ext列表和extval列表
+     */
+    public function getExtVal($id, $type){
+
+    }
+
     /**
      * 获取extlist
      */
@@ -117,5 +125,19 @@ class ExtModel extends CommonModel
         $fieldObj->where($arrMap)->delete();
     }
 
+
+    public function field_list()
+    {
+        return array(
+            array('title'=>'ID','name'=>'id','type'=>'hidden'),
+            array('title'=>'资源类型','name'=>'res_type','type'=>'text'),
+            array('title'=>'资源编号','name'=>'res_id','type'=>'text'),
+            array('title'=>'名称','name'=>'title','type'=>'text'),
+            array('title'=>'类型','name'=>'type','type'=>'text'),
+            array('title'=>'标记','name'=>'lable','type'=>'text'),
+            array('title'=>'排序','name'=>'sort_order','type'=>'number'),
+            array('title'=>'操作','name'=>'action_list','type'=>'action_list'),
+        );
+    }
 
 }

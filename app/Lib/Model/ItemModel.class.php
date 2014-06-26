@@ -45,6 +45,7 @@ class ItemModel extends CommonModel
             array('title'=>'更新时间','name'=>'date_modify','type'=>'date'),
             array('title'=>'操作','name'=>'action_list','type'=>'action_list'),
             array('title'=>'子文章属性','name'=>'ext_list','type'=>'ext_list'),
+            array('title'=>'自定义属性','name'=>'ext_info','type'=>'ext_info'),
         );
     }
 

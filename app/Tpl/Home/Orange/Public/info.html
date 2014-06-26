@@ -87,18 +87,26 @@
         <input class="form-control" id="{$vo.name}" name="{$vo.name}" type="text" value="{$field_info[$vo[name]]}" disabled>
     </div>
 
+    <!-- 自定义字段 -->
+    <elseif condition="$vo.type eq 'ext_info'" />
+    <volist name="" id="voo">
+      <div class="form-group">
+        <label for=""></label>
+        <input class="form-control" id="" name="" type="text" value="">
+      </div>
+    </volist>
+
     <!-- 子文章属性 -->
     <elseif condition="$vo.type eq 'ext_list'" />
     <div class="panel-group" id="accordion">
         <div class="panel panel-default" style="margin-bottom:20px;">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">{$vo.title}</a>
+                    <a data-toggle="collapse" data-toggle="collapse" data-parent="#accordion" href="#ext_list_table">{$vo.title}</a>
                 </h4>
             </div>
-        <div id="collapseOne" class="panel-collapse collapse in">
-            <div class="panel-body">
-                hh
+        <div id="ext_list_table"  class="panel-collapse collapse in">
+            <div class="panel-body" id="ext_list">
             </div>
         </div>
     </div>
@@ -123,3 +131,9 @@
 -->
 <include file="Public:gallery" />
 <script src="__PUBLIC__/js/editor.js"></script>
+<script>
+$(function(){
+  var url = '{$ext_url}';
+  $("#ext_list").load(url);
+})
+</script>

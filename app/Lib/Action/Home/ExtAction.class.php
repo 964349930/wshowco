@@ -11,24 +11,31 @@ class ExtAction extends HomeAction
      */
     public function extList()
     {
-        $extObj = D('Ext');
+        $ext_obj = D('Ext');
         $res_type = trim($_REQUEST['res_type']);
         $res_id = intval($_REQUEST['res_id']);
-        $arrField = array();
-        $arrMap['res_type'] = array('eq', $res_type);
-        $arrMap['res_id'] = array('eq', $res_id);
-        $arrOrder = array('sort_order');
-        $extList = $extObj->getList($arrField, $arrMap, $arrOrder);
+
+        $fields_all = $ext_obj->field_list();
+        $fields = array('id','title','type','lable','sort_order');
+        $map = array('res_type'=>$res_type,'res_id'=>$res_id);
+
+        $ext_list = $ext_obj->field($fields)->where($map)->order('sort_order')->select();
+
+        foreach($ext_list as $k=>$v){
+            $ext_list[$k]['action_list'] = array(
+                array('type'=>'edit','url'=>U('Ext/extInfo',array('res_type'=>$res_type,'res_id'=>$res_id))),
+                array('type'=>'del','url'=>U('Ext/del',array('res_type'=>$res_type,'res_id'=>$v['id']))),
+            );
+        }
+        $fields[] = 'action_list';
         $data = array(
-            'res_type' => $res_type,
-            'res_id' => $res_id,
-            'addUrl' => U('Home/Ext/extInfo', array('res_type'=>$res_type, 'res_id'=>$res_id)),
-            'infoUrl' => U('Home/Ext/extInfo'),
-            'delUrl' => U('Home/Ext/del'),
-            'extList' => $extList,
+            'res_type'   => $res_type,
+            'res_id'     => $res_id,
+            'field_list' => $this->get_field_list($fields_all,$fields),
+            'field_info' => $ext_list,
         );
         $this->assign($data);
-        $this->display();
+        $this->display('Public:ext_list');
     }
 
     /**
@@ -58,11 +65,12 @@ class ExtAction extends HomeAction
         $data['date_modify'] = time();
         if(empty($data['id'])){
             $data['date_add'] = time();
-            $extObj->add($data);
+            $result = $extObj->add($data);
         }else{
             $extObj->save($data);
+            $result = $data['id'];
         }
-        $this->success('操作成功');
+        echo $result;
     }
 
     /**

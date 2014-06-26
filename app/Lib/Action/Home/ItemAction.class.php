@@ -124,7 +124,9 @@ class ItemAction extends HomeAction
 
                 //更新显示
                 $info = $itemObj->field()->where('id='.$id)->find();
-                $this->assign('extList', D('Ext')->getExtList('item', $itemInfo['id']));
+                $info['ext_info'] = D('ExtVal')->getExtVal($id,'item');
+                $this->assign('ext_url', U('Ext/extList',array('res_type'=>'item','res_id'=>$id)));
+                $fields[] = 'ext_list';
             }else{
 
                 //添加显示
@@ -134,7 +136,7 @@ class ItemAction extends HomeAction
 
             $this->assign('getExtValueList', U('Home/Ext/getExtValueList'));
             $fields_all = $itemObj->field_list();
-            $fields[] = 'ext_list';
+            $fields[] = 'ext_info';
             $ids = D('Item')->get_ids($info['parent_id']);
             $ids = array_reverse($ids);
             foreach($ids as $k=>$v){

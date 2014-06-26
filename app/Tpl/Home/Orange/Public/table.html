@@ -1,0 +1,83 @@
+<div class="table-responsive">
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <volist name="field_list" id="vo">
+      <if condition="$vo[type] eq 'hidden'">
+        <th class="hidden">{$vo.title}</th>
+      <else />
+      <th>{$vo.title}</th>
+      </if>
+      </volist>
+    </tr>
+    </thead>
+    <tbody>
+    <volist name="field_info" id="vo">
+    <tr>
+        <volist name="field_list" id="voo">
+
+        <!-- 如果是文本字段 -->
+        <if condition="$voo[type] eq 'text'">
+        <td class="input_text" data-id = "{$vo.id}" data-name="{$voo[name]}">{$vo[$voo[name]]}</td>
+
+        <!-- 如果是隐藏字段 -->
+        <elseif condition="$voo[type] eq 'hidden'" />
+        <td class="hidden">{$vo[$voo[name]]}</td>
+
+        <!-- 如果是单选字段 -->
+        <elseif condition="$voo[type] eq 'radio'" />
+        <td>{$vo[$voo[name]]}</td>
+
+        <!-- 如果是操作列表 -->
+        <elseif condition="$voo[type] eq 'action_list'" />
+            <td>
+            <volist name="vo[action_list]" id="vooo">
+
+            <!-- 如果是编辑操作 -->
+            <if condition="$vooo[type] eq 'edit'">
+            <a href="javascript:;" onclick="ext_edit(this)" title="编辑"><i class="fa fa-edit" style="margin-right:10px;"></i></a>
+
+            <!-- 如果是删除操作 -->
+            <else />
+            <a href="javascript:;" title="删除" onClick="ext_rm(this)"><i class="fa fa-trash-o" style="color:red;"></i></a>
+            </if>
+            </volist>
+            </td>
+        <else />
+        <td>{$vo[$voo[name]]}</td>
+        </if>
+        </volist>
+    </tr>
+    </volist>
+    </tbody>
+</table>
+<a href="javascript:;" onClick="ext_add()">添加</a>
+</div>
+<script>
+/** 字段添加 **/
+function ext_add(){
+  var new_line = '<tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><a href="javascript:;" onclick="ext_edit(this)" title="编辑"><i class="fa fa-edit" style="margin-right:10px;"></i></a><a href="javascript:;" title="删除" onClick="ext_rm(this)"><i class="fa fa-trash-o" style="color:red;"></i></a></td></tr>';
+  $("table").find("tbody").append(new_line);
+}
+
+/** 字段编辑 **/
+function ext_edit(e){
+  var data = new Array();
+  var list = $(e).parent("td").siblings("td");
+  for(var i = 0; i < list.length; i++){
+    data[i] = $(list[i]).children("input").val();
+    $(list[i]).html(data[i]);
+  }
+  Var res_type = '{$res_type}';
+  var res_id = '{$res_id}';
+  $.post("{:U('Ext/extInfo')}",{res_type:res_type,res_id:res_id,title:data[0],type:data[1],lable:data[2],sort_order:data[3]});
+}
+
+/** 字段删除 **/
+function ext_rm(e){
+  var url = '';
+  $.get(url,data);
+  $(e).parents("tr").remove();
+}
+
+</script>
