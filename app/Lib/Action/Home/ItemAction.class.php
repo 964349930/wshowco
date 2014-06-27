@@ -120,11 +120,11 @@ class ItemAction extends HomeAction
         if(empty($_POST)){
             $id = $this->_get('id', 'intval');
             $fields = array('id','parent_id','title','cover','intro','info','template_id','status');
+            $fields[] = 'ext_info';
             if(!empty($id)){
 
                 //更新显示
                 $info = $itemObj->field()->where('id='.$id)->find();
-                $info['ext_info'] = D('ExtVal')->getExtVal($id,'item');
                 $this->assign('ext_url', U('Ext/extList',array('res_type'=>'item','res_id'=>$id)));
                 $fields[] = 'ext_list';
             }else{
@@ -134,9 +134,9 @@ class ItemAction extends HomeAction
                 
             }
 
+            $info['ext_info'] = D('Ext')->getExtVal($info['parent_id'], $id,'item');
             $this->assign('getExtValueList', U('Home/Ext/getExtValueList'));
             $fields_all = $itemObj->field_list();
-            $fields[] = 'ext_info';
             $ids = D('Item')->get_ids($info['parent_id']);
             $ids = array_reverse($ids);
             foreach($ids as $k=>$v){
@@ -163,12 +163,6 @@ class ItemAction extends HomeAction
         }
         $data = $this->_post();
         $data['date_modify'] = time();
-		if(!empty($_FILES['pic']['name'])){
-			$picList = uploadPic();
-			if($picList['code'] != 'error'){
-				$data['cover'] = D('GalleryMeta')->addImg($picList['pic']['savename']);
-			}
-		}
         $item_id = $data['id'];
         if(empty($item_id)){
             //添加操作
@@ -187,12 +181,9 @@ class ItemAction extends HomeAction
                 echo json_encode(array('code'=>'0','msg'=>'更新失败'));
             }
         }
-        /*
         //增值属性操作
-        $extValData = $_POST['ext'];
-        D('ExtVal')->updateExtVal($extValData, $item_id);
-        $this->success('操作成功');
-         */
+        $ext_data = $_POST['ext'];
+        D('Ext')->updateExtVal($ext_data, $item_id);
     }
 
     /**

@@ -6,126 +6,47 @@
  */
 class ExtModel extends CommonModel
 {
-
     /**
-     * 获取ext列表和extval列表
+     * 获取字段列表和值
      */
-    public function getExtVal($id, $type){
-
+    public function getExtVal($fid,$id, $type){
+        $map = array('res_id'=>$fid,'res_type'=>$type);
+        $list = $this->where($map)->order('sort_order')->select();
+        foreach($list as $k=>$v){
+            $map = array('res_id'=>$id,'ext_id'=>$v['id']);
+            $ext_val = D('ExtVal')->where($map)->find();
+            $list[$k]['ext_id'] = $v['id'];
+            $list[$k]['id'] = $ext_val['id'];
+            $list[$k]['value'] = $ext_val['value'];
+        }
+        return $list;
     }
 
     /**
-     * 获取extlist
+     * update val
+     * @param array2 $extList
+     * @param int $res_id
+     * @return int $id
      */
-    public function getExtList($res_type, $res_id)
+    public function updateExtVal($list, $res_id)
     {
-        $arrField = array();
-        $arrMap['reg_type'] = array('eq', $res_type);
-        $arrMap['reg_id'] = array('eq', $res_id);
-        $arrOrder = array('sort_order');
-        $extList = $this->getList($arrField, $arrMap, $arrOrder);
-        return $extList;
-    }
-
-    /**
-     * 获取CmsField表中的cat_id
-     */
-    private function getCatId($cat_id, $obj_type){
-        switch($obj_type){
-        case 'cmsCat':
-            $cat_fid = D('CmsCat')->where('id='.$cat_id)->getField('fid');
-            break;
-        case 'cmsLeave':
-            $cat_fid = D('cmsLeave')->where('id='.$cat_id)->getField('cat_id');
-            break;
-        }
-        return $cat_fid;
-    }
-
-    /**
-     * 获取CmsFieldContent字段内容
-     */
-    public function getFieldContent($cat_id, $obj_type, $field_id){
-        $contentObj = D('CmsFieldContent');
-        $arrMap = array(
-            'cat_id'   => $cat_id,
-            'obj_type' => $obj_type,
-            'field_id' => $field_id,
-        );
-        $contentInfo = $contentObj->where($arrMap)->find();
-        return $contentInfo;
-    }
-           
-    /**
-     * 获取字段名称+内容列表
-     * 
-     */
-    public function getFieldList($cat_id, $obj_type='cmsCat', $return='index', $cat_fid){
-        $fieldObj = D('CmsField');
-        $arrField = array('*');
-        if(!empty($cat_fid)){
-            $cat_fid = $cat_fid;
-        }elseif(empty($cat_id)){
-            $cat_fid = '0';
-        }else{
-            $cat_fid = $this->getCatId($cat_id, $obj_type);
-        }
-        $arrMap['wechat_id'] = array('eq', $_SESSION['wechat_id']);
-        $arrMap['obj_type']  = array('eq', $obj_type);
-        $arrMap['cat_id']    = array('eq', $cat_fid);
-        $arrMap['status']    = array('eq', '1');
-        $arrOrder = array('display_order');
-        //获取自定义字段名称列表
-        $fieldList = $fieldObj->getList($arrField, $arrMap, $arrOrder);
-        //关联数组
-        $assList = array();
-        foreach($fieldList as $k=>$v){
-            $contentInfo = $this->getFieldContent($cat_id, $obj_type, $v['id']);
-            $fieldList[$k]['content_id'] = $contentInfo['id'];
-            $fieldList[$k]['content']    = $contentInfo['content'];
-            $assList[$v['value']]       = $contentInfo['content'];
-        }
-        if($return == 'index'){
-            return $fieldList;
-        }elseif($return == 'other'){
-            return $assList;
-        }else{
-            return array();
-        }
-    }
-
-    /**
-     * 更新字段数据
-     */
-    public function updateFieldList($fieldList, $cat_id, $obj_type='cmsCat'){
-        $fieldInfo = array();
-        foreach($fieldList as $k=>$v){
-            $fieldInfo['id'] = $v['id'];
-            $fieldInfo['obj_type'] = $obj_type;
-            $fieldInfo['cat_id'] = $cat_id;
-            $fieldInfo['field_id'] = $k;
-            $fieldInfo['content'] = $v['content'];
-            $fieldInfo['mtime'] = time();
-            if(empty($fieldInfo['id'])){
-                $fieldInfo['ctime'] = time();
-                D('CmsFieldContent')->add($fieldInfo);
+        foreach($list as $k=>$v){
+            $id = $v['id'];
+            $v['date_modify'] = time();
+            if(empty($id)){
+                $v['res_id'] = $res_id;
+                $v['date_add'] = time();
+                $id = D('ExtVal')->add($v);
             }else{
-                D('CmsFieldContent')->save($fieldInfo);
+                D('ExtVal')->save($v);
             }
         }
     }
 
+
     /**
-     * 删除字段数据
+     * 字段列表
      */
-    public function delFieldList($cat_ids, $obj_type){
-        $fieldObj = D('CmsFieldContent');
-        $arrMap['obj_type'] = array('eq', $obj_type);
-        $arrMap['cat_id'] = array('in', $cat_ids);
-        $fieldObj->where($arrMap)->delete();
-    }
-
-
     public function field_list()
     {
         return array(
