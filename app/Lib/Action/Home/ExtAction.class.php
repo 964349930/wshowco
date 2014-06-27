@@ -16,7 +16,7 @@ class ExtAction extends HomeAction
         $res_id = intval($_REQUEST['res_id']);
 
         $fields_all = $ext_obj->field_list();
-        $fields = array('id','title','type','lable','sort_order');
+        $fields = array('id','title','type','sort_order');
         $map = array('res_type'=>$res_type,'res_id'=>$res_id);
 
         $ext_list = $ext_obj->field($fields)->where($map)->order('sort_order')->select();

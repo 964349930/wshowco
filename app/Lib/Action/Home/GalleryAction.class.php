@@ -79,7 +79,7 @@ class GalleryAction extends HomeAction
             $imgList[$k] = $imgObj->format($v, array('path_name'));
         }
         $this->assign('imgList', $imgList);
-        $this->display('Public:showImgList');
+        $this->display('Public:img_list');
     }
 
     /**

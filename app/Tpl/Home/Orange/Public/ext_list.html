@@ -1,3 +1,13 @@
+<div class="panel-group">
+<div class="panel panel-default" style="margin-bottom:20px;">
+        <div class="panel-heading">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#ext_list">{$vo.title}</a>
+          </h4>
+        </div>
+        <div id="ext_list"  class="panel-collapse collapse">
+          <div class="panel-body">
+
 <div class="table-responsive">
 <table class="table table-striped">
   <thead>
@@ -53,10 +63,16 @@
 </table>
 <a href="javascript:;" onClick="ext_add()">添加</a>
 </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
 <script>
 /** 字段添加 **/
 function ext_add(){
-  var new_line = '<tr><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><a href="javascript:;" onclick="ext_edit(this)" title="编辑"><i class="fa fa-edit" style="margin-right:10px;"></i></a><a href="javascript:;" title="删除" onClick="ext_rm(this)"><i class="fa fa-trash-o" style="color:red;"></i></a></td></tr>';
+  var new_line = '<tr><td><input class="form-control input-sm" type="text"></td><td><select class="form-control input-sm"><option value="text">文本</option><option value="radio">单选</option><option value="checkbox">多选</option></select></td><td><input class="form-control input-sm" type="number"></td><td><a href="javascript:;" onclick="ext_edit(this)" title="编辑"><i class="fa fa-edit" style="margin-right:10px;"></i></a><a href="javascript:;" title="删除" onClick="ext_rm(this)"><i class="fa fa-trash-o" style="color:red;"></i></a></td></tr>';
   $("table").find("tbody").append(new_line);
 }
 

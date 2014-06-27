@@ -5,7 +5,7 @@
 
 <!-- 面包屑导航 -->
 <notempty name="bread_list">
-<include file="Public:breadcrumbs" />
+<include file="Public:nav_min" />
 </notempty>
 
   <!--
@@ -89,43 +89,11 @@
 
     <!-- 自定义字段 -->
     <elseif condition="$vo.type eq 'ext_info'" />
-    <div class="panel-group">
-      <div class="panel panel-default" style="margin-bottom:20px;">
-        <div class="panel-heading">
-          <h4 class="panel-title">
-            <a data-toggle="collapse" href="#ext_info">{$vo.title}</a>
-          </h4>
-        </div>
-        <div id="ext_info" class="panel-collapse collapse">
-          <div class="panel-body">
-            <volist name="field_info[$vo[name]]" id="voo">
-              <div class="form-group">
-                <label>{$voo.title}</label>
-                <input type="hidden" name="ext[{$voo.lable}][id]" value="{$voo.id}">
-                <input type="hidden" name="ext[{$voo.lable}][ext_id]" value="{$voo.ext_id}">
-                <input class="form-control" name="ext[{$voo.lable}][value]" type="{$voo.type}" value="{$voo.value}">
-              </div>
-            </volist>
-          </div>
-        </div>
-      </div>
-    </div>
+    <include file="Public:ext_info" />
 
     <!-- 子文章属性 -->
     <elseif condition="$vo.type eq 'ext_list'" />
-    <div class="panel-group" id="accordion">
-        <div class="panel panel-default" style="margin-bottom:20px;">
-            <div class="panel-heading">
-                <h4 class="panel-title">
-                    <a data-toggle="collapse" data-toggle="collapse" data-parent="#accordion" href="#ext_list_table">{$vo.title}</a>
-                </h4>
-            </div>
-        <div id="ext_list_table"  class="panel-collapse collapse">
-            <div class="panel-body" id="ext_list">
-            </div>
-        </div>
-    </div>
-
+    <script>$(this).load('{$ext_url}');</script>
 
     <!-- 普通文本 -->
     <else />
@@ -145,10 +113,5 @@
   插件列表：plugin_list
 -->
 <include file="Public:gallery" />
-<script src="__PUBLIC__/js/editor.js"></script>
-<script>
-$(function(){
-  var url = '{$ext_url}';
-  $("#ext_list").load(url);
-})
-</script>
+<script src="../Public/js/editor.js"></script>
+
