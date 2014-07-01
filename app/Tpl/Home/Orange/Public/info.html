@@ -14,43 +14,51 @@
         {title, type, name}
     值列表：info
   -->
-  <form role="form" id="form" onsubmit="return editInfo('form')" data-href="{$form_url}" enctype="multipart/form-data">
+  <form class="form-horizontal" role="form" id="form" onsubmit="return editInfo('form')" data-href="{$form_url}" enctype="multipart/form-data">
     <volist name="field_list" id="vo">
 
     <!-- 内容字段 -->
     <if condition="$vo.type eq 'textarea'">
     <div class="form-group">
-        <label for="{$vo.name}">{$vo.title}</label>
-        <textarea class="form-control" id="{$vo.name}" name="{$vo.name}" cols="80" rows="4">{$field_info[$vo[name]]}</textarea>
+        <label for="{$vo.name}" class="col-sm-2 control-label">{$vo.title}</label>
+        <div class="col-sm-10">
+          <textarea class="form-control" id="{$vo.name}" name="{$vo.name}" cols="80" rows="4">{$field_info[$vo[name]]}</textarea>
+        </div>
     </div>
 
     <!-- 富文本编辑器 -->
     <elseif condition="$vo.type eq 'content'" />
     <div class="form-group">
-    <label for="{$vo.name}">{$vo.title}</label>
+    <label for="{$vo.name}" class="col-sm-2 control-label">{$vo.title}</label>
     <include file="Public:editor" />
-        <div class="form-control" id="editor" style="overflow:scroll;height:300px;">{$field_info[$vo[name]]}</div>
+    <div class="col-sm-10">
+        <div id="editor" style="overflow:scroll;height:300px;">{$field_info[$vo[name]]}</div>
         <textarea class="hidden" id="resultInfo" name="{$vo.name}"></textarea>
+    </div>
     </div>
 
     <!-- 选择字段 -->
     <elseif condition="$vo.type eq 'select'" />
     <div class="form-group">
-        <label for="{$vo.name}">{$vo.title}</label>
+        <label for="{$vo.name}" class="col-sm-2 control-label">{$vo.title}</label>
+        <div class="col-sm-10">
         <select class="form-control" id="{$vo.name}" name="{$vo.name}">
             <volist name="vo.data" id="voo">
             <option value="{$voo.value}" <eq name="field_info[$vo[name]]" value="$voo.value">selected</eq>>{$voo.title}</option>
             </volist>
         </select>
     </div>
+    </div>
 
     <!-- 单选字段 -->
     <elseif condition="$vo.type eq 'radio'" />
     <div class="form-group">
         <volist name="vo.data" id="voo">
-        <label class="radio-inline">
+        <label class="radio-inline col-sm-2 control-label">
+            <div class="col-sm-10">
             <input type="radio" name="{$vo.name}" id="{$vo.name}{$key+1}" value="{$voo.value}"
             <eq name="field_info[$vo[name]]" value="$voo.value">checked</eq>>{$voo.title}
+        </div>
         </label>
             </volist>
     </div>
@@ -59,20 +67,24 @@
     <!-- 图片路径 -->
     <elseif condition="$vo.type eq 'path'" />
     <div class="form-group">
-      <label for="{$vo.name}">{$vo.title}</label>
+      <label for="{$vo.name}" class="col-sm-2 control-label">{$vo.title}</label>
+      <div class="col-sm-10">
       <notempty name="field_info[$vo[name]]">
         <img class="img_responsive" src="{$field_info[$vo[name]]|getPicPath=###,'s'}" height="50px" />
       </notempty>
       <input class="form-control" id="imgPath" name="{$vo.name}" type="file" value="{$field_info[$vo[name]]}" accept:"image/*">
+      </div>
     </div>
 
     <!-- 图片字段 -->
     <elseif condition="$vo.type eq 'sel_img'" />
     <div class="form-group">
-        <label for="{$vo.name}">{$vo.title}</label>
+        <label for="{$vo.name}" class="col-sm-2 control-label">{$vo.title}</label>
+        <div class="col-sm-10">
         <a class="btn btn-default" id="sel_img">点击选择图片</a>
         <img class="img_responsive " id="resultImg" <empty name="field_info[$vo[name]]"> class="hidden"</empty> src="<php>echo getPicPath(D('GalleryMeta')->getImg($field_info[$vo['name']]));</php>" height="50px" />
         <input type="hidden" name="{$vo.name}" id="resultImgId"  value="{$field_info[$vo[name]]}">
+    </div>
     </div>
 
 
@@ -83,8 +95,10 @@
     <!-- 不可修改 -->
     <elseif condition="$vo.type eq 'disabled'"/>
     <div class="form-group">
-        <label for="{$vo.name}">{$vo.title}</label>
+        <label for="{$vo.name}" class="col-sm-2 control-label">{$vo.title}</label>
+        <div class="col-sm-10">
         <input class="form-control" id="{$vo.name}" name="{$vo.name}" type="text" value="{$field_info[$vo[name]]}" disabled>
+    </div>
     </div>
 
     <!-- 自定义字段 -->
@@ -99,8 +113,10 @@
     <!-- 普通文本 -->
     <else />
     <div class="form-group">
-        <label for="{$vo.name}">{$vo.title}</label>
+        <label for="{$vo.name}" class="col-sm-2 control-label">{$vo.title}</label>
+        <div class="col-sm-10">
         <input class="form-control" id="{$vo.name}" name="{$vo.name}" type="{$vo.type}" value="{$field_info[$vo[name]]}">
+    </div>
     </div>
     </if>
 
