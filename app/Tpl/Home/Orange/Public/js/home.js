@@ -54,6 +54,7 @@ $(function(){
 
   /** 实时监听 **/
   $("#GMessage").hide();
+  /*
   setInterval(function(){
     var msg = $("#GMessage");
     msg.load('message.log',function(data){
@@ -63,7 +64,7 @@ $(function(){
         $.get('push.php');
       }
     });
-  },1000)
+  },1000)*/
 })
 
 /** load main content **/

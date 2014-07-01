@@ -93,7 +93,8 @@
 
     <!-- 子文章属性 -->
     <elseif condition="$vo.type eq 'ext_list'" />
-    <script>$(this).load('{$ext_url}');</script>
+    <div id="ext_list_div"></div>
+    <script>$("#ext_list_div").load('{$ext_url}');</script>
 
     <!-- 普通文本 -->
     <else />
