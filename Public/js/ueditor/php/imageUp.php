@@ -18,7 +18,7 @@
     //上传配置
     $config = array(
         //"savePath" => ($path == "1" ? "upload/" : "upload1/"),
-        "savePath"   => '../../../../../../data/attach/editor/',
+        "savePath"   => '../../../../data/attach/editor/',
 		"maxSize" => 1000, //单位KB
         "allowFiles" => array(".gif", ".png", ".jpg", ".jpeg", ".bmp")
     );
