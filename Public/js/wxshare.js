@@ -1,10 +1,10 @@
 // set the wechat share option
 function wxshare() {
   var wxjs = WeixinJSBridge;
-  wxjs.on("menu:share:appmessage", shareappmessage);
-  wxjs.on("menu:share:weibo", shareweibo);
-  wxjs.on("menu:share:timeline", sharetimeline);
-  //wxjs.invoke("getnetworktype", {}, getnetworktype)
+  wxjs.on("menu:share:appmessage", e),
+  wxjs.on("menu:share:weibo", f),
+  wxjs.on("menu:share:timeline", g),
+  //wxjs.invoke("getNetworkType", {}, getnetworktype)
 }
 
 // get the client network type by weixinjsbridge
@@ -20,66 +20,45 @@ function wxshare() {
 //   case "network_type:wifi":
 //     b = 4e3
 //   }
-//   c = new image,
+//   c = new Image,
 //   c.onerror = c.onload = function () {
 //     c = null
 //   }
 // }
 
 
-
-// function share2qqblog() {
-//   var b = window.shareData.share2qqBlog;
-//   WeixinJSBridge.invoke("shareWeibo", {
-//     content: a.isios ? b.content + b.link : b.content,
-//     url: b.link
-//   }, function () { })
-// }
-
-function share(type) {
-  var data = window.shareData;
+function e() {
+  var send2friendmsg = window.shareData.send2Friend,
   WeixinJSBridge.invoke("sendAppMessage", {
-    img_url: data.img,
+    img_url: send2friendmsg.img,
     img_width: "640",
     img_height: "640",
-    link: data.link,
-    desc: data.content,
-    title: data.title
-  }, function (res) {
-  })
+    link: send2friendmsg.link,
+    desc: send2friendmsg.content,
+    title: send2friendmsg.title
+  },function () { })
 }
-// 发送给好友
-function shareappmessage(){
-  WeixinJSBridge.invoke('sendAppMessage', {
-    "img_url": window.shareData.img,
-    "img_width": "640",
-    "img_height": "640",
-    "link": window.shareData.link,
-    "desc": window.shareData.content,
-    "title": window.shareData.title
-  }, function (res) {
-  });
+
+function share() {
+  var b = window.shareData.share2qqBlog;
+  WeixinJSBridge.invoke("shareWeibo", {
+    content: a.isios ? b.content + b.link : b.content,
+    url: b.link
+  }, function () { })
 }
-// 分享到朋友圈
-function sharetimeline(){
-  WeixinJSBridge.invoke('shareTimeline', {
-    "img_url": window.shareData.img,
-    "img_width": "640",
-    "img_height": "640",
-    "link": window.shareData.link,
-    "desc": window.shareData.content,
-    "title": window.shareData.title
-  }, function (res) {
-  });
+
+function sharetimeline() {
+  var a = window.shareData.share2Friend;
+  WeixinJSBridge.invoke("shareTimeline", {
+    img_url: a.img,
+    img_width: "640",
+    img_height: "640",
+    link: a.link,
+    desc: " ",
+    title: a.title
+  }, function () { })
 }
-// 分享到微博
-function shareweibo(){
-  WeixinJSBridge.invoke('shareWeibo', {
-    "content": window.shareData.content,
-    "url": window.shareData.link
-  }, function (res) {
-  });
-}
+
 // get the client agent:ios, android
 function getclientagent(){
   var a = window.navigator.userAgent;
